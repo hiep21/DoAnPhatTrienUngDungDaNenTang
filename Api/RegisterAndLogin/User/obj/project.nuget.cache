@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YI8ioy/ivurdfjhM1pooEDhmR727D7RZ39NTvU5H6dnHFrCB/Bluu3M7Msqg+k1BHS0qScf7VmgZAWY7oE+eKg==",
+  "dgSpecHash": "sVIwrrMR6ULAzO7QjutbUmL0AEnoXXHuhaGElPPrJ2gPG4J9zDtUx7SA+37wOi8vsXWz5XguvYBL3yLiMLXY1g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\nguye\\Desktop\\Đồ án Phát triển\\Api\\RegisterAndLogin\\User\\User.csproj",
+  "projectFilePath": "C:\\Users\\nguye\\Desktop\\Đồ án Phát triển\\DoAnPhatTrienUngDungDaNenTang\\Api\\RegisterAndLogin\\User\\User.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nguye\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\nguye\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
