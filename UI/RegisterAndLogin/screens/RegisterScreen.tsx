@@ -45,7 +45,7 @@ const selectGender = (Gender) => {
 
 
 
-const register = async() => {
+const register = async(values) => {
     
     if(password != rePassword) {
         return alert("Mật khẩu không khớp")
@@ -58,11 +58,11 @@ const register = async() => {
 
     try {
         const registerResponse = await registerApi({ 
-            user,
-            email,
-            password,
-            dateOfBirth,
-            gender
+            user: values.user ,
+            email: values.email,
+            password: values.password,
+            dateOfBirth: values.dateOfBirth,
+            gender: gender
         });
         navigation.navigate('LoginScreen')
         const { data } = registerResponse
