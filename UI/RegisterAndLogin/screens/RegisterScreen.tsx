@@ -6,17 +6,18 @@ import { validateEmail } from "../Utils/validate"
 import Background from "./Background"
 import { ErrorMessage, Formik } from "formik"
 import * as Yup from 'yup'
+import DatePicker from "react-native-date-picker"
 
 const validationSchema = Yup.object().shape({
-    user: Yup.string().required("Username is required"),
-    password: Yup.string().required("Password is required"),
-    confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
-    .required("Confirm Password is required"),
+    user: Yup.string()
+        .min(2,'To Short!')
+        .max(20,'To Long!')
+        .required("Username is required"),
+    password: Yup.string().min(8).required("Password is required")
+    .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/),
     email: Yup.string().email("Invalid email").required("Email is required"),
-    
-    dateOfBirth: Yup.string().required("Date of Birth is required"),
-    gender: Yup.string().required("Gender is required"),
+    dateOfBirth: Yup.string().required("Date of Birth is required").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$/),
+    rePassword: Yup.string().min(8).oneOf([Yup.ref('password')]).required("Confirm password is required"),
     
     
     });
@@ -29,9 +30,9 @@ const [ email, setEmail ] = useState<string>("")
 const [ password, setPassword ] = useState<string>("")
 const [ rePassword, setRePassword ] = useState<string>("")
 const [isLoading, setIsLoading] = useState<boolean>(false)
-const [dateOfBirth, setDateOfBirth] = useState<string>();
+const [dateOfBirth, setDateOfBirth] = useState<string>("");
 const [isModalVisible, setIsModalVisible] = useState(false);
-const [selectedGender, setSelectedGender] = useState(null);
+const [gender, setSelectedGender] = useState<string>("");
 
 const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -49,11 +50,11 @@ const register = async() => {
     if(password != rePassword) {
         return alert("Mật khẩu không khớp")
     }
-
+    
     //Validate email
-   if(!validateEmail(email)) {
-    return alert("Email không hợp lệ")
-   }
+//    if(!validateEmail(email)) {
+//     return alert("Email không hợp lệ")
+//    }
 
     try {
         const registerResponse = await registerApi({ 
@@ -97,44 +98,49 @@ return (
         <View style={styles.container}>
             <Text style={styles.mainText}>Register</Text>
             <Formik initialValues={{
-                user: "",
-                password: "",
-                confirmPassword: "",
-                email: "",
-                dateOfBirth: "",
-                gender: "", 
+                user: '',
+                password: '',
+                rePassword: '',
+                email: '',
+                dateOfBirth: '',
+                gender: '', 
             }}
             validationSchema={validationSchema}
             onSubmit={register}
             >
-            {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+            {({ values,touched, handleChange, isValid, handleSubmit, isSubmitting,errors, setFieldTouched }) => (
                 <View style={styles.mainContainer}>
                 <View style={styles.content}>
                     <Text style={styles.label}>User</Text>
-                    <TextInput value={user} onChangeText={(value) => {
-                        setUser(value), handleChange("user")
-                    }}  style={styles.input} onBlur={handleBlur("user")}/>
-                    <ErrorMessage component={Text} name="user" style={styles.errorText}/>
-                    <Text style={styles.label} >Email</Text>
-                    <TextInput value={email} onChangeText={(value) => {
-                        setEmail(value), handleChange("email")
-                    }} onBlur={handleBlur("email")} style={styles.input} placeholder = "...@gmail.com"/>
-                    <ErrorMessage component={Text} name="email" style={styles.errorText} />
+                    <TextInput value={values.user} onChangeText={ 
+                        handleChange('user')
+                         }  style={styles.input} 
+                         onBlur={() => setFieldTouched('user')}
+                         />
+                    {touched.user && errors.user && (<Text style= {styles.errorText}>{errors.user}</Text>)}
+                    
+                    <Text style={styles.label}>Email</Text>
+                    <TextInput value={values.email} 
+                    onChangeText={handleChange("email")
+                    }  style={styles.input} 
+                    onBlur={() => setFieldTouched('email')}
+                    placeholder = "...@gmail.com"/>
+                    {touched.email && errors.email && (<Text style= {styles.errorText}>{errors.email}</Text>)}
                     <Text style={styles.label}>Date of birth</Text>
+                    
                     <TextInput
-                        value={dateOfBirth}
-                        onChangeText={(value) => {
-                            setDateOfBirth(value); handleChange("dateOfBirth")
-                        }}
+                        value={values.dateOfBirth}
+                        onChangeText={handleChange("dateOfBirth")}
                         style={styles.input}
-                        onBlur={handleBlur("dateOfBirth")}
-                        placeholder="DD/MM/YYYY"/>
-                        <ErrorMessage component={Text} name="dateOfBirth" style={styles.errorText} />
+                        onBlur={() => setFieldTouched('dateOfBirth')}
+                        placeholder="DD/MM/YYYY"
+                        />
+                        {touched.dateOfBirth && errors.dateOfBirth && (<Text style= {styles.errorText}>{errors.dateOfBirth}</Text>)}
                     <Text style={styles.label}>Gender</Text>
                 
                     <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
                         <Text style={styles.selectedGenderText}> 
-                            {selectedGender ? selectedGender : 'Select Gender'} 
+                            {gender ? gender : 'Select Gender'} 
                         </Text>
                     </TouchableOpacity>
 
@@ -156,24 +162,23 @@ return (
                             </View>
                         </View>
                     </Modal>
-                    <ErrorMessage component={Text} name="gender" style={styles.errorText} />
-
+                    
                     <Text style={styles.label} >Password</Text>
-                    <TextInput value={password} onChangeText={(value) => {
-                        setPassword(value), handleChange("password")
-                    }} onBlur={handleBlur("password")}  style={styles.input} secureTextEntry/>
-                    <ErrorMessage component={Text} name="password" style={styles.errorText} />
+                    <TextInput value={values.password} onChangeText={handleChange("password")}
+                      style={styles.input} onBlur={() => setFieldTouched('password')}secureTextEntry/>
+                    {touched.password && errors.password && (<Text style= {styles.errorText}>{errors.password}</Text>)}
                     <Text style={styles.label}>Enter the password</Text>
-                    <TextInput value={rePassword} onBlur={handleBlur("confirmPassword")} onChangeText={(value) => {
-                        setRePassword(value), handleChange("confirmPassword")
-                    }}   style={styles.input} secureTextEntry/>
-                    <ErrorMessage component={Text} name="confirmPassword" style={styles.errorText} />
+                    <TextInput value={values.rePassword} onChangeText={handleChange("rePassword")}
+                        onBlur={() => setFieldTouched('rePassword')}
+                        style={styles.input} secureTextEntry/>
+                        {touched.rePassword && errors.rePassword && (<Text style= {styles.errorText}>{errors.rePassword}</Text>)}
+                    
                 
 
                 
                     </View>
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={styles.buttonSignup} disabled={isSubmitting} onPress={register}>
+                        <TouchableOpacity disabled={!isValid} style={styles.buttonSignup} onPress={register}>
                             <Text style= {styles.textbtn}>Signup</Text>
                         </TouchableOpacity>
                     </View>

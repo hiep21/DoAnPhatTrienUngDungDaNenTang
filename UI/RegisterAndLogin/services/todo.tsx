@@ -8,7 +8,7 @@ interface RegisterData {
     email: string
     password: string
     gender: string
-    dateOfBirth: Date
+    dateOfBirth: string
     
 }
 
