@@ -24,12 +24,6 @@ namespace Game.Services.Implements
                 Directory.CreateDirectory(uploadPath);
             }
 
-           
-
-            // Lưu tệp APK vào thư mục.
-            // ...
-
-            // Trả về thông tin tệp APK đã tải lên.
             return apkDto;
         }
 
