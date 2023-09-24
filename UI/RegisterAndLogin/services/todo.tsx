@@ -42,7 +42,7 @@ export const loginApi = ({ user, password }: LoginData) => {
         }
     })
 }
-export const getUsers = ({ user, password }: LoginData) => {
+export const getUsers = ({ user, password }: RegisterData) => {
     return axios({
         method: "GET",
         url: BASE_URL.concat("/Game"), // Điều này giả sử rằng bạn có một API endpoint /users để lấy danh sách tài khoản đã đăng ký

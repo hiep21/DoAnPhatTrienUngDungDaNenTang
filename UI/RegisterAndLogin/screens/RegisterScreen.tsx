@@ -56,29 +56,29 @@ const register = async(values) => {
 //     return alert("Email không hợp lệ")
 //    }
 
-    try {
-        const registerResponse = await registerApi({ 
-            user: values.user ,
-            email: values.email,
-            password: values.password,
-            dateOfBirth: values.dateOfBirth,
-            gender: gender
-        });
-        navigation.navigate('LoginScreen')
-        const { data } = registerResponse
+    // try {
+    //     const registerResponse = await registerApi({ 
+    //         user: values.user ,
+    //         email: values.email,
+    //         password: values.password,
+    //         dateOfBirth: values.dateOfBirth,
+    //         gender: gender
+    //     });
+    //     navigation.navigate('LoginScreen')
+    //     const { data } = registerResponse
         
-    } catch(err) {
-        alert(err.response.data.message)
-    }
+    // } catch(err) {
+    //     alert(err.response.data.message)
+    // }
     if(!isLoading) {
         setIsLoading(true)
         try {
             const registerResponse = await registerApi({ 
-                user,
-                email,
-                password,
-                dateOfBirth,
-                gender
+                user: values.user ,
+                email: values.email,
+                password: values.password,
+                dateOfBirth: values.dateOfBirth,
+                gender: gender
             });
             navigation.navigate('LoginScreen')
             const { data } = registerResponse
@@ -133,9 +133,9 @@ return (
                         onChangeText={handleChange("dateOfBirth")}
                         style={styles.input}
                         onBlur={() => setFieldTouched('dateOfBirth')}
-                        placeholder="DD/MM/YYYY"
+                        placeholder="MM/DD/YYYY"
                         />
-                        {touched.dateOfBirth && errors.dateOfBirth && (<Text style= {styles.errorText}>{errors.dateOfBirth}</Text>)}
+                    {touched.dateOfBirth && errors.dateOfBirth && (<Text style= {styles.errorText}>{errors.dateOfBirth}</Text>)}
                     <Text style={styles.label}>Gender</Text>
                 
                     <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>

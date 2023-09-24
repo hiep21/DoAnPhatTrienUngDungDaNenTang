@@ -1,14 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert,Image } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert,Image,ActivityIndicator } from 'react-native';
 
 import { useState, useEffect } from 'react';
-import { validateEmail } from '../Utils/validate';
+
 import { loginApi, getUsers, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Background';
 
 
 const LoginScreen = ({ navigation }) => {
-    const [ email, setEmail ] = useState<string>("")
+    const [ user, setUser ] = useState<string>("")
     const [ password, setPassword ] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
 
@@ -25,11 +25,12 @@ const LoginScreen = ({ navigation }) => {
 
     }, [])
 
+
     const login = async () => {
-        if(!validateEmail(email)) {
-            alert("Email không hợp lệ!")
+        if (!user || !password) {
+            alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
+            return;
         }
-        
         if(!isLoading){
             setIsLoading(true)
             try {
@@ -38,7 +39,15 @@ const LoginScreen = ({ navigation }) => {
                     password
                 })
                 const {data} = loginResponse
-                
+                // Kiểm tra tài khoản đã được lập trong phần Register
+                const users = await getUsers()
+                const registeredUser = users.find((u) => u.user === user && u.password === password);
+                if (!registeredUser) {
+                    alert("Tài khoản chưa được đăng ký!");
+                    setIsLoading(false);
+                    return;
+                }
+
                 //Lưu token lại
                 
                 const result = await saveTokenToDevice(data?.tokens?.access?.token)
@@ -67,10 +76,10 @@ const LoginScreen = ({ navigation }) => {
         <View style={styles.mainContainer}>
             <View style={styles.content}>
             
-                <Text style={styles.label}>Email</Text>
-                <TextInput value={email} onChangeText={(value) => {
-                    setEmail(value)
-                }}  style={styles.input} placeholder="...@gmail.com"/>
+                <Text style={styles.label}>User</Text>
+                <TextInput value={user} onChangeText={(value) => {
+                    setUser(value)
+                }}  style={styles.input} placeholder=""/>
                 <Text style={styles.label}>Password</Text>
                 <TextInput value={password} onChangeText={(value) => {
                     setPassword(value)
@@ -78,7 +87,11 @@ const LoginScreen = ({ navigation }) => {
             </View>
             <View style={styles.buttons}>
                 <TouchableOpacity style={styles.button} onPress={login}>
-                    <Text style= {styles.textbtn} >login</Text>
+                    {isLoading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                                <Text style={styles.textbtn}>login</Text>
+                    )}
                 </TouchableOpacity>
                 <View style={styles.signup}>
                     <Text style={styles.text}>Don't have an account?</Text>
