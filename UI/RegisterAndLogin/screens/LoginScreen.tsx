@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
         const token = await getAccessToken()
         if(token) {
             configAxiosWithAccessToken(token)
-            navigation.navigate("HomeScreen")
+            navigation.navigate("MainScreen")
         }
     }
 
