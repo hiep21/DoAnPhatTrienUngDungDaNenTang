@@ -11,8 +11,8 @@ using User.DbContexts;
 namespace User.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230925160242_User")]
-    partial class User
+    [Migration("20230926173133_RegisterAndLogin")]
+    partial class RegisterAndLogin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ namespace User.Migrations
 
             modelBuilder.Entity("User.Entities.Login", b =>
                 {
-                    b.Property<string>("KeyToken")
+                    b.Property<string>("User")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
@@ -37,15 +37,7 @@ namespace User.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("hashedPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("KeyToken");
+                    b.HasKey("User");
 
                     b.ToTable("Logins");
                 });

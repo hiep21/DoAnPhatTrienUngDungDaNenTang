@@ -8,6 +8,6 @@ namespace User.Services.Interfaces
         void Create(CreateLoginDto input);
         List<LoginDto> GetAll();
         void Update(UpdateLoginDto input);
-        void Delete(string keyToken);
+        void Delete(string user);
     }
 }

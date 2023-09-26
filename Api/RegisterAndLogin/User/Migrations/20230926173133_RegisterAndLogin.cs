@@ -5,7 +5,7 @@
 namespace User.Migrations
 {
     /// <inheritdoc />
-    public partial class User : Migration
+    public partial class RegisterAndLogin : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,15 +14,13 @@ namespace User.Migrations
                 name: "Logins",
                 columns: table => new
                 {
-                    KeyToken = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    User = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    User = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    hashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Logins", x => x.KeyToken);
+                    table.PrimaryKey("PK_Logins", x => x.User);
                 });
 
             migrationBuilder.CreateTable(

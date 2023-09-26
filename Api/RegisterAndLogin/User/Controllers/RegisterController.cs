@@ -55,11 +55,11 @@ namespace User.Controllers
             }
         }
         [HttpDelete("delete")]
-        public IActionResult Delete(string keyToken) 
+        public IActionResult Delete(string User) 
         {
             try
             {
-                _registerService.Delete(keyToken);
+                _registerService.Delete(User);
                 return Ok();
             }
             catch (Exception ex) 

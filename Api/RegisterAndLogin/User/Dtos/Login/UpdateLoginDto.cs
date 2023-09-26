@@ -2,6 +2,6 @@
 {
     public class UpdateLoginDto : CreateLoginDto
     {
-        public string KeyToken { get; set; }
+        public string User { get; set; }
     }
 }

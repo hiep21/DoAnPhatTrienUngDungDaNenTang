@@ -17,31 +17,36 @@ namespace User.Services.Implements
 
         public void Create(CreateLoginDto input)
         {
-            if (_context.Logins.Any(b => b.KeyToken == input.KeyToken))  
+            if (_context.Logins.Any(b => b.User == input.User))
             {
-                throw new Exception("Tên tài khoản đã có người sử dụng");
+                throw new Exception("Tài khoản đã có trong base");
+            }
+            var existingRegister = _context.Registers.FirstOrDefault(r => r.User == input.User);
+            if (!BCrypt.Net.BCrypt.Verify(input.Password, existingRegister.Password))
+            {
+                throw new Exception("Mật khẩu không khớp với mật khẩu đã đăng ký.");
             }
             _context.Logins.Add(new Login
             {
-                KeyToken = input.KeyToken,
                 User = input.User,
-                Password = input.Password,
-                hashedPassword = input.hashedPassword
+                Email = existingRegister.Email,
 
+                Password = BCrypt.Net.BCrypt.HashPassword(input.Password),
             });
+
             _context.SaveChanges();
         }
 
+
         public void Update(UpdateLoginDto input)
         {
-            var login = _context.Logins.FirstOrDefault(s => s.KeyToken == input.KeyToken);
+            var login = _context.Logins.FirstOrDefault(s => s.User == input.User);
             if (login == null)
             {
-                throw new Exception($"Không tìm thấy tài khoản có token = {input.KeyToken}");
+                throw new Exception($"Không tìm thấy tài khoản có token = {input.User}");
             }
             login.User = input.User;
-            login.Password = input.Password;
-            login.hashedPassword = input.hashedPassword;
+            login.Password = BCrypt.Net.BCrypt.HashPassword(input.Password);
 
             _context.SaveChanges();
         }
@@ -53,20 +58,21 @@ namespace User.Services.Implements
             {
                 results.Add(new LoginDto
                 {
-                    KeyToken=login.KeyToken,
+                    
                     User = login.User,
-                    hashedPassword = login.hashedPassword
+                    Email=login.Email,
+                    Password = login.Password
                     
                 });
             }
             return results;
         }
-        public void Delete(string keyToken) 
+        public void Delete(string user) 
         {
-            var login = _context.Logins.FirstOrDefault(x => x.KeyToken == keyToken);
+            var login = _context.Logins.FirstOrDefault(x => x.User == user);
             if (login == null)
             {
-                throw new Exception($"Không tìm thấy tài khoản có id = {keyToken}");
+                throw new Exception($"Không tìm thấy tài khoản có id = {user}");
             }
             _context.Logins.Remove(login);
             _context.SaveChanges();
