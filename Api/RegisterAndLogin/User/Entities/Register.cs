@@ -11,6 +11,6 @@ namespace User.Entities
         public string Password { get; set; }
         public string Note { get; set; }
         public string Gender { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
     }
 }

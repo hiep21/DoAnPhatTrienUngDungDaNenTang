@@ -16,6 +16,6 @@ namespace User.Dtos.Register
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ghi chú quyền hạn")]
         public string Note { get; set; }
         public string Gender { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
     }
 }
