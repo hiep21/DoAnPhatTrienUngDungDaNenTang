@@ -1,7 +1,7 @@
 
 import React, { useState, Component } from "react"
-import { View, StyleSheet, Text, TextInput ,TouchableOpacity, Alert, Modal,} from "react-native"
-import { registerApi } from "../services/todo"
+import { View, StyleSheet, Text, TextInput ,TouchableOpacity, Alert, Modal, ActivityIndicator,} from "react-native"
+import { registerApi,RegisterData } from "../services/todo"
 import { validateEmail } from "../Utils/validate"
 import Background from "./Background"
 import { ErrorMessage, Formik } from "formik"
@@ -18,9 +18,7 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
     dateOfBirth: Yup.string().required("Date of Birth is required").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$/),
     rePassword: Yup.string().min(8).oneOf([Yup.ref('password')]).required("Confirm password is required"),
-    
-    
-    });
+});
 
 const RegisterScreen = ({ navigation }) => {
 
@@ -33,6 +31,8 @@ const [isLoading, setIsLoading] = useState<boolean>(false)
 const [dateOfBirth, setDateOfBirth] = useState<string>("");
 const [isModalVisible, setIsModalVisible] = useState(false);
 const [gender, setSelectedGender] = useState<string>("");
+
+const [datas, setDatas] = useState<RegisterData>()
 
 const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -56,30 +56,12 @@ const register = async(values) => {
 //     return alert("Email không hợp lệ")
 //    }
 
-    // try {
-    //     const registerResponse = await registerApi({ 
-    //         user: values.user ,
-    //         email: values.email,
-    //         password: values.password,
-    //         dateOfBirth: values.dateOfBirth,
-    //         gender: gender
-    //     });
-    //     navigation.navigate('LoginScreen')
-    //     const { data } = registerResponse
-        
-    // } catch(err) {
-    //     alert(err.response.data.message)
-    // }
+    
     if(!isLoading) {
         setIsLoading(true)
         try {
-            const registerResponse = await registerApi({ 
-                user: values.user ,
-                email: values.email,
-                password: values.password,
-                dateOfBirth: values.dateOfBirth,
-                gender: gender
-            });
+            
+            const registerResponse = await registerApi(datas);
             navigation.navigate('LoginScreen')
             const { data } = registerResponse
             
@@ -179,7 +161,8 @@ return (
                     </View>
                     <View style={styles.buttons}>
                         <TouchableOpacity disabled={!isValid} style={styles.buttonSignup} onPress={register}>
-                            <Text style= {styles.textbtn}>Signup</Text>
+                            {isLoading && <ActivityIndicator />}
+                            {!isLoading &&<Text style= {styles.textbtn}>Signup</Text>}
                         </TouchableOpacity>
                     </View>
                     <View style={styles.contenLogin}>

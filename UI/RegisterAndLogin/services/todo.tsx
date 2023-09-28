@@ -3,28 +3,30 @@ import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 
 const BASE_URL = 'https://64f767c49d77540849538bb1.mockapi.io/todo/'
-interface RegisterData {
-    user: string
-    email: string
-    password: string
-    gender: string
+export interface RegisterData {
+    user: string,
+    email: string,
+    password: string,
+    note: string,
+    gender: string,
     dateOfBirth: string
-    
+        
 }
 
-interface LoginData {
+export interface LoginData {
     user: string
     password: string
     
 }
-export const registerApi = ({ user, email, password, gender, dateOfBirth }: RegisterData) => {
+export const registerApi = ({ user, email, password, note, gender, dateOfBirth }: RegisterData) => {
     return axios({
         method: "POST",
-        url: BASE_URL.concat("/Game"),
+        url: 'http://192.168.1.12:5133/Register/createRegister',
         data: {
             user,
             email,
             password,
+            note,
             gender,
             dateOfBirth
             

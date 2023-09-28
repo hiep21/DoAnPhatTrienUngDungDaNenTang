@@ -8,6 +8,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import ManagerGameScreen from './screens/ManagerGameScreen';
 import UpdateGameScreen from './screens/UpdateGameScreen';
 import InfoGameScreen from './screens/InfoGameScreen';
+import HomeScreen from './screens/HomeScreen'
 
 const StackNAvigator = createStackNavigator({
 
@@ -19,10 +20,11 @@ const StackNAvigator = createStackNavigator({
   },
   InfoGameScreen: {
     screen: InfoGameScreen
-  }
+  },
+  HomeScreen:{ screen: HomeScreen}
 
 }, {
-  initialRouteName: 'ManagerGameScreen'
+  initialRouteName: 'InfoGameScreen'
 }
 )
 export default createAppContainer(StackNAvigator)
