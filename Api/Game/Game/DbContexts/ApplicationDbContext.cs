@@ -12,6 +12,7 @@ namespace Game.DbContexts
         {
         }
         public DbSet<ApkFile> ApkFiles { get; set; }
+        public DbSet<InfoApkFile> InfoApkFiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

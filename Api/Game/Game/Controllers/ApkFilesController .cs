@@ -2,7 +2,8 @@
 using Game.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-
+using Game.Dtos.ApkFile;
+using Game.Entities;
 
 namespace Game.Controllers
 {
@@ -18,26 +19,67 @@ namespace Game.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadApk(IFormFile apkFile)
+        public async Task<IActionResult> UploadApk(IFormFile apkFile)//, InfoApkFile infoApkFile)
         {
             if (apkFile == null || apkFile.Length == 0)
             {
                 return BadRequest("Tệp APK không hợp lệ.");
             }
+            byte[] apkData;
+            using (var memoryStream = new MemoryStream())
+            {
+                await apkFile.CopyToAsync(memoryStream);
+                apkData = memoryStream.ToArray();
+            }
 
+            //var infoApkDto = new InfoFileDto
+            //{
+            //    Name = infoApkFile.Name,
+            //    NhaCungCap = infoApkFile.NhaCungCap,
+            //    Description = infoApkFile.Description,
+            //};
             var apkDto = new ApkFileDto
             {
-                FileName = apkFile.FileName
+                FileName = apkFile.FileName,
+                Data = apkData,
+
             };
 
-            var uploadedApk = await _apkFileService.UploadApkAsync(apkDto);
+            var uploadedApk = await _apkFileService.UploadApkAsync(apkDto);//, infoApkDto);
 
             if (uploadedApk == null)
             {
                 return BadRequest("Tệp APK không hợp lệ.");
             }
 
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            var filePath = Path.Combine(uploadPath, apkDto.FileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileStream.WriteAsync(apkData, 0, apkData.Length);
+            }
+
             return Ok(uploadedApk);
+        }
+        [HttpGet("GetFile")]
+        public IActionResult GetFile()
+        {
+            try
+            {
+
+                return Ok(_apkFileService.GetFile());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

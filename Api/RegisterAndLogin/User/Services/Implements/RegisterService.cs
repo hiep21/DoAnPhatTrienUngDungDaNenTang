@@ -54,24 +54,23 @@ namespace User.Services.Implements
             _context.SaveChanges();
         }
 
-        public List<RegisterDto> GetByEmail()
+        public List<RegisterDto> GetByUser()
         {
             
             var results = new List<RegisterDto>();
             foreach (var registers in _context.Registers)
             {
-                if (registers == registers) 
+                
+                results.Add(new RegisterDto
                 {
-                    results.Add(new RegisterDto
-                    {
-                        User = registers.User,
-                        Email = registers.Email,
-                        Password = registers.Password,
-                        Note = registers.Note,
-                        Gender = registers.Gender,
-                        DateOfBirth = registers.DateOfBirth,
-                    });
-                }
+                    User = registers.User,
+                    Email = registers.Email,
+                    Password = registers.Password,
+                    Note = registers.Note,
+                    Gender = registers.Gender,
+                    DateOfBirth = registers.DateOfBirth,
+                });
+            
             }
             return results;
         }
