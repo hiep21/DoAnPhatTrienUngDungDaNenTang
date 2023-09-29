@@ -25,22 +25,66 @@ const InfoGameScreen = ({ navigation }) => {
             <View style={styles.title}>
                 <Text style={styles.underlined}> Danh sách trò chơi</Text>
             </View>
-            <View style={styles.group7}>
-                <Image style={styles._1} source={{ uri: /* dummy image */ 'https://dummyimage.com/50x50/000/fff.jpg' }} />
-                <View style={styles.titleGame}>
-                    <Text style={styles.buildAQueen}>
-                        {`Build A Queen`}
-                    </Text>
-                    <Text style={styles.thongthuong}>
-                        {`Thông thường`}
-                    </Text>
-                    <Text style={styles.trangthai}>
-                        {`Trạng thái: Đã phê duyệt`}
-                    </Text>
+            <View style={styles.head1}>
+                <View style={styles.group7}>
+                    <Image style={styles._1} source={{ uri: /* dummy image */ 'https://dummyimage.com/50x50/000/fff.jpg' }} />
+                    <View style={styles.titleGame}>
+                        <Text style={styles.buildAQueen}>
+                            {`Bridge Race`}
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                            {`Build to cross the bridge!`}
+                        </Text>
+                        <Text style={styles.trangthai}>
+                            {`Trạng thái: trên kệ`}
+                        </Text>
+                        
+                    </View>
+                    
+                </View>
+                
+                <View style={styles.btnGame}>
+                    <TouchableOpacity style={styles.button1}>
+                        <Text >Cập nhật</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2}>
+                        <Text> Gỡ khỏi kệ </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
+            <Text style={styles.underlined1}/>
+            <View style={styles.head1}>
+                <View style={styles.group7}>
+                    <Image style={styles._1} source={{ uri: /* dummy image */ 'https://dummyimage.com/50x50/000/fff.jpg' }} />
+                    <View style={styles.titleGame}>
+                        <Text style={styles.buildAQueen}>
+                            {`Bridge Race`}
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                            {`Build to cross the bridge!`}
+                        </Text>
+                        <Text style={styles.trangthai}>
+                            {`Trạng thái: trên kệ`}
+                        </Text>
+                        
+                    </View>
+                    
+                </View>
+                
+                <View style={styles.btnGame}>
+                    <TouchableOpacity style={styles.button1}>
+                        <Text >Cập nhật</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button2}>
+                        <Text> Gỡ khỏi kệ </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <Text style={styles.underlined1}/>
+            
 
         </View>
+        
 
     );
 };
@@ -92,25 +136,31 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "500",
         paddingLeft: 30,
-        paddingTop:20,
+        paddingTop:10,
         
+        
+    },
+    underlined1:{
+        borderBottomWidth: 2,
+        borderBottomColor: "#D9D9D9",
+        width:420,
+        fontSize: 15,
+        fontWeight: "500",
+        paddingLeft: 30,
+        paddingTop:5,
         
     },
     group7: {
         paddingTop: 20,
         flexDirection: 'row',  
-        justifyContent:'flex-start',
-        width:"80%",
         alignItems:'center',
+        
 
-        
-        
     },
     _1: {
         width:50,
         height:50,
         borderRadius: 10,
-        
         
     },
     buildAQueen: {
@@ -135,8 +185,40 @@ const styles = StyleSheet.create({
 
     },
     titleGame:{
+        paddingLeft:5,
+        
+    },
+    btnGame:{
+        alignItems:'center',
+        paddingTop:5,
+        
+    },
+    button1: {
+        
+        backgroundColor: "#6C9EFF",
+        marginBottom: 5,
+        width: 80,
+        alignItems: "center",
+        borderRadius:5,
+        padding:2
+    },
+    button2: {
+        borderRadius:4,
+        backgroundColor: "#FF6C6C",
+        marginBottom: 5,
+        width: 80,
+        alignItems: "center",
+        padding:2,
+        
+    },
+    head1: {
+        width: "100%",
+        height: 60,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        paddingTop:10
+    },
 
-    }
 
 })
 

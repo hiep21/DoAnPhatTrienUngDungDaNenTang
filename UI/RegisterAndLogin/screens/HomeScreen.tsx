@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import Background from './Background';
 
-const Homescreen = ({ navigation }) => {
+const HomeScreen = ({ navigation }) => {
     
   return (
     <Background>
@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Homescreen;
+export default HomeScreen;

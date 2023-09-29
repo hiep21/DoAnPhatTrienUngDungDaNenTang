@@ -5,9 +5,14 @@ import { useState, useEffect } from 'react';
 
 import { loginApi, getUsers, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Background';
+import { LoginData } from '../services/interfaces/User.interface';
 
 
 const LoginScreen = ({ navigation }) => {
+    const [ users, setUsers ] = useState<LoginData>({
+        user: "",
+        password: ""
+    })
     const [ user, setUser ] = useState<string>("")
     const [ password, setPassword ] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
@@ -25,12 +30,13 @@ const LoginScreen = ({ navigation }) => {
 
     }, [])
 
-
+    
     const login = async () => {
-        if (!user || !password) {
+        if (!users.user || !users.password) {
             alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
             return;
         }
+        
         if(!isLoading){
             setIsLoading(true)
             try {
@@ -39,31 +45,25 @@ const LoginScreen = ({ navigation }) => {
                     password
                 })
                 const {data} = loginResponse
-                // Kiểm tra tài khoản đã được lập trong phần Register
-                const users = await getUsers()
-                const registeredUser = users.find((u) => u.user === user && u.password === password);
-                if (!registeredUser) {
-                    alert("Tài khoản chưa được đăng ký!");
-                    setIsLoading(false);
-                    return;
-                }
-
+            
                 //Lưu token lại
                 
-                const result = await saveTokenToDevice(data?.tokens?.access?.token)
+                const result = await saveTokenToDevice(users)
                 if(!result) {
                     alert("Lỗi khi xử lý đăng nhập!")
                 } 
                 alert("Đăng nhập thành công")
     
                 
-                console.log(token)
+                console.log(result)
     
                 //Chuyển hướng sang màn home
+                navigation.navigate("MainScreen")
             } catch(err) {
                 const {data} = err.response
                 alert(data.message)
             }
+
             setIsLoading(false)
         }
         
@@ -77,13 +77,21 @@ const LoginScreen = ({ navigation }) => {
             <View style={styles.content}>
             
                 <Text style={styles.label}>User</Text>
-                <TextInput value={user} onChangeText={(value) => {
+                <TextInput value={users.user} onChangeText={(value) => {
+                    setUsers({
+                        ...users,
+                        user: value
+                    }),
                     setUser(value)
                 }}  style={styles.input} placeholder=""/>
                 <Text style={styles.label}>Password</Text>
-                <TextInput value={password} onChangeText={(value) => {
+                <TextInput value={users.password} onChangeText={(value) => {
+                    setUsers({
+                        ...users,
+                        password: value
+                    }),
                     setPassword(value)
-                }}   style={styles.input} /> 
+                }}   style={styles.input} secureTextEntry/> 
             </View>
             <View style={styles.buttons}>
                 <TouchableOpacity style={styles.button} onPress={login}>

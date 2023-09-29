@@ -25,7 +25,7 @@ export const registerApi = ({ user, email, password, note, gender, dateOfBirth }
 export const loginApi = ({ user, password }: LoginData) => {
     return axios({
         method: "POST",
-        url: BASE_URL.concat("/Login"),
+        url: "http://192.168.1.12:5133/Login/createLogin",
         data: {
             user,
             password
@@ -42,14 +42,16 @@ export const getUsers = ({ user, password }: RegisterData) => {
         }
     })
 }
-export const saveTokenToDevice = async (tokenToSave: string) => {
+export const saveTokenToDevice = async (tokenToSave: LoginData) => {
     try {
-        await SecureStore.setItemAsync('accessToken', tokenToSave)
-        return true
+        // Chuyển đổi tokenToSave thành chuỗi bằng JSON.stringify nếu nó không phải là chuỗi
+        const tokenAsString = typeof tokenToSave === 'string' ? tokenToSave : JSON.stringify(tokenToSave);
+        await SecureStore.setItemAsync('accessToken', tokenAsString);
+        return true;
     } catch (error) {
-        console.log("Loi khi luu access token", error)
+        console.log("Lỗi khi lưu token truy cập", error);
     }
-    return false
+    return false;
 }
 
 export const getAccessToken = async () => {
