@@ -41,13 +41,13 @@ namespace User.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("getByEmail")]
-        public IActionResult getByEmail()
+        [HttpGet("getByUser")]
+        public IActionResult GetByUser()
         {
             try
             {
 
-                return Ok(_registerService.GetByEmail());
+                return Ok(_registerService.GetByUser());
             }
             catch (Exception ex) 
             {

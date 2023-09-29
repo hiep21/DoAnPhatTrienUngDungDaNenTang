@@ -1,23 +1,11 @@
 
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
+import { LoginData, RegisterData } from "./interfaces/User.interface";
 
 const BASE_URL = 'https://64f767c49d77540849538bb1.mockapi.io/todo/'
-export interface RegisterData {
-    user: string,
-    email: string,
-    password: string,
-    note: string,
-    gender: string,
-    dateOfBirth: string
-        
-}
 
-export interface LoginData {
-    user: string
-    password: string
-    
-}
+
 export const registerApi = ({ user, email, password, note, gender, dateOfBirth }: RegisterData) => {
     return axios({
         method: "POST",
@@ -29,7 +17,7 @@ export const registerApi = ({ user, email, password, note, gender, dateOfBirth }
             note,
             gender,
             dateOfBirth
-            
+
         }
     })
 }
@@ -58,35 +46,35 @@ export const saveTokenToDevice = async (tokenToSave: string) => {
     try {
         await SecureStore.setItemAsync('accessToken', tokenToSave)
         return true
-    } catch(error) {
+    } catch (error) {
         console.log("Loi khi luu access token", error)
     }
     return false
 }
 
-export const getAccessToken = async() => {
+export const getAccessToken = async () => {
     try {
         const accessToken = await SecureStore.getItemAsync('accessToken')
-        if(accessToken) {
+        if (accessToken) {
             return accessToken
         }
-    } catch(error) {
+    } catch (error) {
         console.log("Loi khi lay token", error)
     }
     return false
 }
 
 export const configAxiosWithAccessToken = (token: string) => {
-    axios.interceptors.request.use(async (config) => {           
+    axios.interceptors.request.use(async (config) => {
         // Add the token to the headers
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+            config.headers.Authorization = `Bearer ${token}`;
         }
-    
+
         return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );          
+    },
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
 }
