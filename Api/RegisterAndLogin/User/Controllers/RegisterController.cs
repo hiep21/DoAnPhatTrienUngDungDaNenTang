@@ -42,14 +42,26 @@ namespace User.Controllers
             }
         }
         [HttpGet("getByUser")]
-        public IActionResult GetByUser()
+        public IActionResult GetByUser(string user)
         {
             try
             {
 
-                return Ok(_registerService.GetByUser());
+                return Ok(_registerService.GetByUser(user));
             }
             catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                return Ok(_registerService.GetAll());
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

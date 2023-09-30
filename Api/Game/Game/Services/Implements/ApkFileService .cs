@@ -3,6 +3,7 @@ using Game.Dtos.ApkFile;
 using Game.Dtos.Register;
 using Game.Entities;
 using Game.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 
@@ -46,12 +47,14 @@ namespace Game.Services.Implements
 
             return apkDto;
         }
+        
         public List<ApkFileDto> GetFile()
         {
 
             var apkFile = new List<ApkFileDto>();
             foreach (var apkFiles in _context.ApkFiles)
             {
+
 
                 apkFile.Add(new ApkFileDto { 
                     FileName = apkFiles.FileName,
@@ -61,5 +64,6 @@ namespace Game.Services.Implements
             }
             return apkFile;
         }
+        
     }
 }

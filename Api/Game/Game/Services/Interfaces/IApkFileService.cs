@@ -9,6 +9,8 @@ namespace Game.Services.Interfaces
     public interface IApkFileService
     {
         Task<ApkFileDto> UploadApkAsync(ApkFileDto apkDto);//, InfoFileDto apkFormFile);
-        public List<ApkFileDto> GetFile();
+        
+        List<ApkFileDto> GetFile();
+
     }
 }

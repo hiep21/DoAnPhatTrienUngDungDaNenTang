@@ -24,8 +24,8 @@ namespace Game
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
             });
             builder.Services.AddScoped<IApkFileService, ApkFileService>();
-            
-            
+            builder.Services.AddScoped<IInfoApkFile, InfoApkService>();
+
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

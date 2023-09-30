@@ -21,6 +21,10 @@ namespace User.Services.Implements
             {
                 throw new Exception("Tài khoản đã có trong base");
             }
+            if (_context.Registers.Any(r => r.User != input.User))
+            {
+                throw new Exception("Tài khoản chưa đăng ký");
+            }
             var existingRegister = _context.Registers.FirstOrDefault(r => r.User == input.User);
             if (!BCrypt.Net.BCrypt.Verify(input.Password, existingRegister.Password))
             {

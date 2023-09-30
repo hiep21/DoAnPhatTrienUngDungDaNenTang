@@ -5,7 +5,7 @@
 namespace User.Migrations
 {
     /// <inheritdoc />
-    public partial class RegisterAndLogin : Migration
+    public partial class User : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

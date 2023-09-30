@@ -11,8 +11,8 @@ using User.DbContexts;
 namespace User.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230926173133_RegisterAndLogin")]
-    partial class RegisterAndLogin
+    [Migration("20230929040951_User")]
+    partial class User
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

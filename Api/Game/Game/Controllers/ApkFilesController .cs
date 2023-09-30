@@ -18,7 +18,7 @@ namespace Game.Controllers
             _apkFileService = apkFileService;
         }
 
-        [HttpPost]
+        [HttpPost("addFile")]
         public async Task<IActionResult> UploadApk(IFormFile apkFile)//, InfoApkFile infoApkFile)
         {
             if (apkFile == null || apkFile.Length == 0)
@@ -68,7 +68,8 @@ namespace Game.Controllers
 
             return Ok(uploadedApk);
         }
-        [HttpGet("GetFile")]
+        
+        [HttpGet("getFile")]
         public IActionResult GetFile()
         {
             try
@@ -81,5 +82,6 @@ namespace Game.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
     }
 }

@@ -17,11 +17,18 @@ namespace User.Services.Implements
 
         public void Create(CreateRegisterDto input)
         {
-            if (_context.Registers.Any(b => b.Email == input.Email))
+
+            bool checkEmail = false;
+            foreach (var item in _context.Registers)
+            {
+                checkEmail = BCrypt.Net.BCrypt.Verify(input.Email, item.Email);
+            }
+
+            if (checkEmail)
             {
                 throw new Exception("Email đã có người sử dụng");
             }
-            if (_context.Registers.Any(b => b.User == input.User))  
+            if (_context.Registers.Any(b => b.User == input.User))
             {
                 throw new Exception("Tên tài khoản đã có người sử dụng");
             }
@@ -54,13 +61,37 @@ namespace User.Services.Implements
             _context.SaveChanges();
         }
 
-        public List<RegisterDto> GetByUser()
+        public List<RegisterDto> GetByUser(string user)
+        {
+            var register = _context.Registers.FirstOrDefault(s => s.User == user);
+            if (register == null)
+            {
+                throw new Exception($"Không tìm thấy tài khoản có user = {user}");
+            }
+            var results = new List<RegisterDto>();
+            foreach (var registers in _context.Registers)
+            {
+                
+                results.Add(new RegisterDto
+                {
+                    User = register.User,
+                    Email = register.Email,
+                    Password = register.Password,
+                    Note = register.Note,
+                    Gender = register.Gender,
+                    DateOfBirth = register.DateOfBirth,
+                });
+            
+            }
+            return results;
+        }
+        public List<RegisterDto> GetAll()
         {
             
             var results = new List<RegisterDto>();
             foreach (var registers in _context.Registers)
             {
-                
+
                 results.Add(new RegisterDto
                 {
                     User = registers.User,
@@ -70,7 +101,7 @@ namespace User.Services.Implements
                     Gender = registers.Gender,
                     DateOfBirth = registers.DateOfBirth,
                 });
-            
+
             }
             return results;
         }
