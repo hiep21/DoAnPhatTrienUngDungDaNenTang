@@ -23,7 +23,8 @@ namespace Game.Services.Implements
             {
                 throw new Exception("Tên trò chơi đã có người sử dụng");
             }
-            if (_context.ApkFiles.Any(a => a.FileName != input.TenTroChoi))
+            var checkNameGame = _context.ApkFiles.FirstOrDefault(c => c.FileName == input.TenTroChoi);
+            if (checkNameGame == null)
             {
                 throw new Exception("Tên trò chơi không trùng với tên file");
             }
@@ -65,6 +66,33 @@ namespace Game.Services.Implements
                 });
 
             }
+            return infoApkFile;
+        }
+        public List<InfoFileDto> GetInfoFileById(int id)
+        {
+            var checkFileById = _context.InfoApkFiles.FirstOrDefault(s => s.Id == id);
+            if (checkFileById == null)
+            {
+                throw new Exception($"Không có game có Id = {id}");
+            }
+            var infoApkFile = new List<InfoFileDto>();
+            
+            infoApkFile.Add(new InfoFileDto
+            {
+                Id = checkFileById.Id,
+                TenTroChoi = checkFileById.TenTroChoi,
+                MoTaTroChoi = checkFileById.MoTaTroChoi,
+                TheLoai = checkFileById.TheLoai,
+                DoTuoi = checkFileById.DoTuoi,
+                Gia = checkFileById.Gia,
+                TrangThai = checkFileById.TrangThai,
+                KichCoFile = checkFileById.KichCoFile,
+                GioiThieuTroChoi = checkFileById.GioiThieuTroChoi,
+                NhaCungCap = checkFileById.NhaCungCap,
+
+
+            });
+
             return infoApkFile;
         }
         public void DeleteInfoFile(string tenTroChoi)

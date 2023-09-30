@@ -58,7 +58,7 @@ namespace Game.Services.Implements
 
                 apkFile.Add(new ApkFileDto { 
                     FileName = apkFiles.FileName,
-                    Data = apkFiles.Data
+                    //Data = apkFiles.Data
                 });
 
             }
