@@ -21,12 +21,13 @@ const ManagerGameScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
-    const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameScreen", { item })
-    }
+    
     useEffect(() => {
         loadTasks()
     }, [])
+    const goToDetail = (item: InfoGame) => {
+        navigation.navigate("InfoGameScreen", {gameId: item.id })
+    }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
@@ -130,6 +131,9 @@ const styles = StyleSheet.create({
         marginTop: 20,
 
     },
+    end:{
+        
+    }
 });
 
 export default ManagerGameScreen;

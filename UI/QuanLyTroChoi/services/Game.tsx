@@ -1,7 +1,8 @@
-import axios from "axios";
+import axios from 'axios'
 import { CreateGame} from "./interfaces/GameService";
 
-const BASE_URL = 'http://192.168.1.244:5221/InfoFile/'
+const BASE_URL = 'http://26.115.177.223:5221/InfoFile/'
+const BASE_URL_BY_ID = 'http://26.115.177.223:5221/InfoFile/getInfoFileById?id='
 export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi }: CreateGame) => {
     return axios({
         method: "POST",
@@ -23,6 +24,12 @@ export const getByName = () => {
     return axios({
         method: "GET",
         url: BASE_URL.concat("getInfoFile")
+    })
+}
+export const getById = (id: string) => {
+    return axios({
+        method: "GET",
+        url: BASE_URL_BY_ID.concat(id)
     })
 }
 

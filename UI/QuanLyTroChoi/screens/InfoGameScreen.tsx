@@ -1,8 +1,37 @@
-import React from 'react';
+import React, { useState ,useEffect} from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
-
+import { InfoGame } from '../services/interfaces/GameService';
+import { getById, getByName } from '../services/Game';
 const InfoGameScreen = ({ navigation }) => {
 
+    const gameId = navigation.getParam("gameId")
+    
+    const [game, setGame] = useState<InfoGame>()
+
+    const getGameById = async() => {
+        try {
+            const { data } = await getById(gameId)
+            console.log(data)
+            setGame(data)
+        } catch (err) {
+            const errorMessage = err.response
+            alert(errorMessage)
+        }
+    }
+    const deleteGame = async() =>{
+        try{
+            const {data} = await deleteGame(gameId)
+            setGame(data)
+        } catch(err){
+            const errorMessage = err.response
+            alert(errorMessage)
+        }
+    }
+    
+   
+    useEffect(() => {
+        getGameById()
+    }, [ gameId ])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -23,20 +52,20 @@ const InfoGameScreen = ({ navigation }) => {
                 </View>
             </View>
             <View style={styles.title}>
-                <Text style={styles.underlined}> Danh sách trò chơi</Text>
+                <Text style={styles.underlined}> Danh sách trò chơi </Text>
             </View>
             <View style={styles.head1}>
                 <View style={styles.group8}>
                     <Image style={styles._1} source={{ uri:'https://dummyimage.com/50x50/000/fff.jpg' }} />
                     <View style={styles.titleGame}>
                         <Text style={styles.buildAQueen}>
-                            {`Bridge Race`}
+                            {game?.tenTroChoi}
                         </Text>
                         <Text style={styles.thongthuong1}>
-                            {`Build to cross the bridge!`}
+                            {game?.gioiThieuTroChoi}
                         </Text>
                         <Text style={styles.trangthai}>
-                            {`Trạng thái: trên kệ`}
+                            Trang thái: {game?.trangThai}
                         </Text>
                         
                     </View>
@@ -191,7 +220,7 @@ const styles = StyleSheet.create({
     },
     underlined:{
         borderBottomWidth: 1,
-        borderBottomColor: "000",
+        borderBottomColor: "#000",
         width:420,
         fontSize: 15,
         fontWeight: "500",
@@ -207,8 +236,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "500",
         paddingLeft: 30,
-        
-        
     },
     underlined2:{
         borderRightWidth: 2,
@@ -279,6 +306,7 @@ const styles = StyleSheet.create({
     },
     titleGame:{
         paddingLeft:5,
+        width:100
         
     },
     btnGame:{
