@@ -34,8 +34,8 @@ const ManagerGameScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() => { goToDetail(item) }}>
                 <View style={{
                     flexDirection: 'row',
-                    marginLeft: "10%",
-                    marginTop: 40,
+                    marginLeft: "5%",
+                    marginTop: 20,
 
 
                 }}>
@@ -66,16 +66,16 @@ const ManagerGameScreen = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.head}>
                 <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/favicon.png")} />
+                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' />
                     <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/favicon.png")} />
+                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/mic.jpg")} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
+                        <Image style={{ width: 30, height: 30, }} source={require("../assets/tb.jpeg")} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
@@ -96,9 +96,28 @@ const ManagerGameScreen = ({ navigation }) => {
                     renderItem={(list) => renderTask(list)}
                     onRefresh={loadTasks}
                     refreshing={refreshing}
+                    style={{
+                        marginTop: "5%",
+                        borderWidth: 1,
+                        width: "95%",
+                        alignSelf: 'center',
+                        borderRadius: 5,
+                        borderColor: "#bbb"
+                    }}
                 />
             </View>
-            <View style={styles.end}></View>
+            <View style={styles.end}>
+                <TouchableOpacity onPress={() => { navigation.navigate("AddGame") }} style={{
+                    backgroundColor: "#DFEEF6",
+                    width: "90%",
+                    height: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                }}>
+                    <Image style={{ width: 20, height: 20 }} source={require("../assets/10.webp")} />
+                </TouchableOpacity>
+            </View>
         </View>
 
     );
@@ -106,7 +125,7 @@ const ManagerGameScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
+        backgroundColor: "white"
 
     },
     head: {
@@ -139,7 +158,10 @@ const styles = StyleSheet.create({
 
     },
     end: {
-
+        width: "100%",
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
