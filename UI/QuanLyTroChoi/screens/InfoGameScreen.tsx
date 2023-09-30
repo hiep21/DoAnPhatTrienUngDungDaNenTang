@@ -26,13 +26,13 @@ const InfoGameScreen = ({ navigation }) => {
                 <Text style={styles.underlined}> Danh sách trò chơi</Text>
             </View>
             <View style={styles.head1}>
-                <View style={styles.group7}>
-                    <Image style={styles._1} source={{ uri: /* dummy image */ 'https://dummyimage.com/50x50/000/fff.jpg' }} />
+                <View style={styles.group8}>
+                    <Image style={styles._1} source={{ uri:'https://dummyimage.com/50x50/000/fff.jpg' }} />
                     <View style={styles.titleGame}>
                         <Text style={styles.buildAQueen}>
                             {`Bridge Race`}
                         </Text>
-                        <Text style={styles.thongthuong}>
+                        <Text style={styles.thongthuong1}>
                             {`Build to cross the bridge!`}
                         </Text>
                         <Text style={styles.trangthai}>
@@ -53,34 +53,94 @@ const InfoGameScreen = ({ navigation }) => {
                 </View>
             </View>
             <Text style={styles.underlined1}/>
-            <View style={styles.head1}>
+            <View style={styles.head2}>
                 <View style={styles.group7}>
-                    <Image style={styles._1} source={{ uri: /* dummy image */ 'https://dummyimage.com/50x50/000/fff.jpg' }} />
-                    <View style={styles.titleGame}>
-                        <Text style={styles.buildAQueen}>
-                            {`Bridge Race`}
+                    
+                    <View style={styles.thongtin}>
+                        <Text style={styles.buildAQueen}>Giá cho thuê </Text>
+                        <Text style={styles.thongthuong}>
+                           
                         </Text>
                         <Text style={styles.thongthuong}>
-                            {`Build to cross the bridge!`}
+                            100.000 đ
                         </Text>
-                        <Text style={styles.trangthai}>
-                            {`Trạng thái: trên kệ`}
+                        
+                    </View>
+                    
+                </View>
+                <Text style={styles.underlined2}/>
+                <View style={styles.group7}>
+                    
+                    <View style={styles.thongtin}>
+                        <Text style={styles.buildAQueen}>
+                            Tuổi
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                            4+
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                            Tuổi
+                        </Text>
+                        
+                    </View>
+                    
+                </View>
+                <Text style={styles.underlined2}/>
+                <View style={styles.group7}>
+                    
+                    <View style={styles.thongtin}>
+                        <Text style={styles.buildAQueen}>
+                            Thể loại
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                            
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                            Đua xe
+                        </Text>
+                        
+                    </View>
+                    
+                </View>
+                <Text style={styles.underlined2}/>
+                <View style={styles.group7}>
+                    
+                    <View style={styles.thongtin}>
+                        <Text style={styles.buildAQueen}>
+                            kích cỡ
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                            246,4
+                        </Text>
+                        <Text style={styles.thongthuong}>
+                           MB
                         </Text>
                         
                     </View>
                     
                 </View>
                 
-                <View style={styles.btnGame}>
-                    <TouchableOpacity style={styles.button1}>
-                        <Text >Cập nhật</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2}>
-                        <Text> Gỡ khỏi kệ </Text>
-                    </TouchableOpacity>
-                </View>
+                
             </View>
             <Text style={styles.underlined1}/>
+            <View style={styles.thongtinchitiet}>
+                <Text style={styles.txtthongtinchitiet}>
+                    Xây dựng một cây cầu
+                </Text>
+                <Text style={styles.txtthongtinchitiet}>
+                    “Trò chơi đua xe hay nhát từ trước đến nay, 
+                    cố gắng xây dựng cây cầu của bạn bằng cách 
+                    cạnh tranh với những người khác để thu thập 
+                    các khối màu của riêng bạn và xây dựng cây cầu với chúng.
+                </Text>
+                <Text style={styles.txtthongtinchitiet}>
+                    Các tính năng chính của trò chơi gồm:
+                    Tùy chỉnh màu của ký tự và khối: tùy chỉnh da nhân vật
+                    Gói: nhận các gói có chứa kí tự thú vị
+                    Bản đồ đường bộ: có thể chơi tất cả  trên toàn thế giới cở các thành phố khác nhau
+                    Bảng xếp hạng: nhanh hơn và thu thập nhiều ngôi sao để leo lên bảng xếp hạng.”
+                </Text>
+            </View>
             
 
         </View>
@@ -147,10 +207,24 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "500",
         paddingLeft: 30,
-        paddingTop:5,
+        
+        
+    },
+    underlined2:{
+        borderRightWidth: 2,
+        borderRightColor: "#5555",
+        height:30,
+        marginTop:20,
         
     },
     group7: {
+        paddingTop:10,
+        flexDirection: 'row',  
+        alignItems:'center',
+        
+
+    },
+    group8: {
         paddingTop: 20,
         flexDirection: 'row',  
         alignItems:'center',
@@ -164,24 +238,43 @@ const styles = StyleSheet.create({
         
     },
     buildAQueen: {
-        fontFamily: "Inter",
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: "400",
         
     },
     thongthuong: {
         
-        fontFamily: "Inter",
+        
+        fontSize: 13,
+        fontWeight: "400",
+        
+    },
+    thongthuong1: {
+        
+        
         fontSize: 10,
         fontWeight: "400",
         
     },
     trangthai: {
-        fontFamily: "Inter",
+        
         fontSize: 10,
         fontWeight: "400",
     },
     thongtin:{
+        justifyContent:'center',
+        width:80,
+        alignItems:'center',
+        
+        
+    },
+    thongtinchitiet:{
+        justifyContent:'center',
+        width:300,
+        
+    },
+    txtthongtinchitiet:{
+        paddingTop:10,
 
     },
     titleGame:{
@@ -203,7 +296,7 @@ const styles = StyleSheet.create({
         padding:2
     },
     button2: {
-        borderRadius:4,
+        borderRadius:5,
         backgroundColor: "#FF6C6C",
         marginBottom: 5,
         width: 80,
@@ -216,7 +309,17 @@ const styles = StyleSheet.create({
         height: 60,
         justifyContent: 'space-between',
         flexDirection: 'row',
-        paddingTop:10
+        paddingTop:10,
+        
+    },
+    head2: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems:'center',
+    },
+    head3: {
+        justifyContent: 'space-between',
+        alignItems:'center',
     },
 
 

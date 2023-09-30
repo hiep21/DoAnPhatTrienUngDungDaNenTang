@@ -1,25 +1,19 @@
 import React, { useEffect, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
-export interface testdataItem {
-    item: string
-    number: string
-}
+import { InfoGame } from '../services/interfaces/GameService';
+import { getByName } from '../services/Game';
+
 const ManagerGameScreen = ({ navigation }) => {
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const testData = [
-        {
-            item: "hiep",
-            number: "10"
-        }
-    ]
+    const [listGame, setListGame] = useState<InfoGame[]>([])
 
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            const { data } = await listUserApi()
+            const { data } = await getByName()
             console.log(data)
-            setTasks(data.items)
+            setListGame(data)
 
         } catch (err) {
             const errorMessage = err.response
@@ -27,17 +21,36 @@ const ManagerGameScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
-
+    const goToDetail = (item: InfoGame) => {
+        navigation.navigate("InfoGameScreen", { tenTroChoi: item.tenTroChoi })
+    }
     useEffect(() => {
         loadTasks()
     }, [])
 
-    const renderTask = ({ item }: { item: testdataItem }) => {
+    const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <View>
-                <Text>{item.item}</Text>
-                <Text>{item.number}</Text>
-            </View>
+            <TouchableOpacity onPress={() => { goToDetail(item) }}>
+                <View style={{
+                    flexDirection: 'row',
+                    marginLeft: "10%",
+                    marginTop: 40,
+
+
+                }}>
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../assets/1.png")} />
+                    <View style={{
+                        marginLeft: 15,
+                        width: "70%"
+                    }}>
+                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi}</Text>
+                        <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
+                        <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
+                        <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
+                    </View>
+
+                </View>
+            </TouchableOpacity >
 
         )
     }
@@ -62,8 +75,16 @@ const ManagerGameScreen = ({ navigation }) => {
                 </View>
             </View>
             <View style={styles.body}>
+                <Text style={{
+                    textAlign: 'left',
+                    paddingLeft: 30,
+                    borderBottomWidth: 1.5,
+                    fontSize: 17,
+                    fontWeight: '600',
+
+                }}>Danh sách trò chơi</Text>
                 <FlatList
-                    data={testData}
+                    data={listGame}
                     renderItem={(list) => renderTask(list)}
                     onRefresh={loadTasks}
                     refreshing={refreshing}
@@ -77,15 +98,16 @@ const ManagerGameScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center",
-        padding: 40,
+
 
     },
     head: {
-        width: "120%",
+
+        width: "80%",
         height: 40,
         justifyContent: 'space-between',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingTop: 10
     },
     search: {
         width: 200,
@@ -94,12 +116,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         borderRadius: 20,
+        marginLeft: "5%"
 
     },
     user: {
         flexDirection: 'row',
+        marginLeft: "20%"
     },
+    body: {
+        backgroundColor: "white",
+        width: "100%",
+        height: "70%",
+        marginTop: 20,
 
+    },
 });
 
 export default ManagerGameScreen;

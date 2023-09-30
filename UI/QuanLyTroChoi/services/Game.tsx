@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CreateGame } from "./interfaces/GameService";
+import { CreateGame} from "./interfaces/GameService";
 
 const BASE_URL = 'http://192.168.1.244:5221/InfoFile/'
 export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi }: CreateGame) => {
