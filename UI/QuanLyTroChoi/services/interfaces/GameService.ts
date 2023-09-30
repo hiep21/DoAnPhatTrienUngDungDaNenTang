@@ -8,7 +8,6 @@ export interface CreateGame {
     gioiThieuTroChoi: string
 }
 export interface InfoGame {
-    id: string,
     tenTroChoi: string,
     moTaTroChoi: string,
     trangThai: string,

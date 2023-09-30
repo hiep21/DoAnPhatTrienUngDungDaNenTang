@@ -12,7 +12,7 @@ const ManagerGameScreen = ({ navigation }) => {
         setRefreshing(true)
         try {
             const { data } = await getByName()
-            console.log(data)
+            // console.log(data)
             setListGame(data)
 
         } catch (err) {
@@ -21,12 +21,12 @@ const ManagerGameScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
-    
+
     useEffect(() => {
         loadTasks()
     }, [])
     const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameScreen", {items: item })
+        navigation.navigate("InfoGameScreen", { gameId: item.id })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
@@ -44,10 +44,17 @@ const ManagerGameScreen = ({ navigation }) => {
                         marginLeft: 15,
                         width: "70%"
                     }}>
-                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi}</Text>
+                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
                         <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
-                        <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
-                        <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
+                        <View style={{
+                            flexDirection: 'row',
+                            width: "100%",
+                            justifyContent: 'space-between'
+                        }}>
+                            <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
+                            <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
+                        </View>
+
                     </View>
 
                 </View>
@@ -131,8 +138,8 @@ const styles = StyleSheet.create({
         marginTop: 20,
 
     },
-    end:{
-        
+    end: {
+
     }
 });
 

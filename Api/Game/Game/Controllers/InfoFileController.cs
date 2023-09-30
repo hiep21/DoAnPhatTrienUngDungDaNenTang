@@ -41,7 +41,7 @@ namespace Game.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("getInfoFileById")]
+        [HttpGet("getInfoFileById/{id}")]
         public IActionResult GetInfoFileById(int id)
         {
             try
@@ -54,7 +54,7 @@ namespace Game.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("deleteInfoFile")]
+        [HttpDelete("deleteInfoFile/{tenTroChoi}")]
         public IActionResult DeleteInfoFile(string tenTroChoi)
         {
             try
