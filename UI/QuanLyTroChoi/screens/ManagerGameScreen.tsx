@@ -17,7 +17,10 @@ const ManagerGameScreen = ({ navigation }) => {
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            console("thành công")
+            const { data } = await listUserApi()
+            console.log(data)
+            setTasks(data.items)
+
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -58,7 +61,7 @@ const ManagerGameScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.bođy}>
+            <View style={styles.body}>
                 <FlatList
                     data={testData}
                     renderItem={(list) => renderTask(list)}
@@ -79,7 +82,6 @@ const styles = StyleSheet.create({
 
     },
     head: {
-        backgroundColor: "red",
         width: "120%",
         height: 40,
         justifyContent: 'space-between',

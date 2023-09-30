@@ -24,7 +24,7 @@ const StackNAvigator = createStackNavigator({
   HomeScreen:{ screen: HomeScreen}
 
 }, {
-  initialRouteName: 'InfoGameScreen'
+  initialRouteName: 'ManagerGameScreen'
 }
 )
 export default createAppContainer(StackNAvigator)
