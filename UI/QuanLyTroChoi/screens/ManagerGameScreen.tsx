@@ -26,7 +26,7 @@ const ManagerGameScreen = ({ navigation }) => {
         loadTasks()
     }, [])
     const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameScreen", {gameId: item.id })
+        navigation.navigate("InfoGameScreen", {items: item })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {

@@ -26,12 +26,6 @@ export const getByName = () => {
         url: BASE_URL.concat("getInfoFile")
     })
 }
-export const getById = (id: string) => {
-    return axios({
-        method: "GET",
-        url: BASE_URL_BY_ID.concat(id)
-    })
-}
 
 
 export const deleteApi = (tenTroChoi: string) => {

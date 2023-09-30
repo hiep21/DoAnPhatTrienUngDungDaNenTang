@@ -1,37 +1,36 @@
 import React, { useState ,useEffect} from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { InfoGame } from '../services/interfaces/GameService';
-import { getById, getByName } from '../services/Game';
+import { getByName } from '../services/Game';
 const InfoGameScreen = ({ navigation }) => {
 
-    const gameId = navigation.getParam("gameId")
+    const gameInfo = navigation.getParam("items")
     
-    const [game, setGame] = useState<InfoGame>()
+    const [game, setGame] = useState<InfoGame>(gameInfo)
 
-    const getGameById = async() => {
-        try {
-            const { data } = await getById(gameId)
-            console.log(data)
-            setGame(data)
-        } catch (err) {
-            const errorMessage = err.response
-            alert(errorMessage)
-        }
-    }
+    // const getGameById = async() => {
+    //     try {
+    //         const { data } = await getById(gameId)
+    //         console.log(data)
+    //         setGame(data)
+    //     } catch (err) {
+    //         const errorMessage = err.response
+    //         alert(errorMessage)
+    //     }
+    // }
+    const nameGame = gameInfo.tenTroChoi
+    console.log(nameGame)
     const deleteGame = async() =>{
         try{
-            const {data} = await deleteGame(gameId)
+            const {data} = await deleteGame(nameGame)
             setGame(data)
+            navigation.navigate("ManagerGameScreen")
         } catch(err){
             const errorMessage = err.response
             alert(errorMessage)
         }
     }
-    
-   
-    useEffect(() => {
-        getGameById()
-    }, [ gameId ])
+    useEffect(() => {}, [ gameInfo ])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -62,7 +61,7 @@ const InfoGameScreen = ({ navigation }) => {
                             {game?.tenTroChoi}
                         </Text>
                         <Text style={styles.thongthuong1}>
-                            {game?.gioiThieuTroChoi}
+                            {game?.moTaTroChoi}
                         </Text>
                         <Text style={styles.trangthai}>
                             Trang thái: {game?.trangThai}
@@ -76,7 +75,7 @@ const InfoGameScreen = ({ navigation }) => {
                     <TouchableOpacity style={styles.button1}>
                         <Text >Cập nhật</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2}>
+                    <TouchableOpacity style={styles.button2} onPress={deleteGame}>
                         <Text> Gỡ khỏi kệ </Text>
                     </TouchableOpacity>
                 </View>
@@ -91,7 +90,7 @@ const InfoGameScreen = ({ navigation }) => {
                            
                         </Text>
                         <Text style={styles.thongthuong}>
-                            100.000 đ
+                            {game?.gia} đ
                         </Text>
                         
                     </View>
@@ -105,7 +104,7 @@ const InfoGameScreen = ({ navigation }) => {
                             Tuổi
                         </Text>
                         <Text style={styles.thongthuong}>
-                            4+
+                            {game?.doTuoi}+
                         </Text>
                         <Text style={styles.thongthuong}>
                             Tuổi
@@ -125,7 +124,7 @@ const InfoGameScreen = ({ navigation }) => {
                             
                         </Text>
                         <Text style={styles.thongthuong}>
-                            Đua xe
+                            {game?.theLoai}
                         </Text>
                         
                     </View>
@@ -139,7 +138,7 @@ const InfoGameScreen = ({ navigation }) => {
                             kích cỡ
                         </Text>
                         <Text style={styles.thongthuong}>
-                            246,4
+                            {game?.kichCoFile}
                         </Text>
                         <Text style={styles.thongthuong}>
                            MB
@@ -154,21 +153,12 @@ const InfoGameScreen = ({ navigation }) => {
             <Text style={styles.underlined1}/>
             <View style={styles.thongtinchitiet}>
                 <Text style={styles.txtthongtinchitiet}>
-                    Xây dựng một cây cầu
+                    {game?.moTaTroChoi}
                 </Text>
                 <Text style={styles.txtthongtinchitiet}>
-                    “Trò chơi đua xe hay nhát từ trước đến nay, 
-                    cố gắng xây dựng cây cầu của bạn bằng cách 
-                    cạnh tranh với những người khác để thu thập 
-                    các khối màu của riêng bạn và xây dựng cây cầu với chúng.
+                    {game?.gioiThieuTroChoi}
                 </Text>
-                <Text style={styles.txtthongtinchitiet}>
-                    Các tính năng chính của trò chơi gồm:
-                    Tùy chỉnh màu của ký tự và khối: tùy chỉnh da nhân vật
-                    Gói: nhận các gói có chứa kí tự thú vị
-                    Bản đồ đường bộ: có thể chơi tất cả  trên toàn thế giới cở các thành phố khác nhau
-                    Bảng xếp hạng: nhanh hơn và thu thập nhiều ngôi sao để leo lên bảng xếp hạng.”
-                </Text>
+                
             </View>
             
 
