@@ -22,7 +22,7 @@ const ManagerGameScreen = ({ navigation }) => {
         setRefreshing(false)
     }
     const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameScreen", { tenTroChoi: item.tenTroChoi })
+        navigation.navigate("InfoGameScreen", { item })
     }
     useEffect(() => {
         loadTasks()
