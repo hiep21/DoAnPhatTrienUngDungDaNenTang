@@ -41,6 +41,19 @@ namespace Game.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("getInfoFileById")]
+        public IActionResult GetInfoFileById(int id)
+        {
+            try
+            {
+
+                return Ok(_infoApkFileService.GetInfoFileById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpDelete("deleteInfoFile")]
         public IActionResult DeleteInfoFile(string tenTroChoi)
         {

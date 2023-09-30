@@ -8,5 +8,6 @@ namespace Game.Services.Interfaces
         void CreateInfoFile(CreateInfoFileDto input);
         void DeleteInfoFile(string tenTroChoi);
         List<InfoFileDto> GetInfoFile();
+        List<InfoFileDto> GetInfoFileById(int id);
     }
 }
