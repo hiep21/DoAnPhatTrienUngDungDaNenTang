@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { InfoGame } from '../services/interfaces/GameService';
-import { getById, getByName } from '../services/Game';
+import { deleteApi, getById, getByName } from '../services/Game';
 const InfoGameScreen = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
-
+    const tenTroChoi = navigation.getParam("tenTroChoi")
     const [game, setGame] = useState<InfoGame>()
-
+    const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
+
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -21,149 +22,135 @@ const InfoGameScreen = ({ navigation }) => {
 
 
     const deleteGame = async () => {
-        try {
-            const { data } = await deleteGame(game?.tenTroChoi)
-            setGame(data)
-            navigation.navigate("ManagerGameScreen")
-        } catch (err) {
-            const errorMessage = err.response
-            alert(errorMessage)
-        }
+        Alert.alert(
+            "Xác nhận",
+            "Bạn có chắc chắn muốn xóa không",
+            [
+                {
+                    text: "Hủy",
+                    style: "cancel",
+                },
+                {
+                    text: "Đồng ý",
+                    onPress: async () => {
+                        await deleteApi(deleteName);
+                        alert('Xóa game thành công');
+                        navigation.navigate("ManagerGameScreen");
+                    },
+                },
+            ]
+        );
     }
     useEffect(() => {
         getGameById()
-    }, [gameId])
+    }, [gameId, tenTroChoi])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
                 <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/favicon.png")} />
+                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' />
                     <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/favicon.png")} />
+                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/mic.jpg")} />
                     </TouchableOpacity>
                 </View>
+
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
+                        <Image style={{ width: 30, height: 30, }} source={require("../assets/tb.jpeg")} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={styles.title}>
-                <Text style={styles.underlined}> Danh sách trò chơi </Text>
-            </View>
-            <View style={styles.head1}>
-                <View style={styles.group8}>
-                    <Image style={styles._1} source={{ uri: 'https://dummyimage.com/50x50/000/fff.jpg' }} />
-                    <View style={styles.titleGame}>
-                        <Text style={styles.buildAQueen}>
-                            {game?.tenTroChoi}
-                        </Text>
-                        <Text style={styles.thongthuong1}>
-                            {game?.moTaTroChoi}
-                        </Text>
-                        <Text style={styles.trangthai}>
-                            Trang thái: {game?.trangThai}
-                        </Text>
+            <View style={styles.body}>
+                <Text style={{
+                    textAlign: 'left',
+                    paddingLeft: 30,
+                    borderBottomWidth: 1.5,
+                    fontSize: 17,
+                    fontWeight: '600',
 
+                }}>Danh sách trò chơi</Text>
+                <View style={styles.describeGame}>
+                    <Image style={{
+                        height: 50,
+                        width: 50,
+                        borderRadius: 5,
+                        marginTop: 10
+                    }} source={require("../assets/1.png")} />
+                    <View style={{
+
+                        justifyContent: 'center',
+
+                        width: "50%"
+                    }}>
+                        <Text style={{ fontSize: 15 }}>{game?.tenTroChoi}</Text>
+                        <Text style={{ fontSize: 10 }}>{game?.moTaTroChoi}</Text>
+                        <Text style={{ fontSize: 10 }}>Trạng thái: {game?.trangThai}</Text>
                     </View>
+                    <View style={{
 
-                </View>
+                        width: "30%",
 
-                <View style={styles.btnGame}>
-                    <TouchableOpacity style={styles.button1}>
-                        <Text >Cập nhật</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2} onPress={deleteGame}>
-                        <Text> Gỡ khỏi kệ </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <Text style={styles.underlined1} />
-            <View style={styles.head2}>
-                <View style={styles.group7}>
+                    }}>
+                        <TouchableOpacity style={{
+                            height: "45%",
+                            width: "100%",
+                            backgroundColor: "#6C9EFF",
+                            justifyContent: 'center',
+                            borderRadius: 5
+                        }}>
+                            <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
+                        </TouchableOpacity>
 
-                    <View style={styles.thongtin}>
-                        <Text style={styles.buildAQueen}>Giá cho thuê </Text>
-                        <Text style={styles.thongthuong}>
-
-                        </Text>
-                        <Text style={styles.thongthuong}>
-                            {game?.gia} đ
-                        </Text>
-
+                        <TouchableOpacity style={{
+                            height: "45%",
+                            width: "100%",
+                            backgroundColor: "#FF6C6C",
+                            marginTop: "5%",
+                            justifyContent: 'center',
+                            borderRadius: 5
+                        }} onPress={() => { deleteGame() }}>
+                            <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
+                        </TouchableOpacity>
                     </View>
-
                 </View>
-                <Text style={styles.underlined2} />
-                <View style={styles.group7}>
-
-                    <View style={styles.thongtin}>
-                        <Text style={styles.buildAQueen}>
-                            Tuổi
-                        </Text>
-                        <Text style={styles.thongthuong}>
-                            {game?.doTuoi}+
-                        </Text>
-                        <Text style={styles.thongthuong}>
-                            Tuổi
-                        </Text>
-
+                <View style={{
+                    width: "100%",
+                    height: 100,
+                    marginTop: 10,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <View style={[styles.itemInfo, { width: 80 }]}>
+                        <Text>Giá cho thuê</Text>
+                        <Text>{game?.gia}</Text>
                     </View>
-
-                </View>
-                <Text style={styles.underlined2} />
-                <View style={styles.group7}>
-
-                    <View style={styles.thongtin}>
-                        <Text style={styles.buildAQueen}>
-                            Thể loại
-                        </Text>
-                        <Text style={styles.thongthuong}>
-
-                        </Text>
-                        <Text style={styles.thongthuong}>
-                            {game?.theLoai}
-                        </Text>
-
+                    <View style={styles.itemInfo}>
+                        <Text>Tuổi</Text>
+                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderLeftWidth: 1, borderColor: "#bbb" }}>{game?.doTuoi}</Text>
                     </View>
-
-                </View>
-                <Text style={styles.underlined2} />
-                <View style={styles.group7}>
-
-                    <View style={styles.thongtin}>
-                        <Text style={styles.buildAQueen}>
-                            kích cỡ
-                        </Text>
-                        <Text style={styles.thongthuong}>
-                            {game?.kichCoFile}
-                        </Text>
-                        <Text style={styles.thongthuong}>
-                            MB
-                        </Text>
-
+                    <View style={styles.itemInfo}>
+                        <Text>Thể loại</Text>
+                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderColor: "#bbb" }}>{game?.theLoai}</Text>
                     </View>
-
+                    <View style={styles.itemInfo}>
+                        <Text>Kích cỡ</Text>
+                        <Text>{game?.kichCoFile}</Text>
+                    </View>
                 </View>
-
 
             </View>
-            <Text style={styles.underlined1} />
-            <View style={styles.thongtinchitiet}>
-                <Text style={styles.txtthongtinchitiet}>
-                    {game?.moTaTroChoi}
-                </Text>
-                <Text style={styles.txtthongtinchitiet}>
+            <View style={styles.end}>
+                <Text>
                     {game?.gioiThieuTroChoi}
                 </Text>
-
             </View>
-
-
         </View>
 
 
@@ -172,12 +159,16 @@ const InfoGameScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center",
-        padding: 20,
-        justifyContent: 'flex-start',
-        width: "90%",
-        marginHorizontal: 25
+        backgroundColor: "white"
 
+    },
+    head: {
+
+        width: "80%",
+        height: 40,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        paddingTop: 10
     },
     search: {
         width: 200,
@@ -186,161 +177,42 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         borderRadius: 20,
+        marginLeft: "5%"
 
-    },
-    head: {
-
-        width: "120%",
-        height: 40,
-        justifyContent: 'space-between',
-        flexDirection: 'row'
     },
     user: {
         flexDirection: 'row',
+        marginLeft: "20%"
     },
-    danhsachtrochoi: {
-        fontSize: 15,
-        fontWeight: "500",
-        marginLeft: 20,
-        paddingTop: 20
-
-    },
-    title: {
-        justifyContent: 'flex-start',
+    body: {
+        backgroundColor: "white",
         width: "100%",
-        marginRight: 100
-    },
-    underlined: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#000",
-        width: 420,
-        fontSize: 15,
-        fontWeight: "500",
-        paddingLeft: 30,
-        paddingTop: 10,
-
-
-    },
-    underlined1: {
-        borderBottomWidth: 2,
-        borderBottomColor: "#D9D9D9",
-        width: 420,
-        fontSize: 15,
-        fontWeight: "500",
-        paddingLeft: 30,
-    },
-    underlined2: {
-        borderRightWidth: 2,
-        borderRightColor: "#5555",
-        height: 30,
+        height: "40%",
         marginTop: 20,
 
     },
-    group7: {
-        paddingTop: 10,
+    describeGame: {
+
+        height: 70,
+        width: "85%",
+        alignSelf: 'center',
         flexDirection: 'row',
-        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 10
+    },
+    itemInfo: {
 
+        width: 70,
+        height: 40,
+        alignItems: 'center'
 
     },
-    group8: {
-        paddingTop: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-
-
-    },
-    _1: {
-        width: 50,
-        height: 50,
-        borderRadius: 10,
-
-    },
-    buildAQueen: {
-        fontSize: 14,
-        fontWeight: "400",
-
-    },
-    thongthuong: {
-
-
-        fontSize: 13,
-        fontWeight: "400",
-
-    },
-    thongthuong1: {
-
-
-        fontSize: 10,
-        fontWeight: "400",
-
-    },
-    trangthai: {
-
-        fontSize: 10,
-        fontWeight: "400",
-    },
-    thongtin: {
-        justifyContent: 'center',
-        width: 80,
-        alignItems: 'center',
-
-
-    },
-    thongtinchitiet: {
-        justifyContent: 'center',
-        width: 300,
-
-    },
-    txtthongtinchitiet: {
-        paddingTop: 10,
-
-    },
-    titleGame: {
-        paddingLeft: 5,
-        width: 100
-
-    },
-    btnGame: {
-        alignItems: 'center',
-        paddingTop: 5,
-
-    },
-    button1: {
-
-        backgroundColor: "#6C9EFF",
-        marginBottom: 5,
-        width: 80,
-        alignItems: "center",
-        borderRadius: 5,
-        padding: 2
-    },
-    button2: {
-        borderRadius: 5,
-        backgroundColor: "#FF6C6C",
-        marginBottom: 5,
-        width: 80,
-        alignItems: "center",
-        padding: 2,
-
-    },
-    head1: {
+    end: {
         width: "100%",
-        height: 60,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        paddingTop: 10,
-
-    },
-    head2: {
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    head3: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 
 
 })

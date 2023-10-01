@@ -39,7 +39,7 @@ export const getById = (id:string) => {
 export const deleteApi = (tenTroChoi: string) => {
     return axios({
         method: "DELETE",
-        url: BASE_URL.concat("deleteInfoFile?tenTroChoi=").concat(tenTroChoi)
+        url: BASE_URL.concat("deleteInfoFile/").concat(tenTroChoi)
     })
 }
 
