@@ -26,7 +26,7 @@ const ManagerGameScreen = ({ navigation }) => {
         loadTasks()
     }, [])
     const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameScreen", { gameId: item.id })
+        navigation.navigate("InfoGameScreen", { gameId: item.id, tenTroChoi : item.tenTroChoi })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
@@ -115,7 +115,7 @@ const ManagerGameScreen = ({ navigation }) => {
                     justifyContent: 'center',
                     borderRadius: 5,
                 }}>
-                    <Image style={{ width: 20, height: 20 }} source={require("../assets/10.webp")} />
+                    <Text style={{ fontWeight: '700', fontSize: 20 }}>+</Text>
                 </TouchableOpacity>
             </View>
         </View>
