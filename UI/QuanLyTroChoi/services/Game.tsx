@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { CreateGame} from "./interfaces/GameService";
+import { CreateGame } from "./interfaces/GameService";
 
 const BASE_URL = 'http://26.115.177.223:5221/InfoFile/'
-const BASE_URL_BY_ID = 'http://26.115.177.223:5221/InfoFile/getInfoFileById/'
+
+const BASE_URL_BY_ID = 'http://26.115.177.223:5221/ApkFiles/addFile'
 export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi }: CreateGame) => {
     return axios({
         method: "POST",
@@ -26,14 +27,14 @@ export const getByName = () => {
         url: BASE_URL.concat("getInfoFile")
     })
 }
-export const getById = (id:string) => {
-    
+export const getById = (id: string) => {
+
     return axios({
         method: "GET",
-        url: BASE_URL_BY_ID.concat(id)
-        
+        url: BASE_URL.concat("getInfoFileById/").concat(id)
+
     })
-    
+
 }
 
 export const deleteApi = (tenTroChoi: string) => {
@@ -43,3 +44,9 @@ export const deleteApi = (tenTroChoi: string) => {
     })
 }
 
+export const testApi = () => {
+    return axios({
+        method: "POST",
+        url: BASE_URL_BY_ID.concat("addFile")
+    })
+}

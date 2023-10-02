@@ -34,10 +34,7 @@ const Carousel = ({ navigation }) => {
           require('../assets/games/spider_man/spider_man_1.jpg'),
           require('../assets/games/spider_man/spider_man_2.jpg'),
           require('../assets/games/spider_man/spider_man_5.jpg'),
-
-
-
-
+          
         ]
       };
     return (

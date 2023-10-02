@@ -59,7 +59,6 @@ namespace Game.Controllers
         {
             try
             {
-
                 _infoApkFileService.DeleteInfoFile(tenTroChoi);
                 return Ok();
             }

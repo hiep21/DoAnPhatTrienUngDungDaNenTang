@@ -41,7 +41,7 @@ namespace User.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("getByUser")]
+        [HttpGet("getByUser/{user}")]
         public IActionResult GetByUser(string user)
         {
             try
@@ -66,7 +66,7 @@ namespace User.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{User}")]
         public IActionResult Delete(string User) 
         {
             try
@@ -79,7 +79,7 @@ namespace User.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("deleteByEmail")]
+        [HttpDelete("deleteByEmail{email}")]
         public IActionResult DeleteByEmail(string email)
         {
             try
