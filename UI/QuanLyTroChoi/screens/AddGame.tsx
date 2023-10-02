@@ -68,7 +68,7 @@ const AddGame = ({ navigation }) => {
     return (
 
         <View style={{ height: "100%" }}>
-            <Text style={styles.mainText}>Thêm Công việc</Text>
+            <Text style={styles.mainText}>Gửi yêu cầu thêm trò chơi</Text>
             <View style={styles.container}>
 
                 <View style={[styles.address, { height: "100%" }]}>
