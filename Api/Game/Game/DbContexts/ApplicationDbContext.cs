@@ -13,7 +13,7 @@ namespace Game.DbContexts
         }
         public DbSet<ApkFile> ApkFiles { get; set; }
         public DbSet<InfoApkFile> InfoApkFiles { get; set; }
-
+        public DbSet<ImageModel> ImageModels { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }

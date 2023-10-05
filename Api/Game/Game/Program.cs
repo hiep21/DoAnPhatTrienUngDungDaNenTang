@@ -25,7 +25,7 @@ namespace Game
             });
             builder.Services.AddScoped<IApkFileService, ApkFileService>();
             builder.Services.AddScoped<IInfoApkFile, InfoApkService>();
-
+            builder.Services.AddScoped<IImageService, ImagesService>();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
