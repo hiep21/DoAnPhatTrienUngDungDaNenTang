@@ -6,17 +6,21 @@ import { LoginData, RegisterData } from "./interfaces/User.interface";
 const BASE_URL = 'https://64f767c49d77540849538bb1.mockapi.io/todo/'
 
 
-export const registerApi = ({ user, email, password, note, gender, dateOfBirth }: RegisterData) => {
+export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone, image }: RegisterData) => {
     return axios({
         method: "POST",
-        url: 'http://192.168.1.12:5133/Register/createRegister',
+        url: 'http://26.115.177.223:5133/Register/createRegister',
         data: {
             user,
+            name,
             email,
             password,
             note,
             gender,
-            dateOfBirth
+            dateOfBirth,
+            address,
+            phone,
+            image
 
         }
     })
@@ -25,7 +29,7 @@ export const registerApi = ({ user, email, password, note, gender, dateOfBirth }
 export const loginApi = ({ user, password }: LoginData) => {
     return axios({
         method: "POST",
-        url: "http://192.168.1.12:5133/Login/createLogin",
+        url: "http://26.115.177.223:5133/Login/createLogin",
         data: {
             user,
             password

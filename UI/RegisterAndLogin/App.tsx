@@ -9,20 +9,20 @@ import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 import MainScreen from './screens/MainScreen';
 const StackNAvigator = createStackNavigator({
-  RegisterScreen:{
+  RegisterScreen: {
     screen: RegisterScreen
   },
-  LoginScreen:{
+  LoginScreen: {
     screen: LoginScreen
   },
-  HomeScreen:{
+  HomeScreen: {
     screen: HomeScreen
   },
-  MainScreen:{
+  MainScreen: {
     screen: MainScreen
   }
-  
-},{
+
+}, {
   initialRouteName: 'MainScreen'
 }
 )

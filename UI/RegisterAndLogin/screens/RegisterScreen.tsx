@@ -1,7 +1,7 @@
 
 // screens/Screen1.js
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView,Modal } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal } from 'react-native';
 import { RegisterData } from '../services/interfaces/User.interface';
 import * as Yup from 'yup'
 import { registerApi } from '../services/todo';
@@ -21,12 +21,16 @@ const validationSchema = Yup.object().shape({
 const AddUserScreen = ({ navigation }) => {
 
     const [user, setUser] = useState<RegisterData>({
-        dateOfBirth: "",
+        user: "",
+        name: "string",
         email: "",
-        gender: "LGBT",
-        note: "khách hàng",
         password: "",
-        user: ""
+        note: "Khách hàng",
+        gender: "LGBT",
+        dateOfBirth: "",
+        address: "string",
+        phone: "string",
+        image: "string"
     });
     const [rePasswords, setRePasswords] = useState<string>();
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,7 +38,7 @@ const AddUserScreen = ({ navigation }) => {
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
     };
-    
+
     const selectGender = (Gender: string) => {
         setSelectedGender(Gender);
         setUser({
@@ -43,7 +47,7 @@ const AddUserScreen = ({ navigation }) => {
         });
         toggleModal();
     };
-    
+
 
     const validateInputs = () => {
         if (user.user.length < 5 && (user.user == null || user.user.includes(""))) {
@@ -58,17 +62,17 @@ const AddUserScreen = ({ navigation }) => {
             Alert.alert("Lỗi", "Ngày sinh không được bỏ trống");
             return false;
         }
-       
-        
+
+
 
         return true;
     };
     const addUserAction = async () => {
-        
+
         if (!validateInputs()) {
             return;
         }
-        if(user.password != rePasswords){
+        if (user.password != rePasswords) {
             alert("Confirm Password error");
             return;
         }
@@ -101,88 +105,88 @@ const AddUserScreen = ({ navigation }) => {
     };
     return (
         <Background>
-        <KeyboardAvoidingView>
-            <View style={styles.container}>
-                <Text style={styles.mainText}>Register</Text>
-                <View style={styles.mainContainer}>
-                    <View style={styles.content}>
-                        <Text style={styles.label}>user</Text>
-                        <TextInput value={user.user} onChangeText={(value) => {
-                            setUser({
-                                ...user,
-                                user: value
-                            })
-                        }} style={styles.input} placeholder='User name'/>
-                        <Text style={styles.label}>email</Text>
-                        <TextInput value={user.email} onChangeText={(value) => {
-                            setUser({
-                                ...user,
-                                email: value
-                            })
-                        }} style={styles.input} placeholder='...@gmail.com'/>
-                        <Text style={styles.label}>dateOfBirth</Text>
-                        <TextInput value={user.dateOfBirth} onChangeText={(value) => {
-                            setUser({
-                                ...user,
-                                dateOfBirth: value
-                            })
-                        }} style={styles.input} placeholder='DD/MM/YYYY'/>
-                        <Text style={styles.label}>gender</Text>
-                        <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
-                        <Text style={styles.selectedGenderText}> 
-                            {selectedGender ? selectedGender : 'LGBT'} 
-                        </Text>
-                        </TouchableOpacity>
+            <KeyboardAvoidingView>
+                <View style={styles.container}>
+                    <Text style={styles.mainText}>Register</Text>
+                    <View style={styles.mainContainer}>
+                        <View style={styles.content}>
+                            <Text style={styles.label}>user</Text>
+                            <TextInput value={user.user} onChangeText={(value) => {
+                                setUser({
+                                    ...user,
+                                    user: value
+                                })
+                            }} style={styles.input} placeholder='User name' />
+                            <Text style={styles.label}>email</Text>
+                            <TextInput value={user.email} onChangeText={(value) => {
+                                setUser({
+                                    ...user,
+                                    email: value
+                                })
+                            }} style={styles.input} placeholder='...@gmail.com' />
+                            <Text style={styles.label}>dateOfBirth</Text>
+                            <TextInput value={user.dateOfBirth} onChangeText={(value) => {
+                                setUser({
+                                    ...user,
+                                    dateOfBirth: value
+                                })
+                            }} style={styles.input} placeholder='DD/MM/YYYY' />
+                            <Text style={styles.label}>gender</Text>
+                            <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
+                                <Text style={styles.selectedGenderText}>
+                                    {selectedGender ? selectedGender : 'LGBT'}
+                                </Text>
+                            </TouchableOpacity>
 
-                        <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
-                            <View style={styles.modalContainer}>
-                                <View style={styles.modalContent}>
-                                    <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
-                                        <Text>Male</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
-                                        <Text>Female</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
-                                        <Text>Other</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                        <Text>Close</Text>
+                            <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
+                                <View style={styles.modalContainer}>
+                                    <View style={styles.modalContent}>
+                                        <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
+                                            <Text>Male</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
+                                            <Text>Female</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
+                                            <Text>Other</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                            <Text>Close</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </Modal>
+                            <Text style={styles.label}>password</Text>
+                            <TextInput value={user.password} onChangeText={(value) => {
+                                setUser({
+                                    ...user,
+                                    password: value
+                                })
+                            }} style={styles.input} secureTextEntry />
+                            <Text style={styles.label}>Confirm Password</Text>
+                            <TextInput value={rePasswords
+                            } onChangeText={(value) => {
+                                setRePasswords(value)
+                            }} style={styles.input} secureTextEntry />
+                            <View style={styles.buttons}>
+
+                                <TouchableOpacity style={styles.button} onPress={addUserAction}>
+                                    <Text style={styles.textbtn}>Signup</Text>
+                                </TouchableOpacity>
+                                <View style={styles.signup}>
+                                    <Text style={styles.text}>Have an account?</Text>
+                                    <TouchableOpacity onPress={onCancel}>
+                                        <Text style={styles.textSignup}>Cancel</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                        </Modal>
-                        <Text style={styles.label}>password</Text>
-                        <TextInput value={user.password} onChangeText={(value) => {
-                            setUser({
-                                ...user,
-                                password: value
-                            })
-                        }} style={styles.input} secureTextEntry />
-                        <Text style={styles.label}>Confirm Password</Text>
-                        <TextInput value={rePasswords
-                        } onChangeText={(value) => {
-                            setRePasswords(value)
-                        }} style={styles.input}  secureTextEntry/>
-                        <View style={styles.buttons}>
-                            
-                            <TouchableOpacity style={styles.button} onPress={addUserAction}>
-                                <Text style={styles.textbtn}>Signup</Text>
-                            </TouchableOpacity>
-                            <View style={styles.signup}>
-                                <Text style={styles.text}>Have an account?</Text>
-                                <TouchableOpacity onPress={onCancel}>
-                                    <Text style= {styles.textSignup}>Cancel</Text>
-                                </TouchableOpacity>
-                            </View>
                         </View>
+
                     </View>
-                    
                 </View>
-            </View>
-        </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
         </Background>
-        
+
 
     );
 };
@@ -191,14 +195,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        
+
     },
-    mainContainer:{
-        marginVertical:10,
-        backgroundColor:"#fff",
-        height:700,
-        width:390,
-        borderTopLeftRadius:130,
+    mainContainer: {
+        marginVertical: 10,
+        backgroundColor: "#fff",
+        height: 700,
+        width: 390,
+        borderTopLeftRadius: 130,
         paddingTop: 35,
         alignItems: "center"
     },
@@ -210,7 +214,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 30,
         fontWeight: "900",
-        color:'#fff'
+        color: '#fff'
     },
     address: {
         alignItems: "flex-start",
@@ -222,24 +226,24 @@ const styles = StyleSheet.create({
         paddingVertical: 1,
         width: "100%",
         borderRadius: 100,
-        backgroundColor:"#7777",
-        borderColor:'#555',
-        paddingHorizontal:15
+        backgroundColor: "#7777",
+        borderColor: '#555',
+        paddingHorizontal: 15
     },
     label: {
         marginTop: 8,
-        fontSize:16,
-        fontWeight:'500',
-        color:"#17741d"
+        fontSize: 16,
+        fontWeight: '500',
+        color: "#17741d"
     },
     buttons: {
         justifyContent: "space-between",
         width: 320,
         marginTop: 20,
         alignItems: "center",
-        
+
     },
-    
+
     buttonSave: {
         borderBottomWidth: 4,
         borderRightWidth: 4,
@@ -264,7 +268,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         justifyContent: 'space-between',
         backgroundColor: "#5555"
-        
+
     },
     selectedGenderText: {
         flex: 1,
@@ -295,7 +299,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        
+
         borderWidth: 1,
         borderColor: "#177413",
         padding: 8,
@@ -304,25 +308,25 @@ const styles = StyleSheet.create({
         width: "80%",
         alignItems: "center"
     },
-    signup:{
+    signup: {
         flexDirection: "row",
         justifyContent: "space-between",
         marginTop: 5
-        
+
     },
-    textSignup:{
-        fontWeight:'bold',
-        color:'#17741d',
-        
+    textSignup: {
+        fontWeight: 'bold',
+        color: '#17741d',
+
     },
-    text:{
-        fontWeight:"500",
-        color:'#222'
+    text: {
+        fontWeight: "500",
+        color: '#222'
     },
-    textbtn:{
-        fontWeight:'bold',
+    textbtn: {
+        fontWeight: 'bold',
         color: '#fff',
-        fontSize:15
+        fontSize: 15
     },
 })
 
