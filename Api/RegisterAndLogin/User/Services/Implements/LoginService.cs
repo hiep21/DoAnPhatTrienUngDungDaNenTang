@@ -34,7 +34,6 @@ namespace User.Services.Implements
             {
                 User = input.User,
                 Email = existingRegister.Email,
-
                 Password = BCrypt.Net.BCrypt.HashPassword(input.Password),
             });
 

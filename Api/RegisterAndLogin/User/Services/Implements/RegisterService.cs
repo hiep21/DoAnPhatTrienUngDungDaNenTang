@@ -18,16 +18,6 @@ namespace User.Services.Implements
         public void Create(CreateRegisterDto input)
         {
 
-            bool checkEmail = false;
-            foreach (var item in _context.Registers)
-            {
-                checkEmail = BCrypt.Net.BCrypt.Verify(input.Email, item.Email);
-            }
-
-            if (checkEmail)
-            {
-                throw new Exception("Email đã có người sử dụng");
-            }
             if (_context.Registers.Any(b => b.User == input.User))
             {
                 throw new Exception("Tên tài khoản đã có người sử dụng");
@@ -35,11 +25,15 @@ namespace User.Services.Implements
             _context.Registers.Add(new Register
             {
                 User = input.User,
-                Email = BCrypt.Net.BCrypt.HashPassword(input.Email),
+                Name = input.Name,
+                Email = input.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(input.Password),
                 Note = input.Note,
                 Gender = input.Gender,
                 DateOfBirth = input.DateOfBirth,
+                Address = input.Address,
+                Phone = input.Phone,
+                Image = input.Image,
             });
             _context.SaveChanges();
         }
@@ -52,12 +46,15 @@ namespace User.Services.Implements
                 throw new Exception($"Không tìm thấy tài khoản có user = {input.User}");
             }
             register.User = input.User;
-            register.Email = BCrypt.Net.BCrypt.HashPassword(input.Email);
+            register.Name = input.Name;
+            register.Email = input.Email;
             register.Password = BCrypt.Net.BCrypt.HashPassword(input.Password);
             register.Note = input.Note;
             register.Gender = input.Gender;
             register.DateOfBirth = input.DateOfBirth;
-
+            register.Address = input.Address;
+            register.Phone = input.Phone;
+            register.Image = input.Image;
             _context.SaveChanges();
         }
 
@@ -75,11 +72,15 @@ namespace User.Services.Implements
                 results.Add(new RegisterDto
                 {
                     User = register.User,
+                    Name = register.Name,
                     Email = register.Email,
                     Password = register.Password,
                     Note = register.Note,
                     Gender = register.Gender,
                     DateOfBirth = register.DateOfBirth,
+                    Address = register.Address,
+                    Phone = register.Phone,
+                    Image = register.Image,
                 });
             
             }
@@ -100,6 +101,10 @@ namespace User.Services.Implements
                     Note = registers.Note,
                     Gender = registers.Gender,
                     DateOfBirth = registers.DateOfBirth,
+                    Image = registers.Image,
+                    Phone = registers.Phone,
+                    Name = registers.Name,
+                    Address = registers.Address
                 });
 
             }
