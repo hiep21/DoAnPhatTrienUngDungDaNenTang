@@ -25,6 +25,7 @@
     "react-native-ui-xg": "^0.0.6",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
+    "rn-sliding-up-panel": "^2.4.6",
     "yet": "^0.1.0",
     "yup": "^1.2.0"
   },

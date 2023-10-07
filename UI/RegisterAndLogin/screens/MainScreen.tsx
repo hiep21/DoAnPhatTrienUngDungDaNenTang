@@ -5,7 +5,7 @@ import { SliderBox } from "react-native-image-slider-box";
 import Carousel from './Carousel';
 import { InfoGame } from '../services/interfaces/GameService';
 import { getByName } from '../services/Game';
-
+import BottomSheet from "./BottomSheet";
 
 const MainScreen = ({ navigation }) => {
     
@@ -81,17 +81,21 @@ const MainScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
+                        
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 } }>
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
+                        
                     </TouchableOpacity>
+                    
                 </View>
             </View>
             <View>
                 
             </View>
             <Carousel/>
+            
 
             <View style={styles.body}>
                 <Text style={{
@@ -116,11 +120,11 @@ const MainScreen = ({ navigation }) => {
                         borderColor: "#bbb"
                     }}
                 />
+                
             </View>
-            
-            
-            
+            <BottomSheet ref={ref => (this.bottomSheet = ref)} />
         </View>
+        
 
     );
 };

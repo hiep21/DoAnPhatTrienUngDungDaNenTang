@@ -8,6 +8,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 import MainScreen from './screens/MainScreen';
+import UserScreen from './screens/UserScreen';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen
@@ -20,10 +21,13 @@ const StackNAvigator = createStackNavigator({
   },
   MainScreen: {
     screen: MainScreen
+  },
+  UserScreen:{
+    screen: UserScreen
   }
 
 }, {
-  initialRouteName: 'MainScreen'
+  initialRouteName: 'UserScreen'
 }
 )
 export default createAppContainer(StackNAvigator)
