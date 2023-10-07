@@ -41,7 +41,7 @@ namespace Game.Controllers
             var apkDto = new ApkFileDto
             {
                 FileName = apkFile.FileName,
-                Data = apkData,
+              
 
             };
 
@@ -59,12 +59,7 @@ namespace Game.Controllers
                 Directory.CreateDirectory(uploadPath);
             }
 
-            var filePath = Path.Combine(uploadPath, apkDto.FileName);
-
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await fileStream.WriteAsync(apkData, 0, apkData.Length);
-            }
+            
 
             return Ok(uploadedApk);
         }

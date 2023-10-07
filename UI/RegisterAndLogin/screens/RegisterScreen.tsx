@@ -1,7 +1,7 @@
 
 // screens/Screen1.js
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView } from 'react-native';
 import { RegisterData } from '../services/interfaces/User.interface';
 import * as Yup from 'yup'
 import { registerApi } from '../services/todo';
@@ -22,15 +22,15 @@ const AddUserScreen = ({ navigation }) => {
 
     const [user, setUser] = useState<RegisterData>({
         user: "",
-        name: "string",
+        name: "",
         email: "",
         password: "",
         note: "Khách hàng",
         gender: "LGBT",
         dateOfBirth: "",
-        address: "string",
-        phone: "string",
-        image: "string"
+        address: "",
+        phone: "",
+        image: ""
     });
     const [rePasswords, setRePasswords] = useState<string>();
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -110,64 +110,97 @@ const AddUserScreen = ({ navigation }) => {
                     <Text style={styles.mainText}>Register</Text>
                     <View style={styles.mainContainer}>
                         <View style={styles.content}>
-                            <Text style={styles.label}>user</Text>
-                            <TextInput value={user.user} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
-                                    user: value
-                                })
-                            }} style={styles.input} placeholder='User name' />
-                            <Text style={styles.label}>email</Text>
-                            <TextInput value={user.email} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
-                                    email: value
-                                })
-                            }} style={styles.input} placeholder='...@gmail.com' />
-                            <Text style={styles.label}>dateOfBirth</Text>
-                            <TextInput value={user.dateOfBirth} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
-                                    dateOfBirth: value
-                                })
-                            }} style={styles.input} placeholder='DD/MM/YYYY' />
-                            <Text style={styles.label}>gender</Text>
-                            <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
-                                <Text style={styles.selectedGenderText}>
-                                    {selectedGender ? selectedGender : 'LGBT'}
-                                </Text>
-                            </TouchableOpacity>
+                            <ScrollView style={{
 
-                            <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
-                                <View style={styles.modalContainer}>
-                                    <View style={styles.modalContent}>
-                                        <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
-                                            <Text>Male</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
-                                            <Text>Female</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
-                                            <Text>Other</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                            <Text>Close</Text>
-                                        </TouchableOpacity>
+                                width: "85%",
+                                height: "55%",
+                                marginLeft: 20,
+
+                            }}>
+                                <Text style={styles.label}>user</Text>
+                                <TextInput value={user.user} onChangeText={(value) => {
+                                    setUser({
+                                        ...user,
+                                        user: value
+                                    })
+                                }} style={styles.input} placeholder='User name' />
+                                <Text style={styles.label}>email</Text>
+                                <TextInput value={user.email} onChangeText={(value) => {
+                                    setUser({
+                                        ...user,
+                                        email: value
+                                    })
+                                }} style={styles.input} placeholder='...@gmail.com' />
+                                <Text style={styles.label}>Full name</Text>
+                                <TextInput value={user.name} onChangeText={(value) => {
+                                    setUser({
+                                        ...user,
+                                        name: value
+                                    })
+                                }} style={styles.input} placeholder='Nguyễn Văn A' />
+
+                                <Text style={styles.label}>gender</Text>
+                                <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
+                                    <Text style={styles.selectedGenderText}>
+                                        {selectedGender ? selectedGender : 'LGBT'}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
+                                    <View style={styles.modalContainer}>
+                                        <View style={styles.modalContent}>
+                                            <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
+                                                <Text>Male</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
+                                                <Text>Female</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
+                                                <Text>Other</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                                <Text>Close</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                </View>
-                            </Modal>
-                            <Text style={styles.label}>password</Text>
-                            <TextInput value={user.password} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
-                                    password: value
-                                })
-                            }} style={styles.input} secureTextEntry />
-                            <Text style={styles.label}>Confirm Password</Text>
-                            <TextInput value={rePasswords
-                            } onChangeText={(value) => {
-                                setRePasswords(value)
-                            }} style={styles.input} secureTextEntry />
+                                </Modal>
+                                <Text style={styles.label}>dateOfBirth</Text>
+                                <TextInput value={user.dateOfBirth} onChangeText={(value) => {
+                                    setUser({
+                                        ...user,
+                                        dateOfBirth: value
+                                    })
+                                }} style={styles.input} placeholder='DD/MM/YYYY' />
+                                <Text style={styles.label}>Address</Text>
+                                <TextInput value={user.address} onChangeText={(value) => {
+                                    setUser({
+                                        ...user,
+                                        address: value
+                                    })
+                                }} style={styles.input} placeholder='Address' />
+                                <Text style={styles.label}>Number phone</Text>
+                                <TextInput value={user.phone} onChangeText={(value) => {
+                                    setUser({
+                                        ...user,
+                                        phone: value
+                                    })
+                                }} style={styles.input} placeholder='XXXX-XXX-XXX' />
+
+
+                                <Text style={styles.label}>password</Text>
+                                <TextInput value={user.password} onChangeText={(value) => {
+                                    setUser({
+                                        ...user,
+                                        password: value
+                                    })
+                                }} style={styles.input} secureTextEntry />
+                                <Text style={styles.label}>Confirm Password</Text>
+                                <TextInput value={rePasswords
+                                } onChangeText={(value) => {
+                                    setRePasswords(value)
+                                }} style={styles.input} secureTextEntry />
+
+                            </ScrollView>
                             <View style={styles.buttons}>
 
                                 <TouchableOpacity style={styles.button} onPress={addUserAction}>
@@ -234,7 +267,8 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontSize: 16,
         fontWeight: '500',
-        color: "#17741d"
+        color: "#17741d",
+        marginLeft: 10
     },
     buttons: {
         justifyContent: "space-between",
@@ -267,12 +301,14 @@ const styles = StyleSheet.create({
         padding: 6,
         borderRadius: 100,
         justifyContent: 'space-between',
-        backgroundColor: "#5555"
+        backgroundColor: "#5555",
+
 
     },
     selectedGenderText: {
         flex: 1,
-        color: "#777"
+        color: "#777",
+        marginLeft: 10
     },
     modalContainer: {
         flex: 1,
@@ -302,11 +338,12 @@ const styles = StyleSheet.create({
 
         borderWidth: 1,
         borderColor: "#177413",
-        padding: 8,
+        paddingVertical: 8,
         borderRadius: 100,
         backgroundColor: "#27bc32",
         width: "80%",
-        alignItems: "center"
+        alignItems: "center",
+        marginRight: 15
     },
     signup: {
         flexDirection: "row",

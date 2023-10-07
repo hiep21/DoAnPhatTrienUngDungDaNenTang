@@ -30,7 +30,7 @@ namespace Game.Services.Implements
             var apkFile = new ApkFile
             {
                 FileName = apkDto.FileName,
-                Data = apkDto.Data
+            
             };
             //var infoApkFile = new InfoApkFile
             //{
@@ -58,7 +58,7 @@ namespace Game.Services.Implements
 
                 apkFile.Add(new ApkFileDto { 
                     FileName = apkFiles.FileName,
-                    //Data = apkFiles.Data
+                    
                 });
 
             }
