@@ -38,7 +38,7 @@ namespace Game.Services.Implements
                 Gia = input.Gia,
                 GioiThieuTroChoi = input.GioiThieuTroChoi,
                 KichCoFile = "Mb",
-                TrangThai = "Chờ xét duyệt",
+                TrangThai = "Trên kệ",
                 NhaCungCap = input.NhaCungCap,
             });
             _context.SaveChanges();
@@ -49,21 +49,25 @@ namespace Game.Services.Implements
             var infoApkFile = new List<InfoFileDto>();
             foreach (var infoApkFiles in _context.InfoApkFiles)
             {
-                infoApkFile.Add(new InfoFileDto
+                if (infoApkFiles.TrangThai != "Chờ xét duyệt")
                 {
-                    Id = infoApkFiles.Id,
-                    TenTroChoi = infoApkFiles.TenTroChoi,
-                    MoTaTroChoi = infoApkFiles.MoTaTroChoi,
-                    TheLoai = infoApkFiles.TheLoai,
-                    DoTuoi = infoApkFiles.DoTuoi,
-                    Gia = infoApkFiles.Gia,
-                    TrangThai = infoApkFiles.TrangThai,
-                    KichCoFile = infoApkFiles.KichCoFile,
-                    GioiThieuTroChoi = infoApkFiles.GioiThieuTroChoi,
-                    NhaCungCap = infoApkFiles.NhaCungCap,
+                    infoApkFile.Add(new InfoFileDto
+                    {
+                        Id = infoApkFiles.Id,
+                        TenTroChoi = infoApkFiles.TenTroChoi,
+                        MoTaTroChoi = infoApkFiles.MoTaTroChoi,
+                        TheLoai = infoApkFiles.TheLoai,
+                        DoTuoi = infoApkFiles.DoTuoi,
+                        Gia = infoApkFiles.Gia,
+                        TrangThai = infoApkFiles.TrangThai,
+                        KichCoFile = infoApkFiles.KichCoFile,
+                        GioiThieuTroChoi = infoApkFiles.GioiThieuTroChoi,
+                        NhaCungCap = infoApkFiles.NhaCungCap,
 
 
-                });
+                    });
+                }
+                
 
             }
             return infoApkFile;

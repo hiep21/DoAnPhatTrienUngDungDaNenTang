@@ -29,10 +29,6 @@ namespace Game.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -40,6 +36,20 @@ namespace Game.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ApkFiles");
+                });
+
+            modelBuilder.Entity("Game.Entities.ImageModel", b =>
+                {
+                    b.Property<string>("ImageData")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ImageData");
+
+                    b.ToTable("ImageModels");
                 });
 
             modelBuilder.Entity("Game.Entities.InfoApkFile", b =>

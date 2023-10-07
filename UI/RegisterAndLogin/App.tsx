@@ -23,7 +23,7 @@ const StackNAvigator = createStackNavigator({
   }
 
 }, {
-  initialRouteName: 'MainScreen'
+  initialRouteName: 'RegisterScreen'
 }
 )
 export default createAppContainer(StackNAvigator)
