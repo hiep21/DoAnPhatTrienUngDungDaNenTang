@@ -11,7 +11,7 @@ using User.DbContexts;
 namespace User.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231006165713_User")]
+    [Migration("20231008153212_User")]
     partial class User
     {
         /// <inheritdoc />

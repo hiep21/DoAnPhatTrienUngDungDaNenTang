@@ -3,6 +3,7 @@ using User.Dtos.Login;
 using User.Entities;
 using User.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace User.Services.Implements
 {
@@ -21,10 +22,19 @@ namespace User.Services.Implements
             {
                 throw new Exception("Tài khoản đã có trong base");
             }
-            if (_context.Registers.Any(r => r.User != input.User))
+            bool check =false;
+            foreach (var item in _context.Registers)
             {
-                throw new Exception("Tài khoản chưa đăng ký");
+                if (item.User == input.User)
+                {
+                   check = true;
+                }
             }
+            if (!check)
+            {
+                throw new Exception("tài khoản chưa đăng ký");
+            }
+
             var existingRegister = _context.Registers.FirstOrDefault(r => r.User == input.User);
             if (!BCrypt.Net.BCrypt.Verify(input.Password, existingRegister.Password))
             {

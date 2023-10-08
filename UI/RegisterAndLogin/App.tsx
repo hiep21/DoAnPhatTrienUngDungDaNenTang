@@ -27,7 +27,7 @@ const StackNAvigator = createStackNavigator({
   }
 
 }, {
-  initialRouteName: 'RegisterScreen'
+  initialRouteName: 'HomeScreen'
 
 }
 )
