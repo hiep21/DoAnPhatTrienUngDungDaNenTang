@@ -9,6 +9,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 import MainScreen from './screens/MainScreen';
 import UserScreen from './screens/UserScreen';
+import InfoGameScreen from './screens/InfoGameScreen';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen
@@ -22,8 +23,11 @@ const StackNAvigator = createStackNavigator({
   MainScreen: {
     screen: MainScreen
   },
-  UserScreen:{
+  UserScreen: {
     screen: UserScreen
+  },
+  InfoGameScreen: {
+    screen: InfoGameScreen
   }
 
 }, {
