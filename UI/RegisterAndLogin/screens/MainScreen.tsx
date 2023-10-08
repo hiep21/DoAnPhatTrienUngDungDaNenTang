@@ -122,7 +122,8 @@ const MainScreen = ({ navigation }) => {
                 />
                 
             </View>
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} />
+            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation}/>
+            
         </View>
         
 

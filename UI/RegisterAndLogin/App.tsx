@@ -31,7 +31,7 @@ const StackNAvigator = createStackNavigator({
   }
 
 }, {
-  initialRouteName: 'HomeScreen'
+  initialRouteName: 'MainScreen'
 
 }
 )

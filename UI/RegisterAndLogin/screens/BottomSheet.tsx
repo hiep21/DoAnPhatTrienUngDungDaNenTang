@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View, Dimensions, Animated,StyleSheet,Image, TouchableOpacity } from "react-native";
 
 import SlidingUpPanel from "rn-sliding-up-panel";
+import * as SecureStore from 'expo-secure-store';
 
 const { height } = Dimensions.get("window");
 
@@ -116,7 +117,7 @@ class BottomSheet extends React.Component {
   };
   navigateToUserScreen = () => {
     const { navigation } = this.props;
-    navigation.navigate('HomeScreen'); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('UserScreen'); // Điều hướng đến màn hình "UserScreen"
   };
   
   render() {
@@ -153,6 +154,17 @@ class BottomSheet extends React.Component {
       outputRange: [1, 0.7],
       extrapolate: "clamp"
     });
+    const logout = async () => {
+      try {
+        await SecureStore.deleteItemAsync('accessToken');
+        // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
+        // Ví dụ: Xoá dữ liệu người dùng khỏi trạng thái ứng dụng hoặc thực hiện các thao tác khác liên quan đến đăng xuất.
+        // ...
+        console.log("Đăng xuất thành công");
+      } catch (error) {
+        console.log("Lỗi khi đăng xuất", error);
+      }
+    };
 
     return (
       <View style={styles.container}>
@@ -191,7 +203,7 @@ class BottomSheet extends React.Component {
               </View>
             </View>
             <View style={styles.button}>
-              <TouchableOpacity style={styles.buttons}>
+              <TouchableOpacity style={styles.buttons} onPress={logout}>
                 <Text>Đăng xuất</Text>
               </TouchableOpacity>
             </View>
