@@ -20,16 +20,18 @@ const styles = StyleSheet.create({
   },
   panel: {
     flex: 1,
-    backgroundColor: "#1119",
+    
     borderRadius: 20,
     position: "relative",
 
   },
   panelHeader: {
-
+    backgroundColor: "#1119",
     justifyContent: "center",
+    borderRadius: 20,
     alignItems: "center",
-    padding: 24
+    marginTop:20,
+    padding:24
   },
   textHeader: {
     fontSize: 28,
@@ -106,12 +108,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#27bc32",
     width: 100,
     alignItems: "center",
-  }
+  },
+  
 });
 
 class BottomSheet extends React.Component {
   static defaultProps = {
-    draggableRange: { top: height, bottom: 0 }
+    draggableRange: { top: height + 180 -64, bottom: 180 }
   };
 
   _draggedValue = new Animated.Value(180);
@@ -128,19 +131,19 @@ class BottomSheet extends React.Component {
 
   render() {
     const { top, bottom } = this.props.draggableRange;
+    
 
+    const backgoundOpacity = this._draggedValue.interpolate({
+      inputRange: [height - 48, height],
+      outputRange: [1, 0],
+      extrapolate: "clamp"
+    });
 
-    // const backgoundOpacity = this._draggedValue.interpolate({
-    //   inputRange: [height - 48, height],
-    //   outputRange: [1, 0],
-    //   extrapolate: "clamp"
-    // });
-
-    // const iconTranslateY = this._draggedValue.interpolate({
-    //   inputRange: [height - 56, height, top],
-    //   outputRange: [0, 56, 180 - 32],
-    //   extrapolate: "clamp"
-    // });
+    const iconTranslateY = this._draggedValue.interpolate({
+      inputRange: [height - 56, height, top],
+      outputRange: [0, 56, 180 - 32],
+      extrapolate: "clamp"
+    });
 
 
     const textTranslateY = this._draggedValue.interpolate({
@@ -184,6 +187,7 @@ class BottomSheet extends React.Component {
 
         <SlidingUpPanel
           ref={c => (this._panel = c)}
+          
           snappingPoints={[360]}
           height={height + 180}
           friction={0.5}
@@ -191,6 +195,7 @@ class BottomSheet extends React.Component {
           <View style={styles.panel}>
 
             <View style={styles.panelHeader}>
+              
               <Animated.View
                 style={styles.iconBg}
               >
@@ -201,26 +206,31 @@ class BottomSheet extends React.Component {
                 <Text style={styles.emailUser}>anhnguyen@gmail.com</Text>
               </View>
               <View style={styles.tool}>
-                <View style={styles.itemTool}>
+                <TouchableOpacity style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
+                  <Text style={styles.textTool}>Quản lý ứng dụng</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.itemTool}>
                   <Image style={styles.image} source={require("../assets/favicon.png")} />
                   <Text style={styles.textTool}>Thanh toán</Text>
-                </View>
-                <View style={styles.itemTool}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.itemTool}>
                   <Image style={styles.image} source={require("../assets/favicon.png")} />
                   <Text style={styles.textTool}>Cài đặt</Text>
-                </View>
-                <View style={styles.itemTool}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.itemTool}>
                   <Image style={styles.image} source={require("../assets/favicon.png")} />
-                  <Text style={styles.textTool}>Chợ giúp và phản hồi</Text>
-                </View>
+                  <Text style={styles.textTool}>Trợ giúp và phản hồi</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.button}>
+                <TouchableOpacity style={styles.buttons} onPress={logout}>
+                  <Text>Đăng xuất</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.button}>
-              <TouchableOpacity style={styles.buttons} onPress={logout}>
-                <Text>Đăng xuất</Text>
-              </TouchableOpacity>
-            </View>
           </View>
+            
         </SlidingUpPanel>
       </View>
     );

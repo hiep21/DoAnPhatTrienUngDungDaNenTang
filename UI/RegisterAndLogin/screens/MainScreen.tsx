@@ -73,18 +73,18 @@ const MainScreen = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.head}>
                 <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/favicon.png")} />
+                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/search.png")}/>
                     <TextInput placeholder='Tìm kiếm trò chơi' />
                     <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/favicon.png")} />
+                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/mic.jpg")} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
 
-                        <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
+                        <Image style={{ width: 30, height: 30, }} source={require("../assets/tb.jpeg")} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel() } style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
 
                     </TouchableOpacity>
@@ -116,11 +116,13 @@ const MainScreen = ({ navigation }) => {
                         width: "95%",
                         alignSelf: 'center',
                         borderRadius: 5,
-                        borderColor: "#bbb"
+                        borderColor: "#bbb",
+                        
                     }}
                 />
 
             </View>
+            
             <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
 
         </View>
