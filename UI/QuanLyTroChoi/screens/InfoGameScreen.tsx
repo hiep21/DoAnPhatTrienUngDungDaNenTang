@@ -41,6 +41,7 @@ const InfoGameScreen = ({ navigation }) => {
             ]
         );
     }
+    
     useEffect(() => {
         getGameById()
     }, [gameId, tenTroChoi])

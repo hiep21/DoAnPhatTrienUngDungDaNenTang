@@ -7,13 +7,15 @@ import { getByName } from '../services/Game';
 const ManagerGameScreen = ({ navigation }) => {
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
-
+    const [reListGame, setReListGame] = useState<InfoGame[]>([])
     const loadTasks = async () => {
         setRefreshing(true)
         try {
             const { data } = await getByName()
             // console.log(data)
+            setReListGame(data)
             setListGame(data)
+
 
         } catch (err) {
             const errorMessage = err.response
@@ -21,12 +23,29 @@ const ManagerGameScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
+    const [searchKeyword, setSearchKeyword] = useState<string>("");
+    const handleSearch = () => {
+        const filteredTasks = listGame.filter((item) =>
+            item.tenTroChoi.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.gia.toLowerCase().includes(searchKeyword.toLowerCase())
+        );
 
+        if (filteredTasks != "" && filteredTasks != null) {
+
+            setListGame(filteredTasks);
+
+        }
+        else {
+            console.log(reListGame);
+            setListGame(reListGame);
+        }
+    }
     useEffect(() => {
+
         loadTasks()
     }, [])
     const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameScreen", { gameId: item.id, tenTroChoi : item.tenTroChoi })
+        navigation.navigate("InfoGameScreen", { gameId: item.id, tenTroChoi: item.tenTroChoi })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
@@ -62,13 +81,15 @@ const ManagerGameScreen = ({ navigation }) => {
 
         )
     }
+
     return (
         <View style={styles.container}>
             <View style={styles.head}>
                 <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity>
+                    <TextInput placeholder='Tìm kiếm trò chơi' value={searchKeyword}
+                        onChangeText={(text) => setSearchKeyword(text)} />
+                    <TouchableOpacity onPress={() => { handleSearch() }}>
                         <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/mic.jpg")} />
                     </TouchableOpacity>
                 </View>
