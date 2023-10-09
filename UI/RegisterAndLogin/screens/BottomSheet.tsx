@@ -1,31 +1,34 @@
-import React from "react";
-import { Text, View, Dimensions, Animated,StyleSheet,Image, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, Dimensions, Animated, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 import SlidingUpPanel from "rn-sliding-up-panel";
 import * as SecureStore from 'expo-secure-store';
+import { deleteUsers, getByUser } from "../services/todo";
+import { string } from "yup";
+import { LoginData, RegisterData } from "../services/interfaces/User.interface";
 
 const { height } = Dimensions.get("window");
 
-const styles = StyleSheet.create( {
+const styles = StyleSheet.create({
   container: {
     flex: 0,
     width: "100%",
     backgroundColor: "#f8f9fa",
     alignItems: "center",
     justifyContent: "center",
-    
+
   },
   panel: {
     flex: 1,
     backgroundColor: "#1119",
     borderRadius: 20,
     position: "relative",
-    
+
   },
   panelHeader: {
-    
+
     justifyContent: "center",
-    alignItems:"center",
+    alignItems: "center",
     padding: 24
   },
   textHeader: {
@@ -47,55 +50,55 @@ const styles = StyleSheet.create( {
     width: 60,
     height: 60,
     borderRadius: 30,
-    alignItems:"center",
-    justifyContent:"center",
-    
-   
+    alignItems: "center",
+    justifyContent: "center",
+
+
   },
-  itemUser:{
+  itemUser: {
     fontSize: 38,
     color: "#FFF",
     fontWeight: "500",
   },
-  user:{
-    paddingTop:10,
-    alignItems:"center",
+  user: {
+    paddingTop: 10,
+    alignItems: "center",
   },
-  name:{
+  name: {
     fontSize: 27,
-    fontWeight:"500",
+    fontWeight: "500",
     color: "#fff"
   },
-  emailUser:{
-    fontSize:22,
-    color:'#999',
+  emailUser: {
+    fontSize: 22,
+    color: '#999',
   },
-  tool:{
-    paddingTop:18,
-    justifyContent:"flex-start",
-    width:'80%',
+  tool: {
+    paddingTop: 18,
+    justifyContent: "flex-start",
+    width: '80%',
   },
-  itemTool:{
+  itemTool: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     paddingTop: 10
   },
-  image:{
-    width:25,
-    height:25,
+  image: {
+    width: 25,
+    height: 25,
   },
-  textTool:{
-    fontSize:20,
-    color:'#fff',
-    marginLeft:20,
-    fontWeight:"500"
+  textTool: {
+    fontSize: 20,
+    color: '#fff',
+    marginLeft: 20,
+    fontWeight: "500"
   },
-  button:{
-    justifyContent:"center",
-    alignItems:"center",
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
     padding: 30
   },
-  buttons:{
+  buttons: {
     borderWidth: 1,
     borderColor: "#177413",
     padding: 8,
@@ -115,15 +118,18 @@ class BottomSheet extends React.Component {
   showPanel = () => {
     this._panel.show(480);
   };
-  navigateToUserScreen = () => {
+  navigateToUserScreen = async () => {
+    const getUser = await SecureStore.getItemAsync('accessToken');
+    const tokenObject = JSON.parse(getUser);
+    const userName = tokenObject.user;
     const { navigation } = this.props;
-    navigation.navigate('UserScreen'); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('UserScreen', { user: userName }); // Điều hướng đến màn hình "UserScreen"
   };
-  
+
   render() {
     const { top, bottom } = this.props.draggableRange;
 
-    
+
     // const backgoundOpacity = this._draggedValue.interpolate({
     //   inputRange: [height - 48, height],
     //   outputRange: [1, 0],
@@ -135,7 +141,7 @@ class BottomSheet extends React.Component {
     //   outputRange: [0, 56, 180 - 32],
     //   extrapolate: "clamp"
     // });
-    
+
 
     const textTranslateY = this._draggedValue.interpolate({
       inputRange: [bottom, top],
@@ -156,7 +162,13 @@ class BottomSheet extends React.Component {
     });
     const logout = async () => {
       try {
+        const getUser = await SecureStore.getItemAsync('accessToken');
+        const tokenObject = JSON.parse(getUser);
+        const userName = tokenObject.user;
+        await deleteUsers(userName);
         await SecureStore.deleteItemAsync('accessToken');
+        const { navigation } = this.props;
+        navigation.navigate("HomeScreen");
         // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
         // Ví dụ: Xoá dữ liệu người dùng khỏi trạng thái ứng dụng hoặc thực hiện các thao tác khác liên quan đến đăng xuất.
         // ...
@@ -166,9 +178,10 @@ class BottomSheet extends React.Component {
       }
     };
 
+
     return (
       <View style={styles.container}>
-        
+
         <SlidingUpPanel
           ref={c => (this._panel = c)}
           snappingPoints={[360]}
@@ -176,7 +189,7 @@ class BottomSheet extends React.Component {
           friction={0.5}
         >
           <View style={styles.panel}>
-          
+
             <View style={styles.panelHeader}>
               <Animated.View
                 style={styles.iconBg}
@@ -184,20 +197,20 @@ class BottomSheet extends React.Component {
                 <Text style={styles.itemUser} >A</Text>
               </Animated.View>
               <View style={styles.user}>
-                <Text style={styles.name} onPress={this.navigateToUserScreen}>Nguyễn Văn Anh</Text>
+                <Text style={styles.name} onPress={this.navigateToUserScreen}>xcz</Text>
                 <Text style={styles.emailUser}>anhnguyen@gmail.com</Text>
               </View>
-              <View style = {styles.tool}>
-                <View style ={styles.itemTool}>
-                  <Image style={styles.image} source={require("../assets/favicon.png")}/>
+              <View style={styles.tool}>
+                <View style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
                   <Text style={styles.textTool}>Thanh toán</Text>
                 </View>
-                <View style ={styles.itemTool}>
-                  <Image style={styles.image} source={require("../assets/favicon.png")}/>
+                <View style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
                   <Text style={styles.textTool}>Cài đặt</Text>
                 </View>
-                <View style ={styles.itemTool}>
-                  <Image style={styles.image} source={require("../assets/favicon.png")}/>
+                <View style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
                   <Text style={styles.textTool}>Chợ giúp và phản hồi</Text>
                 </View>
               </View>

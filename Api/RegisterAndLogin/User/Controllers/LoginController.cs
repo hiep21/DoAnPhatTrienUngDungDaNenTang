@@ -54,7 +54,7 @@ namespace User.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{User}")]
         public IActionResult Delete(string User) 
         {
             try

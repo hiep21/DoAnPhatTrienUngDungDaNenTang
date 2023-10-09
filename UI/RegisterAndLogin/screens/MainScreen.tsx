@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput,ScrollView ,FlatList} from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
 import Background from './Background';
 import { SliderBox } from "react-native-image-slider-box";
 import Carousel from './Carousel';
@@ -8,7 +8,7 @@ import { getByName } from '../services/Game';
 import BottomSheet from "./BottomSheet";
 
 const MainScreen = ({ navigation }) => {
-    
+    const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
 
@@ -81,21 +81,20 @@ const MainScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        
+
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 } }>
+                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
-                        
+
                     </TouchableOpacity>
-                    
+
                 </View>
             </View>
             <View>
-                
             </View>
-            <Carousel/>
-            
+            <Carousel />
+
 
             <View style={styles.body}>
                 <Text style={{
@@ -120,12 +119,12 @@ const MainScreen = ({ navigation }) => {
                         borderColor: "#bbb"
                     }}
                 />
-                
+
             </View>
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation}/>
-            
+            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+
         </View>
-        
+
 
     );
 };
@@ -136,8 +135,8 @@ const styles = StyleSheet.create({
         padding: 20,
         justifyContent: 'flex-start',
         width: "100%",
-        
-        backgroundColor:"#fff"
+
+        backgroundColor: "#fff"
 
     },
     search: {
@@ -182,18 +181,18 @@ const styles = StyleSheet.create({
 
 
     },
-    image:{
+    image: {
         //borderRadius: 15,
         //width:'95%',
         //marginTop:15,
-        padding:20
+        padding: 20
     },
     body: {
         backgroundColor: "white",
         width: 340,
         height: 250,
         marginTop: 20,
-        marginHorizontal:5
+        marginHorizontal: 5
 
     },
 

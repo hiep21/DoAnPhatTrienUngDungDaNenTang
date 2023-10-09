@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert,Image,Activi
 
 import { useState, useEffect } from 'react';
 
-import { loginApi, getUsers, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
+import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Background';
 import { LoginData } from '../services/interfaces/User.interface';
 
@@ -21,7 +21,7 @@ const LoginScreen = ({ navigation }) => {
         const token = await getAccessToken()
         if(token) {
             configAxiosWithAccessToken(token)
-            navigation.navigate("MainScreen")
+            navigation.navigate("MainScreen",{ user: users.user})
         }
     }
 

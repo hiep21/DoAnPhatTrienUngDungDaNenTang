@@ -3,8 +3,8 @@ import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 import { LoginData, RegisterData } from "./interfaces/User.interface";
 
-const BASE_URL = 'https://64f767c49d77540849538bb1.mockapi.io/todo/'
-
+const BASE_URL_REGISTER = 'http://26.115.177.223:5133/Register/'
+const BASE_URL_LOGIN = 'http://26.115.177.223:5133/Login/'
 
 export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone, image }: RegisterData) => {
     return axios({
@@ -36,16 +36,20 @@ export const loginApi = ({ user, password }: LoginData) => {
         }
     })
 }
-export const getUsers = ({ user, password }: RegisterData) => {
+export const getByUser = (user: string) => {
     return axios({
         method: "GET",
-        url: BASE_URL.concat("/Game"), // Điều này giả sử rằng bạn có một API endpoint /users để lấy danh sách tài khoản đã đăng ký
-        data: {
-            user,
-            password
-        }
+        url: BASE_URL_REGISTER.concat("getByUser/").concat(user),
     })
 }
+export const deleteUsers = (user: string) => {
+    return axios({
+        method: "delete",
+        url: BASE_URL_LOGIN.concat("delete/").concat(user),
+    })
+}
+
+
 export const saveTokenToDevice = async (tokenToSave: LoginData) => {
     try {
         // Chuyển đổi tokenToSave thành chuỗi bằng JSON.stringify nếu nó không phải là chuỗi
