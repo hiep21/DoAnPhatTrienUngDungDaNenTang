@@ -181,7 +181,9 @@ class BottomSheet extends React.Component {
       }
     };
 
-
+    useEffect(() => {
+      
+  }, [])
     return (
       <View style={styles.container}>
 

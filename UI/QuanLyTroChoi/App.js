@@ -9,7 +9,7 @@ import ManagerGameScreen from './screens/ManagerGameScreen';
 import UpdateGameScreen from './screens/UpdateGameScreen';
 import InfoGameScreen from './screens/InfoGameScreen';
 import AddGame from './screens/AddGame';
-
+import test from './screens/test';
 
 const StackNAvigator = createStackNavigator({
 
@@ -24,12 +24,16 @@ const StackNAvigator = createStackNavigator({
   },
   AddGame: {
     screen: AddGame
+  },
+  test: {
+    screen: test
   }
 
 
 
+
 }, {
-  initialRouteName: 'ManagerGameScreen'
+  initialRouteName: 'test'
 }
 )
 export default createAppContainer(StackNAvigator)

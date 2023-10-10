@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button } from 'react-native';
 import { CreateGame } from '../services/interfaces/GameService';
 import { createGame, getByName } from '../services/Game';
+import * as ImagePicker from 'expo-image-picker';
 
 const AddGame = ({ navigation }) => {
 
@@ -41,7 +42,7 @@ const AddGame = ({ navigation }) => {
             const { data } = await createGame(user)
             alert("Thành công")
             navigation.navigate("ManagerGameScreen")
-            
+
         } catch (err) {
             const message = err.response
             alert(message)
@@ -65,6 +66,27 @@ const AddGame = ({ navigation }) => {
             ]
         );
     };
+    const [image, setImage] = useState(null);
+    const [imageWidth, setImageWidth] = useState(null);
+    const [imageHeight, setImageHeight] = useState(null);
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+            setImageWidth(result.assets[0].width)
+            setImageHeight(result.assets[0].height)
+        }
+    };
+
     return (
 
         <View style={{ height: "100%" }}>
@@ -128,12 +150,15 @@ const AddGame = ({ navigation }) => {
                                 gioiThieuTroChoi: value
                             })
                         }} style={styles.inputAdd} />
+                        <Button title="Pick an image from camera roll" onPress={pickImage} />
+                        {image && <Image source={{ uri: image }} style={{ width: imageWidth/5, height: imageHeight/5 }} />}
+
                     </ScrollView>
                     <View style={styles.buttons}>
                         <TouchableOpacity style={styles.buttonSave} onPress={onCancel}>
                             <Text >Hủy bỏ</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonSave} onPress={()=>{addUserAction()}}>
+                        <TouchableOpacity style={styles.buttonSave} onPress={() => { addUserAction() }}>
                             <Text>Lưu lại</Text>
                         </TouchableOpacity>
                     </View>

@@ -90,7 +90,7 @@ const ManagerGameScreen = ({ navigation }) => {
                     <TextInput placeholder='Tìm kiếm trò chơi' value={searchKeyword}
                         onChangeText={(text) => setSearchKeyword(text)} />
                     <TouchableOpacity onPress={() => { handleSearch() }}>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/mic.jpg")} />
+                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/dấu tích.png")} />
                     </TouchableOpacity>
                 </View>
 

@@ -1,36 +1,37 @@
-import React from 'react';
-import { View, Button } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { Button, View, Text } from 'react-native';
+import * as DocumentPicker from 'expo-document-picker';
+import axios from 'axios';
 
-const test = () => {
-  const handlePickDocument = () => {
-    const options = {
-      title: 'Select Document',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
+const Test = () => {
+  const [documentUri, setDocumentUri] = useState(null);
 
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled document picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+  const pickDocument = async () => {
+    try {
+      let result = await DocumentPicker.getDocumentAsync({
+        type: '*/*', // Chấp nhận tất cả các loại tài liệu
+      });
+      console.log(result);
+      if (result.type === 'success') {
+        // Gửi tài liệu lên API nếu người dùng chọn tài liệu thành công
+        
       } else {
-        console.log('URI: ', response.uri);
-        console.log('Type: ', response.type);
-        console.log('File Name: ', response.fileName);
-        console.log('File Size: ', response.fileSize);
+        console.log('Chưa chọn tài liệu.');
       }
-    });
+    } catch (error) {
+      console.error('Lỗi khi chọn tài liệu:', error);
+    }
   };
 
+
+
+
   return (
-    <View>
-      <Button title="Pick Document" onPress={handlePickDocument} />
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button title="Chọn tài liệu" onPress={pickDocument} />
+      {documentUri && <Text>Tài liệu đã chọn: {documentUri}</Text>}
     </View>
   );
 };
 
-export default test;
+export default Test;
