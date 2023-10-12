@@ -1,69 +1,83 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
-import { SliderBox } from "react-native-image-slider-box";
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Image, ScrollView, Dimensions, Animated } from 'react-native';
 
-const Carousel = ({ navigation }) => {
-    this.state = {
-        images: [
-          // "https://source.unsplash.com/1024x768/?nature",
-          // "https://source.unsplash.com/1024x768/?water",
-          // "https://source.unsplash.com/1024x768/?girl",
-          // "https://source.unsplash.com/1024x768/?tree",
-          require('../assets/games/assassins_creed/assassins_creed_1.jpg'),
-          require('../assets/games/assassins_creed/assassins_creed_2.jpg'),
-          require('../assets/games/assassins_creed/assassins_creed_3.jpg'),
-          require('../assets/games/assassins_creed/assassins_creed_4.jpg'),
-          
-          require('../assets/games/cod/cod_1.jpg'),
-          require('../assets/games/cod/cod_2.jpg'),
-          require('../assets/games/cod/cod_3.jpg'),
-          
+const { width, height } = Dimensions.get('window');
 
-          require('../assets/games/dirt_5/dirt_1.jpg'),
-          require('../assets/games/dirt_5/dirt_2.jpg'),
-          require('../assets/games/dirt_5/dirt_3.jpg'),
+const images = [
+  require('../assets/games/spider_man/spider_man_1.jpg'),
+  require('../assets/games/spider_man/spider_man_2.jpg'),
+  require('../assets/games/spider_man/spider_man_3.jpg'),
+  
+  require('../assets/games/assassins_creed/assassins_creed_1.jpg'),
+  require('../assets/games/assassins_creed/assassins_creed_2.jpg'),
+  require('../assets/games/assassins_creed/assassins_creed_4.jpg'),
+  
+  require('../assets/games/cod/cod_1.jpg'),
+  require('../assets/games/cod/cod_2.jpg'),
+  require('../assets/games/cod/cod_3.jpg'),
 
-          require('../assets/games/fifa_21/fifa_1.jpg'),
-          require('../assets/games/fifa_21/fifa_2.jpg'),
-          require('../assets/games/fifa_21/fifa_3.jpg'),
+];
 
-          require('../assets/games/nba/nba_1.jpg'),
-          require('../assets/games/nba/nba_2.jpg'),
-          require('../assets/games/nba/nba_3.jpg'),
 
-          require('../assets/games/spider_man/spider_man_1.jpg'),
-          require('../assets/games/spider_man/spider_man_2.jpg'),
-          require('../assets/games/spider_man/spider_man_5.jpg'),
-          
-        ]
-      };
-    return (
-        <View style={styles.container}>
-        <SliderBox
-            images={this.state.images}
-            onCurrentImagePressed={index =>
-            console.warn(`image ${index} pressed`)
-            }
-            autoplay
-            circleLoop
-            style={styles.imageSlide}
-        />
+const imageAspectRatio = 1920 / 1080; 
+
+export default function Carousel() {
+  const containerHeight = width / imageAspectRatio;
+  const scrollX = new Animated.Value(0);
+  const scrollViewRef = useRef();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const nextIndex = (Math.floor(scrollX._value / width) + 1) % images.length;
+      scrollViewRef.current.scrollTo({ x: nextIndex * width, animated: true });
+    }, 3000); // Chuyển ảnh sau mỗi 3 giây.
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [scrollX]);
+
+  const position = Animated.divide(scrollX, width);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ width, height: containerHeight }}>
+        <ScrollView
+          horizontal={true}
+          pagingEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }])}
+          scrollEventThrottle={16}
+          ref={scrollViewRef}
+        >
+          {images.map((source, i) => {
+            return (
+              <View key={i} style={{ width, height: containerHeight }}>
+                <Image
+                  style={{ flex: 1, width: undefined, height: undefined,borderRadius:15,marginHorizontal:10 }}
+                  source={source}
+                  resizeMode="contain" // Để không cắt ảnh
+                />
+              </View>
+            );
+          })}
+        </ScrollView>
       </View>
-
-    );
-};
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    imageSlide:{
-        borderRadius:15,
-        width: '95%',
-        height: '100%',
-        justifyContent: 'flex-start',
-        marginHorizontal:10
-        
-    }
-  });
-
-export default Carousel;
+      <View style={{ flexDirection: 'row' }}>
+        {images.map((_, i) => {
+          let opacity = position.interpolate({
+            inputRange: [i - 1, i, i + 1],
+            outputRange: [0.3, 1, 0.3],
+            extrapolate: 'clamp'
+          });
+          return (
+            <Animated.View
+              key={i}
+              style={{ opacity, height: 10, width: 10, backgroundColor: '#595959', margin: 8, borderRadius: 5 }}
+            />
+          );
+        })}
+      </View>
+    </View>
+  );
+}

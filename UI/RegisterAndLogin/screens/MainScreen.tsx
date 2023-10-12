@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
-import Background from './Background';
-import { SliderBox } from "react-native-image-slider-box";
 import Carousel from './Carousel';
 import { InfoGame } from '../services/interfaces/GameService';
 import { getByName } from '../services/Game';
@@ -93,7 +91,7 @@ const MainScreen = ({ navigation }) => {
             </View>
             <View>
             </View>
-            <Carousel />
+            <Carousel/>
 
 
             <View style={styles.body}>
@@ -197,7 +195,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 5
 
     },
-
+    
 })
 
 export default MainScreen;

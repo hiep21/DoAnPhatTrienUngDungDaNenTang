@@ -9,9 +9,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "7.2.0",
-    "@react-native-picker/picker": "2.4.10",
     "axios": "^1.5.0",
+    "deprecated-react-native-prop-types": "^4.2.1",
     "expo": "^49.0.11",
     "expo-secure-store": "~12.3.1",
     "expo-status-bar": "~1.6.0",

@@ -9,6 +9,98 @@ import { LoginData, RegisterData } from "../services/interfaces/User.interface";
 
 const { height } = Dimensions.get("window");
 
+class BottomSheet extends React.Component {
+  static defaultProps = {
+    draggableRange: { top: height + 180 -64, bottom: 180 }
+  };
+
+  _draggedValue = new Animated.Value(180);
+  showPanel = () => {
+    this._panel.show(480);
+  };
+  navigateToUserScreen = async () => {
+    const getUser = await SecureStore.getItemAsync('accessToken');
+    const tokenObject = JSON.parse(getUser);
+    const userName = tokenObject.user;
+    const { navigation } = this.props;
+    navigation.navigate('UserScreen', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+  };
+
+  render() {
+    
+    const logout = async () => {
+      try {
+        const getUser = await SecureStore.getItemAsync('accessToken');
+        const tokenObject = JSON.parse(getUser);
+        const userName = tokenObject.user;
+        await deleteUsers(userName);
+        await SecureStore.deleteItemAsync('accessToken');
+        const { navigation } = this.props;
+        navigation.navigate("HomeScreen");
+        // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
+        // Ví dụ: Xoá dữ liệu người dùng khỏi trạng thái ứng dụng hoặc thực hiện các thao tác khác liên quan đến đăng xuất.
+        // ...
+        console.log("Đăng xuất thành công");
+      } catch (error) {
+        console.log("Lỗi khi đăng xuất", error);
+      }
+    };
+
+    
+    return (
+      <View style={styles.container}>
+
+        <SlidingUpPanel
+          ref={c => (this._panel = c)}
+          
+          snappingPoints={[360]}
+          height={height + 180}
+          friction={0.5}
+        >
+          <View style={styles.panel}>
+
+            <View style={styles.panelHeader}>
+              
+              <Animated.View
+                style={styles.iconBg}
+              >
+                <Text style={styles.itemUser} >A</Text>
+              </Animated.View>
+              <View style={styles.user}>
+                <Text style={styles.name} onPress={this.navigateToUserScreen}>xcz</Text>
+                <Text style={styles.emailUser}>anhnguyen@gmail.com</Text>
+              </View>
+              <View style={styles.tool}>
+                <TouchableOpacity style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
+                  <Text style={styles.textTool}>Quản lý ứng dụng</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
+                  <Text style={styles.textTool}>Thanh toán</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
+                  <Text style={styles.textTool}>Cài đặt</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.itemTool}>
+                  <Image style={styles.image} source={require("../assets/favicon.png")} />
+                  <Text style={styles.textTool}>Trợ giúp và phản hồi</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.button}>
+                <TouchableOpacity style={styles.buttons} onPress={logout}>
+                  <Text>Đăng xuất</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+            
+        </SlidingUpPanel>
+      </View>
+    );
+  }
+}
 const styles = StyleSheet.create({
   container: {
     flex: 0,
@@ -111,132 +203,4 @@ const styles = StyleSheet.create({
   },
   
 });
-
-class BottomSheet extends React.Component {
-  static defaultProps = {
-    draggableRange: { top: height + 180 -64, bottom: 180 }
-  };
-
-  _draggedValue = new Animated.Value(180);
-  showPanel = () => {
-    this._panel.show(480);
-  };
-  navigateToUserScreen = async () => {
-    const getUser = await SecureStore.getItemAsync('accessToken');
-    const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.user;
-    const { navigation } = this.props;
-    navigation.navigate('UserScreen', { user: userName }); // Điều hướng đến màn hình "UserScreen"
-  };
-
-  render() {
-    const { top, bottom } = this.props.draggableRange;
-    
-
-    const backgoundOpacity = this._draggedValue.interpolate({
-      inputRange: [height - 48, height],
-      outputRange: [1, 0],
-      extrapolate: "clamp"
-    });
-
-    const iconTranslateY = this._draggedValue.interpolate({
-      inputRange: [height - 56, height, top],
-      outputRange: [0, 56, 180 - 32],
-      extrapolate: "clamp"
-    });
-
-
-    const textTranslateY = this._draggedValue.interpolate({
-      inputRange: [bottom, top],
-      outputRange: [0, 8],
-      extrapolate: "clamp"
-    });
-
-    const textTranslateX = this._draggedValue.interpolate({
-      inputRange: [bottom, top],
-      outputRange: [0, -112],
-      extrapolate: "clamp"
-    });
-
-    const textScale = this._draggedValue.interpolate({
-      inputRange: [bottom, top],
-      outputRange: [1, 0.7],
-      extrapolate: "clamp"
-    });
-    const logout = async () => {
-      try {
-        const getUser = await SecureStore.getItemAsync('accessToken');
-        const tokenObject = JSON.parse(getUser);
-        const userName = tokenObject.user;
-        await deleteUsers(userName);
-        await SecureStore.deleteItemAsync('accessToken');
-        const { navigation } = this.props;
-        navigation.navigate("HomeScreen");
-        // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
-        // Ví dụ: Xoá dữ liệu người dùng khỏi trạng thái ứng dụng hoặc thực hiện các thao tác khác liên quan đến đăng xuất.
-        // ...
-        console.log("Đăng xuất thành công");
-      } catch (error) {
-        console.log("Lỗi khi đăng xuất", error);
-      }
-    };
-
-    useEffect(() => {
-      
-  }, [])
-    return (
-      <View style={styles.container}>
-
-        <SlidingUpPanel
-          ref={c => (this._panel = c)}
-          
-          snappingPoints={[360]}
-          height={height + 180}
-          friction={0.5}
-        >
-          <View style={styles.panel}>
-
-            <View style={styles.panelHeader}>
-              
-              <Animated.View
-                style={styles.iconBg}
-              >
-                <Text style={styles.itemUser} >A</Text>
-              </Animated.View>
-              <View style={styles.user}>
-                <Text style={styles.name} onPress={this.navigateToUserScreen}>xcz</Text>
-                <Text style={styles.emailUser}>anhnguyen@gmail.com</Text>
-              </View>
-              <View style={styles.tool}>
-                <TouchableOpacity style={styles.itemTool}>
-                  <Image style={styles.image} source={require("../assets/favicon.png")} />
-                  <Text style={styles.textTool}>Quản lý ứng dụng</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool}>
-                  <Image style={styles.image} source={require("../assets/favicon.png")} />
-                  <Text style={styles.textTool}>Thanh toán</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool}>
-                  <Image style={styles.image} source={require("../assets/favicon.png")} />
-                  <Text style={styles.textTool}>Cài đặt</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool}>
-                  <Image style={styles.image} source={require("../assets/favicon.png")} />
-                  <Text style={styles.textTool}>Trợ giúp và phản hồi</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.button}>
-                <TouchableOpacity style={styles.buttons} onPress={logout}>
-                  <Text>Đăng xuất</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-            
-        </SlidingUpPanel>
-      </View>
-    );
-  }
-}
-
 export default BottomSheet;
