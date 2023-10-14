@@ -14,5 +14,9 @@ export interface RegisterData {
 export interface LoginData {
     user: string
     password: string
-
+}
+export interface LoginDataToken {
+    user: string
+    email:string
+    password: string
 }

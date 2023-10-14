@@ -5,18 +5,55 @@ import SlidingUpPanel from "rn-sliding-up-panel";
 import * as SecureStore from 'expo-secure-store';
 import { deleteUsers, getByUser } from "../services/todo";
 import { string } from "yup";
-import { LoginData, RegisterData } from "../services/interfaces/User.interface";
+import { LoginData, LoginDataToken, RegisterData } from "../services/interfaces/User.interface";
 
 const { height } = Dimensions.get("window");
+
 
 class BottomSheet extends React.Component {
   static defaultProps = {
     draggableRange: { top: height + 180 -64, bottom: 180 }
   };
+  
 
   _draggedValue = new Animated.Value(180);
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isPanelVisible: false,
+      userName: "",
+      email: "",
+    };
+  }
+  async componentDidMount() {
+    // Lấy userName từ SecureStore và cập nhật state userName
+    try {
+      const getUser = await SecureStore.getItemAsync('accessToken');
+      const tokenObject = JSON.parse(getUser);
+      const userName = tokenObject.user;
+      const email = tokenObject.email;
+      this.setState({email})
+      this.setState({ userName });
+    } catch (error) {
+      console.log("Lỗi khi lấy thông tin người dùng", error);
+    }
+  }
   showPanel = () => {
-    this._panel.show(480);
+    //this._panel.show(480);
+    this.setState((prevState) => ({
+      isPanelVisible: !prevState.isPanelVisible,
+    }));
+    const { isPanelVisible } = this.state
+    if(isPanelVisible == true){
+      // this.test();
+      this._panel.show(480);
+      
+    }
+    else{
+      this._panel.show(-48);
+    }
+    
   };
   navigateToUserScreen = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
@@ -26,13 +63,34 @@ class BottomSheet extends React.Component {
     navigation.navigate('UserScreen', { user: userName }); // Điều hướng đến màn hình "UserScreen"
   };
 
+  test = async () => { // Đánh dấu hàm test là async
+  const getUserToken = async () => {
+    try {
+      const getUser = await SecureStore.getItemAsync('accessToken');
+      const tokenObject = JSON.parse(getUser);
+      const userName = tokenObject;
+      return userName;
+    } catch (error) {
+      // Xử lý lỗi ở đây nếu cần
+    }
+  };
+
+  const getData = await getUserToken(); 
+  console.log(getData); 
+  
+}
+
   render() {
+   
     
     const logout = async () => {
       try {
         const getUser = await SecureStore.getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
         const userName = tokenObject.user;
+        const email = tokenObject.email;
+        console.log(userName);
+        console.log(email);
         await deleteUsers(userName);
         await SecureStore.deleteItemAsync('accessToken');
         const { navigation } = this.props;
@@ -42,10 +100,11 @@ class BottomSheet extends React.Component {
         // ...
         console.log("Đăng xuất thành công");
       } catch (error) {
-        console.log("Lỗi khi đăng xuất", error);
+        console.log("Lỗi khi đăng xuất", error.response.data);
       }
     };
-
+    const { userName } = this.state;
+    const { email } = this.state;
     
     return (
       <View style={styles.container}>
@@ -67,8 +126,8 @@ class BottomSheet extends React.Component {
                 <Text style={styles.itemUser} >A</Text>
               </Animated.View>
               <View style={styles.user}>
-                <Text style={styles.name} onPress={this.navigateToUserScreen}>xcz</Text>
-                <Text style={styles.emailUser}>anhnguyen@gmail.com</Text>
+                <Text style={styles.name} onPress={this.navigateToUserScreen}>{userName}</Text>
+                <Text style={styles.emailUser}>{email}</Text>
               </View>
               <View style={styles.tool}>
                 <TouchableOpacity style={styles.itemTool}>

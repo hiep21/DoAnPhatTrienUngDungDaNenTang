@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Background';
-import { LoginData } from '../services/interfaces/User.interface';
+import { LoginData, LoginDataToken } from '../services/interfaces/User.interface';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -13,7 +13,9 @@ const LoginScreen = ({ navigation }) => {
         user: "",
         password: ""
     })
+    
     const [ user, setUser ] = useState<string>("")
+    const [ email, setEmail ] = useState<string>("")
     const [ password, setPassword ] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
 
@@ -40,15 +42,20 @@ const LoginScreen = ({ navigation }) => {
         if(!isLoading){
             setIsLoading(true)
             try {
+                
                 const loginResponse = await loginApi({
                     user,
                     password
                 })
-                const {data} = loginResponse
-            
+                const message = loginResponse.data
+               
                 //Lưu token lại
                 
-                const result = await saveTokenToDevice(users)
+                const result = await saveTokenToDevice({
+                    user,
+                    email: message,
+                    password
+                })
                 if(!result) {
                     alert("Lỗi khi xử lý đăng nhập!")
                 } 
@@ -82,6 +89,7 @@ const LoginScreen = ({ navigation }) => {
                         ...users,
                         user: value
                     }),
+                    
                     setUser(value)
                 }}  style={styles.input} placeholder=""/>
                 <Text style={styles.label}>Password</Text>
@@ -90,6 +98,7 @@ const LoginScreen = ({ navigation }) => {
                         ...users,
                         password: value
                     }),
+                    
                     setPassword(value)
                 }}   style={styles.input} secureTextEntry/> 
             </View>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { InfoGame } from '../services/interfaces/GameService';
 import { deleteApi, getById, getByName } from '../services/Game';
+import BottomSheet from "./BottomSheet";
+
 const InfoGameScreen = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
@@ -59,7 +61,7 @@ const InfoGameScreen = ({ navigation }) => {
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/tb.jpeg")} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel() } style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../assets/favicon.png")} />
                     </TouchableOpacity>
                 </View>
@@ -151,6 +153,7 @@ const InfoGameScreen = ({ navigation }) => {
                     {game?.gioiThieuTroChoi}
                 </Text>
             </View>
+            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
         </View>
 
 

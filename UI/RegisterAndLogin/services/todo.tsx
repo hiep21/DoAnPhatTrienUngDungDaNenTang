@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
-import { LoginData, RegisterData } from "./interfaces/User.interface";
+import { LoginData, LoginDataToken, RegisterData } from "./interfaces/User.interface";
 
 const BASE_URL_REGISTER = 'http://26.115.177.223:5133/Register/'
 const BASE_URL_LOGIN = 'http://26.115.177.223:5133/Login/'
@@ -50,7 +50,7 @@ export const deleteUsers = (user: string) => {
 }
 
 
-export const saveTokenToDevice = async (tokenToSave: LoginData) => {
+export const saveTokenToDevice = async (tokenToSave: LoginDataToken) => {
     try {
         // Chuyển đổi tokenToSave thành chuỗi bằng JSON.stringify nếu nó không phải là chuỗi
         const tokenAsString = typeof tokenToSave === 'string' ? tokenToSave : JSON.stringify(tokenToSave);
