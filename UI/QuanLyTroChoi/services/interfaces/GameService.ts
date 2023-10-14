@@ -20,3 +20,24 @@ export interface InfoGame {
     nhaCungCap: string,
     gioiThieuTroChoi: string,
 }
+export interface LoginDataToken {
+    user: string
+    email:string
+    password: string
+}
+export interface LoginData {
+    user: string
+    password: string
+}
+export interface RegisterData {
+    user: string,
+    name: string,
+    email: string,
+    password: string,
+    note: string,
+    address: string,
+    phone: string,
+    image: string,
+    visa: string
+
+}
