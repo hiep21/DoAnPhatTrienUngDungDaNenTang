@@ -2,6 +2,7 @@
 using User.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using User.DbContexts;
 
 namespace User.Controllers
 {
@@ -9,6 +10,7 @@ namespace User.Controllers
     [Route("[controller]")]
     public class LoginController: ControllerBase
     {
+       
         private readonly ILoginService _loginService;
         public LoginController(ILoginService loginService)
         {
@@ -21,7 +23,7 @@ namespace User.Controllers
             try
             {
                 _loginService.Create(input);
-                return Ok("email");
+                return Ok(_loginService.GetEmail(input.User)[0]);
             }
             catch (Exception ex) 
             {

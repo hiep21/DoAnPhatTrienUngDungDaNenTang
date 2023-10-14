@@ -42,7 +42,8 @@ namespace Game.Services.ForAdmin.Implements
 
             return imageDto;
         }
-
+        
+       
         public List<ImageFileDto> GetImage()
         {
 

@@ -4,6 +4,7 @@ using User.Entities;
 using User.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
+using User.Dtos.Register;
 
 namespace User.Services.Implements
 {
@@ -77,6 +78,22 @@ namespace User.Services.Implements
                     Password = login.Password
                     
                 });
+            }
+            return results;
+        }
+        public List<RegisterDto> GetEmail(string user)
+        {
+            var results = new List<RegisterDto>();
+            foreach (var login in _context.Registers)
+            {
+                if (login.User == user)
+                {
+                    results.Add(new RegisterDto
+                    {
+                        Email = login.Email,
+                        Name = login.Name,
+                    });
+                }
             }
             return results;
         }
