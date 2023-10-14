@@ -19,7 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\ForUser\" />
+    <Folder Include="Dtos\ForUser\" />
+    <Folder Include="Entities\ForUser\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Services\ForUser\" />
     <Folder Include="uploads\" />
   </ItemGroup>
 

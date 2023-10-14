@@ -1,50 +1,51 @@
 import React, { useEffect, useState } from 'react';
-
 import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button } from 'react-native';
 import { CreateGame } from '../services/interfaces/GameService';
-import { createGame, getByName } from '../services/Game';
-import * as ImagePicker from 'expo-image-picker';
+import { createGame, deleteApkFile, deleteFolder, deleteImage, getByName, postFileApk, postImage } from '../services/Game';
+import * as DocumentPicker from 'expo-document-picker';
+
 
 const AddGame = ({ navigation }) => {
 
-    const [user, setUser] = useState<CreateGame>({
+    const [game, setgame] = useState<CreateGame>({
         tenTroChoi: "",
         moTaTroChoi: "",
         doTuoi: "",
         theLoai: "",
         gia: "",
-        nhaCungCap: "",
-        gioiThieuTroChoi: ""
+        nhaCungCap: "string",
+        gioiThieuTroChoi: "",
+        kichCoFile: "0Mb",
+        trangThai: "Trên kệ"
     });
 
     const validateInputs = () => {
-        if (user.tenTroChoi.length < 5) {
+        if (game.tenTroChoi.length < 5) {
             Alert.alert("Lỗi", "tên phải tối thiểu 5 ký tự");
             return false;
         }
-        if (user.moTaTroChoi.length < 10) {
+        if (game.moTaTroChoi.length < 10) {
             Alert.alert("Lỗi", "mô tả trò chơi phải tối thiểu 10 ký tự");
             return false;
         }
-        if (user.gioiThieuTroChoi.length < 50) {
-            Alert.alert("Lỗi", "Vị trí tuyển dụng phải tối thiểu 50 ký tự");
+        if (game.gioiThieuTroChoi.length < 50) {
+            Alert.alert("Lỗi", "Giới thiệu trò chơi phải tối thiểu 50 ký tự");
             return false;
         }
 
         return true;
     };
-    const addUserAction = async () => {
+    const addgameAction = async () => {
         if (!validateInputs()) {
             return;
         }
         try {
-            console.log(user)
-            const { data } = await createGame(user)
+            const response = await createGame(game)
             alert("Thành công")
             navigation.navigate("ManagerGameScreen")
-
+            console.log('Upload success:', response.data);
         } catch (err) {
-            const message = err.response
+            const message = err.response.data
             alert(message)
         }
     }
@@ -66,27 +67,87 @@ const AddGame = ({ navigation }) => {
             ]
         );
     };
+
     const [image, setImage] = useState(null);
-    const [imageWidth, setImageWidth] = useState(null);
-    const [imageHeight, setImageHeight] = useState(null);
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        console.log(result);
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            setImageWidth(result.assets[0].width)
-            setImageHeight(result.assets[0].height)
+        try {
+            let result = await DocumentPicker.getDocumentAsync({
+                type: 'image/*',
+                copyToCacheDirectory: false, // Tránh sao chép tệp vào thư mục bộ nhớ cache của ứng dụng
+            });
+            setImage(result);
+        } catch (error) {
+            console.error('Lỗi khi chọn hình ảnh:', error);
         }
     };
 
+    const uploadImage = async () => {
+        if (!image) {
+            console.error('Chưa chọn hình ảnh.');
+            return;
+        }
+
+        try {
+            const response = await postImage(image.assets[0].uri, image.assets[0].name, nameDocumentUri.replace(".apk", ""))
+
+            console.log('Upload success:', response.data);
+        } catch (error) {
+            console.error('Upload failed:', error.response.data);
+        }
+    };
+
+    const [documentUri, setDocumentUri] = useState<string>("");
+    const [nameDocumentUri, setNameDocumentUri] = useState<string>("");
+    const pickDocument = async () => {
+        try {
+            let result = await DocumentPicker.getDocumentAsync({
+                type: '*/*',
+            });
+
+            if (result != null) {
+                setDocumentUri(result.assets[0].uri);
+                setNameDocumentUri(result.assets[0].name);
+                setgame({
+                    ...game,
+                    kichCoFile: ((result.assets[0].size / 1024) / 1024).toString()
+                })
+            } else {
+                Alert.alert("Cảnh báo", 'Chưa chọn file.');
+            }
+        } catch (error) {
+            Alert.alert("Cảnh báo", 'Lỗi khi chọn file:' + error.message);
+        }
+    };
+
+    const uploadDocument = async () => {
+        if (documentUri) {
+            try {
+                // Gửi tệp APK lên API endpoint sử dụng Axios
+                const response = await postFileApk(documentUri, nameDocumentUri)
+                // Xử lý kết quả từ API nếu cần
+                console.log('Upload success:', response.data);
+            } catch (err) {
+                alert(err.response.data);
+                // Xử lý lỗi nếu cần
+            }
+        } else {
+            console.log('Chưa chọn tài liệu.');
+        }
+    };
+    const uploadData = async () => {
+        try {
+            // Gọi các hàm upload lần lượt và chờ cho đến khi hoàn thành mỗi hàm trước khi gọi hàm tiếp theo
+            await uploadDocument();
+            await uploadImage();
+            await addgameAction();
+            // Nếu tất cả các hàm trên chạy thành công, bạn có thể thực hiện các hành động tiếp theo ở đây
+        } catch (error) {
+            alert(error.response.data);
+            const response = await deleteApkFile(nameDocumentUri)
+            const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
+            const response2 = await deleteFolder(nameDocumentUri)
+        }
+    };
     return (
 
         <View style={{ height: "100%" }}>
@@ -99,72 +160,90 @@ const AddGame = ({ navigation }) => {
                         height: "50%"
                     }}>
                         <Text style={styles.label}>Tên trò chơi</Text>
-                        <TextInput value={user?.tenTroChoi} onChangeText={(value) => {
-                            setUser({
-                                ...user,
+                        <TextInput value={game?.tenTroChoi} onChangeText={(value) => {
+                            setgame({
+                                ...game,
                                 tenTroChoi: value
                             })
                         }} style={styles.input} placeholder='Tên trò chơi' />
 
                         <Text style={styles.label}>Mô tả trò chơi</Text>
-                        <TextInput value={user?.moTaTroChoi} onChangeText={(value) => {
-                            setUser({
-                                ...user,
+                        <TextInput value={game?.moTaTroChoi} onChangeText={(value) => {
+                            setgame({
+                                ...game,
                                 moTaTroChoi: value
                             })
                         }} style={styles.input} placeholder='Mô tả trò chơi' />
 
                         <Text style={styles.label}>Độ tuổi</Text>
-                        <TextInput value={user?.doTuoi} onChangeText={(value) => {
-                            setUser({
-                                ...user,
+                        <TextInput value={game?.doTuoi} onChangeText={(value) => {
+                            setgame({
+                                ...game,
                                 doTuoi: value
                             })
                         }} style={styles.input} placeholder='Độ tuổi' />
 
                         <Text style={styles.label}>Thể loại</Text>
-                        <TextInput value={user?.theLoai} onChangeText={(value) => {
-                            setUser({
-                                ...user,
+                        <TextInput value={game?.theLoai} onChangeText={(value) => {
+                            setgame({
+                                ...game,
                                 theLoai: value
                             })
                         }} style={styles.input} placeholder='Thể loại' />
 
                         <Text style={styles.label}>Giá</Text>
-                        <TextInput value={user?.gia} onChangeText={(value) => {
-                            setUser({
-                                ...user,
+                        <TextInput value={game?.gia} onChangeText={(value) => {
+                            setgame({
+                                ...game,
                                 gia: value
                             })
                         }} style={styles.input} placeholder='Giá' />
-
-                        <Text style={styles.label}>File</Text>
-                        <TextInput onChangeText={(value) => {
-
-                        }} style={styles.input} placeholder='File.apk' />
-
                         <Text style={styles.label}>Giới thiệu trò chơi</Text>
-                        <TextInput numberOfLines={5} value={user?.gioiThieuTroChoi} onChangeText={(value) => {
-                            setUser({
-                                ...user,
+                        <TextInput numberOfLines={5} value={game?.gioiThieuTroChoi} onChangeText={(value) => {
+                            setgame({
+                                ...game,
                                 gioiThieuTroChoi: value
                             })
                         }} style={styles.inputAdd} />
-                        <Button title="Pick an image from camera roll" onPress={pickImage} />
-                        {image && <Image source={{ uri: image }} style={{ width: imageWidth/5, height: imageHeight/5 }} />}
+
+                        <Text style={styles.label}>Chọn file</Text>
+                        <TouchableOpacity onPress={() => { pickDocument() }}>
+                            <Text style={styles.input} >
+                                {nameDocumentUri}
+                            </Text>
+                        </TouchableOpacity>
+
+
+
+                        <Text style={styles.label}>Icon file</Text>
+
+                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+
+
+                        <TouchableOpacity onPress={() => { pickImage(); }}>
+                            <Text style={styles.input} >
+
+                            </Text>
+
+                        </TouchableOpacity>
+
+
+
+
 
                     </ScrollView>
                     <View style={styles.buttons}>
                         <TouchableOpacity style={styles.buttonSave} onPress={onCancel}>
                             <Text >Hủy bỏ</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonSave} onPress={() => { addUserAction() }}>
-                            <Text>Lưu lại</Text>
+                        <TouchableOpacity style={styles.buttonSave} onPress={() => { uploadData() }}>
+                            <Text>Upload File</Text>
                         </TouchableOpacity>
+
                     </View>
                 </View>
             </View>
-        </View>
+        </View >
 
 
     );

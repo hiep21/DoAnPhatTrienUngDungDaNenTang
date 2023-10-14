@@ -21,7 +21,7 @@ namespace User.Controllers
             try
             {
                 _loginService.Create(input);
-                return Ok();
+                return Ok("email");
             }
             catch (Exception ex) 
             {

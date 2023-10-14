@@ -33,7 +33,7 @@ const StackNAvigator = createStackNavigator({
 
 
 }, {
-  initialRouteName: 'test'
+  initialRouteName: 'ManagerGameScreen'
 }
 )
 export default createAppContainer(StackNAvigator)

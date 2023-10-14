@@ -1,7 +1,7 @@
 
 using Game.DbContexts;
-using Game.Services.Implements;
-using Game.Services.Interfaces;
+using Game.Services.ForAdmin.Implements;
+using Game.Services.ForAdmin.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Game
@@ -25,7 +25,7 @@ namespace Game
             });
             builder.Services.AddScoped<IApkFileService, ApkFileService>();
             builder.Services.AddScoped<IInfoApkFile, InfoApkService>();
-            builder.Services.AddScoped<IImageService, ImagesService>();
+            builder.Services.AddScoped<IImageService, ImageService>();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

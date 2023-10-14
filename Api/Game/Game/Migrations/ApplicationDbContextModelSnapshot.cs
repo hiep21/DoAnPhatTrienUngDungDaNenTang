@@ -21,38 +21,31 @@ namespace Game.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Game.Entities.ApkFile", b =>
+            modelBuilder.Entity("Game.Entities.ForAdmin.ApkFile", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("FileName");
 
                     b.ToTable("ApkFiles");
                 });
 
-            modelBuilder.Entity("Game.Entities.ImageModel", b =>
+            modelBuilder.Entity("Game.Entities.ForAdmin.ImageFile", b =>
                 {
-                    b.Property<string>("ImageData")
+                    b.Property<string>("ImageName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("FileName")
+                    b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ImageData");
+                    b.HasKey("ImageName");
 
-                    b.ToTable("ImageModels");
+                    b.ToTable("ImageFiles");
                 });
 
-            modelBuilder.Entity("Game.Entities.InfoApkFile", b =>
+            modelBuilder.Entity("Game.Entities.ForAdmin.InfoApkFile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
