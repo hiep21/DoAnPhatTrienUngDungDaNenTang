@@ -45,16 +45,22 @@ namespace User.Services.Implements
             {
                 throw new Exception($"Không tìm thấy tài khoản có user = {input.User}");
             }
+        
+            if (!BCrypt.Net.BCrypt.Verify(input.Password, register.Password))
+            {
+                throw new Exception($"Không đúng password");
+            }    
             register.User = input.User;
             register.Name = input.Name;
             register.Email = input.Email;
-            register.Password = BCrypt.Net.BCrypt.HashPassword(input.Password);
+            register.Password = BCrypt.Net.BCrypt.HashPassword(input.NewPassword);
             register.Note = input.Note;
             register.Gender = input.Gender;
             register.DateOfBirth = input.DateOfBirth;
             register.Address = input.Address;
             register.Phone = input.Phone;
             register.Image = input.Image;
+
             _context.SaveChanges();
         }
 

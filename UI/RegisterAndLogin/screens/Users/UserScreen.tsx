@@ -19,7 +19,10 @@ const UserScreen = ({ navigation }) => {
         }
 
     }
+    const changeInfo = (username: string, textChange: string) => {
 
+        navigation.navigate("ChangeInfo", { user: username, textChange: textChange });
+    }
     useEffect(() => {
         loadTasks()
     }, [user])
@@ -27,74 +30,105 @@ const UserScreen = ({ navigation }) => {
         <Background>
             <View style={styles.container}>
                 <View style={styles.iconBg}>
-                    <TouchableOpacity onPress={() => { navigation.navigate("ChangeInfo"); }}>
-                        {users ? (
+                    <TouchableOpacity onPress={() => { changeInfo(users?.user, "image") }}>
+                        {users?.image == "" ? (
                             <Image style={{
                                 height: 60,
-                                width: 60
+                                width: 60,
+                                borderRadius: 100
                             }} source={require("../../assets/games/cod/cod_1.jpg")} />
                         ) : (
                             <Image style={{
                                 height: 60,
-                                width: 60
-                            }} source={require("../../assets/games/cod/cod_2.jpg")} />
+                                width: 60,
+                                borderRadius: 100
+                            }} source={{ uri: users?.image }} />
                         )}
                     </TouchableOpacity>
 
                 </View>
-                <Text style={[styles.mainText, { color: "red" }]}>{user}</Text>
+                <Text style={[styles.mainText, { color: "blue" }]}>{user}</Text>
                 <View style={styles.mainContainer}>
+                    <View>
+                        <Text>
+                            {users?.image}...
+                        </Text>
+                    </View>
                     <View style={styles.content}>
                         <Text style={styles.label}>Thông tin cá nhân</Text>
                     </View>
                     <View style={styles.contents}>
                         <View style={styles.itemTool}>
-                            <Image style={styles.image} source={require("../../assets/favicon.png")} />
-                            <View>
-                                <Text style={styles.textUser}>Tên của bạn</Text>
-                                <Text style={styles.textUser}>{users?.name}</Text>
+                            <View style={styles.textAndImage}>
+                                <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                                <View>
+                                    <Text style={styles.textUser}>Tên của bạn</Text>
+                                    <Text style={styles.textUser}>{users?.name}</Text>
+                                </View>
                             </View>
-                            <Text style={styles.bonut}> > </Text>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "name") }}>
+                                <Text style={{ fontSize: 25 }}> {">"}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.itemTool}>
-                            <Image style={styles.image} source={require("../../assets/favicon.png")} />
-                            <View>
-                                <Text style={styles.textUser}>Ngày sinh</Text>
-                                <Text style={styles.textUser}>{users?.dateOfBirth}</Text>
-                            </View>
-                            <Text style={styles.bonut}> > </Text>
+                            <View style={styles.textAndImage}>
+                                <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                                <View>
+                                    <Text style={styles.textUser}>Ngày sinh</Text>
+                                    <Text style={styles.textUser}>{users?.dateOfBirth}</Text>
+                                </View>
+                            </View >
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "dateOfBirth") }}>
+                                <Text style={{ fontSize: 25 }}> {">"}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.itemTool}>
-                            <Image style={styles.image} source={require("../../assets/favicon.png")} />
-                            <View>
-                                <Text style={styles.textUser}>Giới tính</Text>
-                                <Text style={styles.textUser}>{users?.gender}</Text>
+                            <View style={styles.textAndImage}>
+                                <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                                <View>
+                                    <Text style={styles.textUser}>Giới tính</Text>
+                                    <Text style={styles.textUser}>{users?.gender}</Text>
+                                </View>
                             </View>
-                            <Text style={styles.bonut}> > </Text>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "gender") }}>
+                                <Text style={{ fontSize: 25 }}> {">"}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.itemTool}>
-                            <Image style={styles.image} source={require("../../assets/favicon.png")} />
-                            <View>
-                                <Text style={styles.textUser}>Email</Text>
-                                <Text style={styles.textUser}>{users?.email}</Text>
+                            <View style={styles.textAndImage}>
+                                <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                                <View>
+                                    <Text style={styles.textUser}>Email</Text>
+                                    <Text numberOfLines={1} style={styles.textUser}>{users?.email}</Text>
+                                </View>
                             </View>
-                            <Text style={styles.bonut}> > </Text>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "email") }}>
+                                <Text style={{ fontSize: 25 }}> {">"}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.itemTool}>
-                            <Image style={styles.image} source={require("../../assets/favicon.png")} />
-                            <View>
-                                <Text style={styles.textUser}>Số điện thoại</Text>
-                                <Text style={styles.textUser}>{users?.phone}</Text>
+                            <View style={styles.textAndImage}>
+                                <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                                <View>
+                                    <Text style={styles.textUser}>Số điện thoại</Text>
+                                    <Text style={styles.textUser}>{users?.phone}</Text>
+                                </View>
                             </View>
-                            <Text style={styles.bonut}> > </Text>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "phone") }}>
+                                <Text style={{ fontSize: 25 }}> {">"}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.itemTool}>
-                            <Image style={styles.image} source={require("../../assets/favicon.png")} />
-                            <View>
-                                <Text style={styles.textUser}>Địa chỉ</Text>
-                                <Text style={styles.textUser}>{users?.address}</Text>
+                            <View style={styles.textAndImage}>
+                                <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                                <View>
+                                    <Text style={styles.textUser}>Địa chỉ</Text>
+                                    <Text style={styles.textUser}>{users?.address}</Text>
+                                </View>
                             </View>
-                            <Text style={styles.bonut}> > </Text>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "address") }}>
+                                <Text style={{ fontSize: 25 }}> {">"}</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
 
@@ -177,7 +211,9 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     bonut: {
-        fontSize: 25,
+
+        width: 20,
+        justifyContent: 'flex-end'
 
     },
     textSignup: {
@@ -205,10 +241,11 @@ const styles = StyleSheet.create({
     },
     itemTool: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
         paddingTop: 15,
+        height: 55,
+        width: "90%",
         alignItems: 'center',
-        width: "70%"
+        justifyContent: 'space-between'
     },
     image: {
         width: 25,
@@ -217,8 +254,12 @@ const styles = StyleSheet.create({
     textUser: {
         marginLeft: 20,
         fontWeight: "500",
+        width: 200,
 
     },
+    textAndImage: {
+        flexDirection: 'row',
+    }
 
 })
 
