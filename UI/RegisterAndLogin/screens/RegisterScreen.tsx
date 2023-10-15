@@ -5,7 +5,7 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert, Key
 import { RegisterData } from '../services/interfaces/User.interface';
 import * as Yup from 'yup'
 import { registerApi } from '../services/todo';
-import Background from './Background';
+import Background from './Users/Background';
 const validationSchema = Yup.object().shape({
     user: Yup.string()
         .min(2, 'To Short!')

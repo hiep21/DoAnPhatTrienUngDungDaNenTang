@@ -7,9 +7,10 @@ import { createStackNavigator } from 'react-navigation-stack';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
-import MainScreen from './screens/MainScreen';
-import UserScreen from './screens/UserScreen';
-import InfoGameScreen from './screens/InfoGameScreen';
+import MainScreen from './screens/Users/MainScreen';
+import UserScreen from './screens/Users/UserScreen';
+import InfoGameScreen from './screens/Users/InfoGameScreen';
+import ChangeInfo from './screens/Users/ChangeInfo';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen
@@ -28,8 +29,11 @@ const StackNAvigator = createStackNavigator({
   },
   InfoGameScreen: {
     screen: InfoGameScreen
+  },
+  ChangeInfo: {
+    screen: ChangeInfo
   }
-
+  
 }, {
   initialRouteName: 'HomeScreen'
 
