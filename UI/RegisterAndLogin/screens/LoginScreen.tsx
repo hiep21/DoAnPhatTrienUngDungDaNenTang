@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Users/Background';
 import { LoginData, LoginDataToken } from '../services/interfaces/User.interface';
+import { deleteItemAsync } from 'expo-secure-store';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -20,6 +21,7 @@ const LoginScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const loadToken = async () => {
+        // await deleteItemAsync('accessToken');
         const token = await getAccessToken()
         if (token) {
             configAxiosWithAccessToken(token)
@@ -42,7 +44,7 @@ const LoginScreen = ({ navigation }) => {
         if (!isLoading) {
             setIsLoading(true)
             try {
-
+                
                 const loginResponse = await loginApi({
                     user,
                     password
@@ -50,10 +52,10 @@ const LoginScreen = ({ navigation }) => {
                 const message = loginResponse.data
 
                 //Lưu token lại
-
+                
                 const result = await saveTokenToDevice({
                     user,
-                    email: message,
+                    email: message.email,
                     password
                 })
                 if (!result) {
@@ -68,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
                 navigation.navigate("MainScreen")
             } catch (err) {
                 const { data } = err.response
-                alert(data.message)
+                alert(data.message.data)
             }
 
             setIsLoading(false)

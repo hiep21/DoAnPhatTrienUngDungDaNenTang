@@ -65,12 +65,15 @@ const ChangeInfo = ({ navigation }) => {
             <Text>
                 Nhập {textChange}
             </Text>
-            {textChange == "image" ? (
+            {textChange != "image" ? (
                 <View>
                     <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { pickImage(); }}>
                         <Text>click</Text>
                     </TouchableOpacity>
                     {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+                    <TouchableOpacity onPress={() => { uploadImage() }}>
+                        <Text>Upload File</Text>
+                    </TouchableOpacity>
                 </View>
 
             ) : (
@@ -78,9 +81,7 @@ const ChangeInfo = ({ navigation }) => {
                     <Text>{textChange}</Text>
                 </Text>
             )}
-            <TouchableOpacity onPress={() => { uploadImage() }}>
-                <Text>Upload File</Text>
-            </TouchableOpacity>
+
         </View>
     )
 }

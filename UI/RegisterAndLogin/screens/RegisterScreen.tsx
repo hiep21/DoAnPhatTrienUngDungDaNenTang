@@ -32,6 +32,7 @@ const AddUserScreen = ({ navigation }) => {
         phone: "",
         image: ""
     });
+    const [userVal, setUserVal] = useState(null);
     const [rePasswords, setRePasswords] = useState<string>();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedGender, setSelectedGender] = useState<string>("");
@@ -69,20 +70,21 @@ const AddUserScreen = ({ navigation }) => {
     };
     const addUserAction = async () => {
 
-        if (!validateInputs()) {
-            return;
-        }
-        if (user.password != rePasswords) {
-            alert("Confirm Password error");
-            return;
-        }
+        // if (!validateInputs()) {
+        //     return;
+        // }
+        // if (user.password != rePasswords) {
+        //     alert("Confirm Password error");
+        //     return;
+        // }
         try {
             const { data } = await registerApi(user)
             Alert.alert("Register complete!")
             navigation.navigate("LoginScreen")
         } catch (err) {
             const message = err.response
-            alert(message)
+            setUserVal(err.response.data.errors)
+            console.log(err.response.data.errors)
         }
     }
     const onCancel = () => {
@@ -124,6 +126,16 @@ const AddUserScreen = ({ navigation }) => {
                                         user: value
                                     })
                                 }} style={styles.input} placeholder='User name' />
+                                {userVal != null ? (
+                                    <View>
+                                        <Text>{userVal.Email}</Text>
+                                    </View>
+
+                                ) : (
+                                    <Text>
+                                        <Text>null</Text>
+                                    </Text>
+                                )}
                                 <Text style={styles.label}>email</Text>
                                 <TextInput value={user.email} onChangeText={(value) => {
                                     setUser({

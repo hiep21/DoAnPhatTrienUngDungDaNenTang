@@ -9,6 +9,7 @@ const UserScreen = ({ navigation }) => {
     const [users, setUsers] = useState<RegisterData>();
     const loadTasks = async () => {
         try {
+            
             const { data } = await getByUser(user)
 
             setUsers(data[0])
@@ -31,7 +32,7 @@ const UserScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <View style={styles.iconBg}>
                     <TouchableOpacity onPress={() => { changeInfo(users?.user, "image") }}>
-                        {users?.image == "" ? (
+                        {users?.image == "string" ? (
                             <Image style={{
                                 height: 60,
                                 width: 60,
