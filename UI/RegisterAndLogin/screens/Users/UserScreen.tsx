@@ -9,7 +9,7 @@ const UserScreen = ({ navigation }) => {
     const [users, setUsers] = useState<RegisterData>();
     const loadTasks = async () => {
         try {
-            
+
             const { data } = await getByUser(user)
 
             setUsers(data[0])
@@ -50,12 +50,9 @@ const UserScreen = ({ navigation }) => {
                 </View>
                 <Text style={[styles.mainText, { color: "blue" }]}>{user}</Text>
                 <View style={styles.mainContainer}>
-                    <View>
-                        <Text>
-                            {users?.image}...
-                        </Text>
-                    </View>
+
                     <View style={styles.content}>
+                        
                         <Text style={styles.label}>Thông tin cá nhân</Text>
                     </View>
                     <View style={styles.contents}>

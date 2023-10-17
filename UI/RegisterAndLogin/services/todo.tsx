@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
-import { LoginData, LoginDataToken, RegisterData } from "./interfaces/User.interface";
+import { LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./interfaces/User.interface";
 
 const BASE_URL_REGISTER = 'http://26.115.177.223:5133/Register/'
 const BASE_URL_LOGIN = 'http://26.115.177.223:5133/Login/'
@@ -25,7 +25,27 @@ export const registerApi = ({ user, name, email, password, note, gender, dateOfB
         }
     })
 }
+export const UpdateRegisterApi = (username: string, { user, name, email, password, newPassword, note, gender, dateOfBirth, address, phone, image }: UpdateRegister) => {
+    return axios({
+        method: "put",
+        url: BASE_URL_REGISTER.concat("updateRegister/").concat(username),
+        
+        data: {
+            user,
+            password,
+            newPassword,
+            name,
+            email,
+            note,
+            gender,
+            dateOfBirth,
+            address,
+            phone,
+            image
 
+        }
+    })
+}
 export const loginApi = ({ user, password }: LoginData) => {
     return axios({
         method: "POST",

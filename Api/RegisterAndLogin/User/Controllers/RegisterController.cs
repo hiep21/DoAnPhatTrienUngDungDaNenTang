@@ -28,7 +28,7 @@ namespace User.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("updateRegister/{User}")]
+        [HttpPut("updateRegister/{user}")]
         public IActionResult Update(UpdateRegisterDto input) 
         {
             try

@@ -2,7 +2,7 @@
 
 namespace User.Dtos.Register
 {
-    public class UpdateRegisterDto : CreateRegisterDto
+    public class UpdateRegisterDto 
     {
         public string User { get; set; }
         public string Password { get; set; }

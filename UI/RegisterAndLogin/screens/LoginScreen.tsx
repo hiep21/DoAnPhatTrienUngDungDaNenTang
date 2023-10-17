@@ -44,15 +44,15 @@ const LoginScreen = ({ navigation }) => {
         if (!isLoading) {
             setIsLoading(true)
             try {
-                
+
                 const loginResponse = await loginApi({
                     user,
                     password
                 })
                 const message = loginResponse.data
-
+                console.log(loginResponse.data);
                 //Lưu token lại
-                
+
                 const result = await saveTokenToDevice({
                     user,
                     email: message.email,
@@ -70,6 +70,7 @@ const LoginScreen = ({ navigation }) => {
                 navigation.navigate("MainScreen")
             } catch (err) {
                 const { data } = err.response
+                alert(err.response.data)
                 alert(data.message.data)
             }
 
