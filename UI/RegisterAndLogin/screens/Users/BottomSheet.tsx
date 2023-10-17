@@ -62,7 +62,13 @@ class BottomSheet extends React.Component {
     const { navigation } = this.props;
     navigation.navigate('UserScreen', { user: userName }); // Điều hướng đến màn hình "UserScreen"
   };
-
+  navigateToManageGame= async () => {
+    const getUser = await SecureStore.getItemAsync('accessToken');
+    const tokenObject = JSON.parse(getUser);
+    const userName = tokenObject.user;
+    const { navigation } = this.props;
+    navigation.navigate('ManagerGameUser', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+  };
   test = async () => { // Đánh dấu hàm test là async
     const getUserToken = async () => {
       try {
@@ -130,7 +136,7 @@ class BottomSheet extends React.Component {
                 <Text numberOfLines={1} style={styles.emailUser}>{email}</Text>
               </View>
               <View style={styles.tool}>
-                <TouchableOpacity style={styles.itemTool}>
+                <TouchableOpacity style={styles.itemTool} onPress={this.navigateToManageGame}>
                   <Image style={styles.image} source={require("../../assets/favicon.png")} />
                   <Text style={styles.textTool}>Quản lý ứng dụng</Text>
                 </TouchableOpacity>
