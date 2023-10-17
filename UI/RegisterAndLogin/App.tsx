@@ -13,27 +13,48 @@ import InfoGameScreen from './screens/Users/InfoGameScreen';
 import ChangeInfo from './screens/Users/ChangeInfo';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
-    screen: RegisterScreen
+    screen: RegisterScreen,
+    navigationOptions: {
+      title: 'Đăng ký',
+    },
   },
   LoginScreen: {
-    screen: LoginScreen
+    screen: LoginScreen,
+    navigationOptions: {
+      title: 'Đăng nhập',
+    },
   },
   HomeScreen: {
-    screen: HomeScreen
+    screen: HomeScreen,
+    navigationOptions: {
+      title: '',
+    },
   },
   MainScreen: {
-    screen: MainScreen
+    screen: MainScreen,
+    navigationOptions: {
+      title: 'Màn hình chính',
+    },
   },
   UserScreen: {
-    screen: UserScreen
+    screen: UserScreen,
+    navigationOptions: {
+      title: '',
+    },
   },
   InfoGameScreen: {
-    screen: InfoGameScreen
+    screen: InfoGameScreen,
+    navigationOptions: {
+      title: 'Thông tin trò chơi',
+    },
   },
   ChangeInfo: {
-    screen: ChangeInfo
+    screen: ChangeInfo,
+    navigationOptions: {
+      title: 'Thay đổi thông tin',
+    },
   }
-  
+
 }, {
   initialRouteName: 'HomeScreen'
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
 import Carousel from './Carousel';
 import { InfoGame } from '../../services/interfaces/GameService';
@@ -23,7 +23,7 @@ const MainScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
-
+    
     useEffect(() => {
         loadTasks()
     }, [])
@@ -65,7 +65,7 @@ const MainScreen = ({ navigation }) => {
         )
     }
 
-
+   
 
     return (
         <View style={styles.container}>
