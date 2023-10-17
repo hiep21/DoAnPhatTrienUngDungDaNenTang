@@ -9,9 +9,11 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "^7.2.0",
     "axios": "^1.5.0",
     "deprecated-react-native-prop-types": "^4.2.1",
     "expo": "^49.0.11",
+    "expo-document-picker": "~11.5.4",
     "expo-secure-store": "~12.3.1",
     "expo-status-bar": "~1.6.0",
     "formik": "^2.4.5",
@@ -20,14 +22,14 @@
     "react-native-date-picker": "^4.3.3",
     "react-native-datepicker": "^1.7.2",
     "react-native-image-slider-box": "^2.0.7",
+    "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-picker-select": "^8.1.0",
     "react-native-ui-xg": "^0.0.6",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
     "rn-sliding-up-panel": "^2.4.6",
     "yet": "^0.1.0",
-    "yup": "^1.2.0",
-    "expo-document-picker": "~11.5.4"
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
