@@ -6,17 +6,18 @@ import { RegisterData } from '../services/interfaces/User.interface';
 import * as Yup from 'yup'
 import { registerApi } from '../services/todo';
 import Background from './Users/Background';
-const validationSchema = Yup.object().shape({
-    user: Yup.string()
-        .min(2, 'To Short!')
-        .max(20, 'To Long!')
-        .required("Username is required"),
-    password: Yup.string().min(8).required("Password is required")
-        .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    dateOfBirth: Yup.string().required("Date of Birth is required").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$/),
-    rePassword: Yup.string().min(8).oneOf([Yup.ref('password')]).required("Confirm password is required"),
-});
+import DateTimePicker from '@react-native-community/datetimepicker';
+// const validationSchema = Yup.object().shape({
+//     user: Yup.string()
+//         .min(2, 'To Short!')
+//         .max(20, 'To Long!')
+//         .required("Username is required"),
+//     password: Yup.string().min(8).required("Password is required")
+//         .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/),
+//     email: Yup.string().email("Invalid email").required("Email is required"),
+//     dateOfBirth: Yup.string().required("Date of Birth is required").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$/),
+//     rePassword: Yup.string().min(8).oneOf([Yup.ref('password')]).required("Confirm password is required"),
+// });
 
 const AddUserScreen = ({ navigation }) => {
 
@@ -50,6 +51,26 @@ const AddUserScreen = ({ navigation }) => {
     };
 
 
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [changeDate, setChangeDate] = useState<string>();
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || selectedDate;
+        console.log(currentDate.toDateString());
+        setShowDatePicker(Platform.OS === 'ios'); 
+        setSelectedDate(currentDate); // Nếu không có ngày nào được chọn, thì sử dụng ngày hiện tại
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
+        const year = currentDate.getFullYear();
+        // const date = day+month+year;
+        // setChangeDate(date);
+        // console.log(`Ngày: ${day}, Tháng: ${month}, Năm: ${year}`);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const date = currentDate.toLocaleDateString(undefined, options);
+        setChangeDate(date);
+        
+    };
+    
     const validateInputs = () => {
         if (user.user.length < 5 && (user.user == null || user.user.includes(""))) {
             Alert.alert("Lỗi", "User phải tối thiểu 5 ký tự, không được bỏ trống");
@@ -69,7 +90,7 @@ const AddUserScreen = ({ navigation }) => {
         return true;
     };
     const addUserAction = async () => {
-
+        
         // if (!validateInputs()) {
         //     return;
         // }
@@ -77,8 +98,13 @@ const AddUserScreen = ({ navigation }) => {
         //     alert("Confirm Password error");
         //     return;
         // }
+        user.dateOfBirth = changeDate;
+
         try {
+            
+           
             const { data } = await registerApi(user)
+            
             Alert.alert("Register complete!")
             navigation.navigate("LoginScreen")
         } catch (err) {
@@ -86,6 +112,8 @@ const AddUserScreen = ({ navigation }) => {
             setUserVal(err.response.data.errors)
             console.log(err.response.data.errors)
         }
+        
+
     }
     const onCancel = () => {
         Alert.alert(
@@ -119,30 +147,31 @@ const AddUserScreen = ({ navigation }) => {
                                 marginLeft: 20,
 
                             }}>
-                                <Text style={styles.label}>user</Text>
+                                <Text style={styles.label}>User</Text>
                                 <TextInput value={user.user} onChangeText={(value) => {
                                     setUser({
                                         ...user,
                                         user: value
                                     })
                                 }} style={styles.input} placeholder='User name' />
-                                {userVal != null ? (
+                                {userVal != null && user.user.length < 5 ? (
                                     <View>
-                                        <Text>{userVal.Email}</Text>
+                                        <Text style={styles.textError}>{userVal.User}</Text>
                                     </View>
 
-                                ) : (
-                                    <Text>
-                                        <Text>null</Text>
-                                    </Text>
-                                )}
-                                <Text style={styles.label}>email</Text>
+                                ) : null}
+                                <Text style={styles.label}>Email</Text>
                                 <TextInput value={user.email} onChangeText={(value) => {
                                     setUser({
                                         ...user,
                                         email: value
                                     })
                                 }} style={styles.input} placeholder='...@gmail.com' />
+                                {userVal != null && (!user.email.includes("@") || !user.email.includes(".")) ? (
+                                    <View>
+                                        <Text style={styles.textError}>{userVal.Email}</Text>
+                                    </View>
+                                ) : null}
                                 <Text style={styles.label}>Full name</Text>
                                 <TextInput value={user.name} onChangeText={(value) => {
                                     setUser({
@@ -150,8 +179,12 @@ const AddUserScreen = ({ navigation }) => {
                                         name: value
                                     })
                                 }} style={styles.input} placeholder='Nguyễn Văn A' />
-
-                                <Text style={styles.label}>gender</Text>
+                                {userVal != null && !user.name ? (
+                                    <View>
+                                        <Text style={styles.textError}>{userVal.Name}</Text>
+                                    </View>
+                                ) : null}
+                                <Text style={styles.label}>Gender</Text>
                                 <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
                                     <Text style={styles.selectedGenderText}>
                                         {selectedGender ? selectedGender : 'LGBT'}
@@ -176,13 +209,22 @@ const AddUserScreen = ({ navigation }) => {
                                         </View>
                                     </View>
                                 </Modal>
-                                <Text style={styles.label}>dateOfBirth</Text>
-                                <TextInput value={user.dateOfBirth} onChangeText={(value) => {
-                                    setUser({
-                                        ...user,
-                                        dateOfBirth: value
-                                    })
-                                }} style={styles.input} placeholder='DD/MM/YYYY' />
+                                <Text style={styles.label}>Date Of Birth</Text>
+                                
+                
+                                <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
+                                    <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
+                                </TouchableOpacity>
+                                {showDatePicker && (
+                                    <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={selectedDate}
+                                    mode="date"
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={onChange}
+                                    />
+                                )}
                                 <Text style={styles.label}>Address</Text>
                                 <TextInput value={user.address} onChangeText={(value) => {
                                     setUser({
@@ -190,6 +232,12 @@ const AddUserScreen = ({ navigation }) => {
                                         address: value
                                     })
                                 }} style={styles.input} placeholder='Address' />
+                                {userVal != null && !user.address ? (
+                                    <View>
+                                        <Text style={styles.textError}>{userVal.Address}</Text>
+                                    </View>
+
+                                ) : null}
                                 <Text style={styles.label}>Number phone</Text>
                                 <TextInput value={user.phone} onChangeText={(value) => {
                                     setUser({
@@ -197,20 +245,35 @@ const AddUserScreen = ({ navigation }) => {
                                         phone: value
                                     })
                                 }} style={styles.input} placeholder='XXXX-XXX-XXX' />
+                                {userVal != null && !user.phone? (
+                                    <View>
+                                        <Text style={styles.textError}>{userVal.Phone}</Text>
+                                    </View>
 
+                                ) : null}
 
-                                <Text style={styles.label}>password</Text>
+                                <Text style={styles.label}>Password</Text>
                                 <TextInput value={user.password} onChangeText={(value) => {
                                     setUser({
                                         ...user,
                                         password: value
                                     })
                                 }} style={styles.input} secureTextEntry />
+                                {userVal != null && !user.password ? (
+                                    <View>
+                                        <Text style={styles.textError}>{userVal.Password}</Text>
+                                    </View>
+                                ) : null}
                                 <Text style={styles.label}>Confirm Password</Text>
                                 <TextInput value={rePasswords
                                 } onChangeText={(value) => {
                                     setRePasswords(value)
                                 }} style={styles.input} secureTextEntry />
+                                {userVal != null && user.password !== rePasswords ? (
+                                    <View>
+                                        <Text style={styles.textError}>Password không khớp</Text>
+                                    </View>
+                                ) : null}
 
                             </ScrollView>
                             <View style={styles.buttons}>
@@ -319,7 +382,7 @@ const styles = StyleSheet.create({
     },
     selectedGenderText: {
         flex: 1,
-        color: "#777",
+
         marginLeft: 10
     },
     modalContainer: {
@@ -377,6 +440,9 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 15
     },
+    textError:{
+        color: "red"
+    }
 })
 
 export default AddUserScreen;
