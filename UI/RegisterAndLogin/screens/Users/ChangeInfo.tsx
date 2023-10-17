@@ -13,28 +13,46 @@ const ChangeInfo = ({ navigation }) => {
     const [usersUpdateImage, setUsersUpdateImage] = useState<UpdateRegister>();
     const [usersUpdate, setUsersUpdate] = useState<UpdateRegister>(
         {
-            user: users,
+            user: "",
             password: "",
             newPassword: "",
-            name: Users?.name,
-            email: Users?.email,
-            note: Users?.note,
-            gender: Users?.gender,
-            dateOfBirth: Users?.dateOfBirth,
-            address: Users?.address,
-            phone: Users?.phone,
-            image: Users?.image
+            name: "",
+            email: "",
+            note: "",
+            gender: "",
+            dateOfBirth: "",
+            address: "",
+            phone: "",
+            image: ""
         }
     );
     const [isLoading, setIsLoading] = useState(false);
+    const [passwords, setPasswords] = useState<string>();
 
     const loadTasks = async () => {
-
+        const getUser = await getItemAsync('accessToken');
+        const tokenObject = JSON.parse(getUser);
+        const password = tokenObject.password;
+        setPasswords(password)
         try {
             const { data } = await getByUser(users)
 
             setUsers(data[0])
-
+            setUsersUpdate(
+                {
+                    user: users,
+                    password: passwords,
+                    newPassword: passwords,
+                    name: data[0].name,
+                    email: data[0].email,
+                    note: data[0].note,
+                    gender: data[0].gender,
+                    dateOfBirth: data[0].dateOfBirth,
+                    address: data[0].address,
+                    phone: data[0].phone,
+                    image: data[0].image
+                }
+            )
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -98,10 +116,33 @@ const ChangeInfo = ({ navigation }) => {
         try {
             const response = await UpdateRegisterApi(users, usersUpdateImage)
 
+
             console.log('Upload success:', response.data);
         } catch (error) {
             console.log('Upload failed:', error.message);
 
+        }
+        setIsLoading(false)
+
+    }
+    const uploadTextChange = async (change: string) => {
+
+        if (!isLoading) {
+            setIsLoading(true)
+            console.log(usersUpdate);
+            if (change == "") {
+                console.error('Chưa chọn hình ảnh.');
+                return;
+            }
+
+            try {
+                const { data } = await UpdateRegisterApi(users, usersUpdate)
+
+                console.log('Upload success:', data);
+            } catch (error) {
+                console.log('Upload failed:', error.response.data.errors.Address);
+
+            }
         }
         setIsLoading(false)
 
@@ -115,7 +156,7 @@ const ChangeInfo = ({ navigation }) => {
             case 'name':
                 return (
                     <View>
-                        <Text style={styles.textInput}>Nhập tên của bạn</Text>
+                        <Text style={styles.textInput}>Sửa tên của bạn</Text>
                         <TextInput
                             value={usersUpdate.name}
                             onChangeText={(value) => {
@@ -127,12 +168,29 @@ const ChangeInfo = ({ navigation }) => {
                             style={styles.input}
                             placeholder='Nguyễn văn A'
                         />
+                        <TouchableOpacity style={{
+                            backgroundColor: "#7FFF00",
+                            width: 200,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            borderWidth: 1
+                        }} onPress={() => { uploadTextChange(usersUpdate.name); }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>cập nhật</Text>
+                            )}
+                        </TouchableOpacity>
                     </View>
                 );
             case 'dateOfBirth':
                 return (
                     <View>
-                        <Text style={styles.textInput}>Nhập ngày sinh của bạn</Text>
+                        <Text style={styles.textInput}>Sửa ngày sinh của bạn</Text>
                         <TextInput
                             value={usersUpdate.dateOfBirth}
                             onChangeText={(value) => {
@@ -144,12 +202,29 @@ const ChangeInfo = ({ navigation }) => {
                             style={styles.input}
                             placeholder='xx/xx/xxxx'
                         />
+                        <TouchableOpacity style={{
+                            backgroundColor: "#7FFF00",
+                            width: 200,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            borderWidth: 1
+                        }} onPress={() => { uploadTextChange(usersUpdate.dateOfBirth); }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>Cập nhật</Text>
+                            )}
+                        </TouchableOpacity>
                     </View>
                 );
             case 'gender':
                 return (
                     <View>
-                        <Text style={styles.textInput}>Nhập ngày sinh của bạn</Text>
+                        <Text style={styles.textInput}>Sửa giới tính của bạn</Text>
                         <TextInput
                             value={usersUpdate.gender}
                             onChangeText={(value) => {
@@ -161,12 +236,29 @@ const ChangeInfo = ({ navigation }) => {
                             style={styles.input}
                             placeholder='Gender'
                         />
+                        <TouchableOpacity style={{
+                            backgroundColor: "#7FFF00",
+                            width: 200,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            borderWidth: 1
+                        }} onPress={() => { uploadTextChange(usersUpdate.gender); }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>Cập nhật</Text>
+                            )}
+                        </TouchableOpacity>
                     </View>
                 );
             case 'email':
                 return (
                     <View>
-                        <Text style={styles.textInput}>Nhập ngày sinh của bạn</Text>
+                        <Text style={styles.textInput}>Sửa email của bạn</Text>
                         <TextInput
                             value={usersUpdate.email}
                             onChangeText={(value) => {
@@ -178,12 +270,29 @@ const ChangeInfo = ({ navigation }) => {
                             style={styles.input}
                             placeholder='xxx@xxx.xxx'
                         />
+                        <TouchableOpacity style={{
+                            backgroundColor: "#7FFF00",
+                            width: 200,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            borderWidth: 1
+                        }} onPress={() => { uploadTextChange(usersUpdate.email); }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>Cập nhật</Text>
+                            )}
+                        </TouchableOpacity>
                     </View>
                 );
             case 'phone':
                 return (
-                    <View style={styles.textInput}>
-                        <Text>Nhập ngày sinh của bạn</Text>
+                    <View >
+                        <Text style={styles.textInput}>Sửa số điện thoại của bạn</Text>
                         <TextInput
                             value={usersUpdate.phone}
                             onChangeText={(value) => {
@@ -195,12 +304,29 @@ const ChangeInfo = ({ navigation }) => {
                             style={styles.input}
                             placeholder='xxxx-xxx-xxx'
                         />
+                        <TouchableOpacity style={{
+                            backgroundColor: "#7FFF00",
+                            width: 200,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            borderWidth: 1
+                        }} onPress={() => { uploadTextChange(usersUpdate.phone); }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>Cập nhật</Text>
+                            )}
+                        </TouchableOpacity>
                     </View>
                 );
             case 'address':
                 return (
                     <View>
-                        <Text style={styles.textInput}>Nhập ngày sinh của bạn</Text>
+                        <Text style={styles.textInput}>Sửa địa chỉ của bạn</Text>
                         <TextInput
                             value={usersUpdate.address}
                             onChangeText={(value) => {
@@ -212,6 +338,23 @@ const ChangeInfo = ({ navigation }) => {
                             style={styles.input}
                             placeholder='Address'
                         />
+                        <TouchableOpacity style={{
+                            backgroundColor: "#7FFF00",
+                            width: 200,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            borderWidth: 1
+                        }} onPress={() => { uploadTextChange(usersUpdate.address); }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>Cập nhật</Text>
+                            )}
+                        </TouchableOpacity>
                     </View>
                 );
         }
@@ -273,7 +416,6 @@ const ChangeInfo = ({ navigation }) => {
                         borderWidth: 1
                     }}>
                         {renderInputField(textChange)}
-
 
                     </View>
                 )}
