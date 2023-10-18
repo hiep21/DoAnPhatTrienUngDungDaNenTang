@@ -14,6 +14,7 @@ import ChangeInfo from './screens/Users/ChangeInfo';
 import ManagerGameUser from './screens/Users/ManagerGame';
 import SettingUser from './screens/Users/Setting';
 import SupportUser from './screens/Users/Support';
+import QRScannerScreen from './screens/NhaCungCap/QRScannerScreen';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -74,10 +75,15 @@ const StackNAvigator = createStackNavigator({
     navigationOptions: {
       title: 'Trợ giúp và phản hồi',
     },
+  },
+  QRScannerScreen: {
+    screen: QRScannerScreen,
+    navigationOptions: {
+      title: 'Trợ giúp và phản hồi',
+    },
   }
-
 }, {
-  initialRouteName: 'HomeScreen'
+  initialRouteName: 'QRScannerScreen'
 
 }
 )
