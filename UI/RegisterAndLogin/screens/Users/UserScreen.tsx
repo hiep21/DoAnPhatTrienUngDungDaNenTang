@@ -32,7 +32,7 @@ const UserScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <View style={styles.iconBg}>
                     <TouchableOpacity onPress={() => { changeInfo(users?.user, "image") }}>
-                        {users?.image == "string" ? (
+                        {users?.image == "" ? (
                             <Image style={{
                                 height: 60,
                                 width: 60,
