@@ -5,7 +5,7 @@ const BASE_URL = 'http://26.115.177.223:5221/InfoFile/'
 
 const BASE_URL_APK_FILE = 'http://26.115.177.223:5221/ApkFiles/'
 
-const BASE_URL_Image = 'http://26.115.177.223:5221/ImageFile/'
+export const BASE_URL_Image = 'http://26.115.177.223:5221/ImageFile/'
 
 export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi, kichCoFile, trangThai }: CreateGame) => {
     return axios({
@@ -37,6 +37,15 @@ export const getById = (id: string) => {
     return axios({
         method: "GET",
         url: BASE_URL.concat("getInfoFileById/").concat(id)
+
+    })
+
+}
+export const getImage = (filename: string, imageName: string) => {
+
+    return axios({
+        method: "GET",
+        url: "http://26.115.177.223:5221/ImageFile/getImage/".concat(filename).concat("/").concat(imageName)
 
     })
 

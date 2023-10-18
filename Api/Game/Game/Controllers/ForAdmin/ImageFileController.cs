@@ -102,7 +102,18 @@ namespace Game.Controllers.ForAdmin
                 return BadRequest(ex.Message);
             }
         }
-        
+        [HttpGet("getImage/{fileName}/{image}")]
+        public IActionResult GetFile(string fileName, string image)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory() + $"/uploads/{fileName.Replace(".apk", "")}/Image", image);
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("Tệp không tồn tại.");
+            }
+
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, "application/octet-stream", image);
+        }
 
     }
 }
