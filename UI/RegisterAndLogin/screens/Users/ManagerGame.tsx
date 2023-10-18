@@ -5,7 +5,7 @@ import { getByName } from '../../services/Game';
 
 
 const ManagerGameUser = ({ navigation }) => {
-
+    const users = navigation.getParam("user")
     const [check, setCheck] = useState<boolean>(false)
     const [listGameIsInstall, setListGameIsInstall] = useState<InfoGame[]>([])
     const [listGameHaveBuy, setListGameHaveBuy] = useState<InfoGame[]>([])
@@ -59,8 +59,12 @@ const ManagerGameUser = ({ navigation }) => {
             </TouchableOpacity >
         )
     }
+    useEffect(() => {
+        loadTasks()
+    }, [users])
     return (
         <View style={styles.container}>
+            
             <View style={{
                 flexDirection: 'row',
 

@@ -92,6 +92,7 @@ namespace User.Services.Implements
                     {
                         Email = login.Email,
                         Name = login.Name,
+                        Image = login.Image,
                     });
                 }
             }

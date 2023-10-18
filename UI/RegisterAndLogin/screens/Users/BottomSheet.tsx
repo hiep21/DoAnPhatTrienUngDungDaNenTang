@@ -62,12 +62,26 @@ class BottomSheet extends React.Component {
     const { navigation } = this.props;
     navigation.navigate('UserScreen', { user: userName }); // Điều hướng đến màn hình "UserScreen"
   };
-  navigateToManageGame= async () => {
+  navigateToManageGame = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
     const userName = tokenObject.user;
     const { navigation } = this.props;
     navigation.navigate('ManagerGameUser', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+  };
+  navigateToSettingUser = async () => {
+    const getUser = await SecureStore.getItemAsync('accessToken');
+    const tokenObject = JSON.parse(getUser);
+    const userName = tokenObject.user;
+    const { navigation } = this.props;
+    navigation.navigate('SettingUser', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+  };
+  navigateToSupportUser = async () => {
+    const getUser = await SecureStore.getItemAsync('accessToken');
+    const tokenObject = JSON.parse(getUser);
+    const userName = tokenObject.user;
+    const { navigation } = this.props;
+    navigation.navigate('SupportUser', { user: userName }); // Điều hướng đến màn hình "UserScreen"
   };
   test = async () => { // Đánh dấu hàm test là async
     const getUserToken = async () => {
@@ -140,15 +154,15 @@ class BottomSheet extends React.Component {
                   <Image style={styles.image} source={require("../../assets/favicon.png")} />
                   <Text style={styles.textTool}>Quản lý ứng dụng</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool}>
+                <TouchableOpacity style={styles.itemTool} >
                   <Image style={styles.image} source={require("../../assets/favicon.png")} />
                   <Text style={styles.textTool}>Thanh toán</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool}>
+                <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSettingUser}>
                   <Image style={styles.image} source={require("../../assets/favicon.png")} />
                   <Text style={styles.textTool}>Cài đặt</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool}>
+                <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSupportUser}>
                   <Image style={styles.image} source={require("../../assets/favicon.png")} />
                   <Text style={styles.textTool}>Trợ giúp và phản hồi</Text>
                 </TouchableOpacity>

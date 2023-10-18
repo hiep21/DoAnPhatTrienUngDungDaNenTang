@@ -12,8 +12,8 @@ import UserScreen from './screens/Users/UserScreen';
 import InfoGameScreen from './screens/Users/InfoGameScreen';
 import ChangeInfo from './screens/Users/ChangeInfo';
 import ManagerGameUser from './screens/Users/ManagerGame';
-
-
+import SettingUser from './screens/Users/Setting';
+import SupportUser from './screens/Users/Support';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -61,6 +61,18 @@ const StackNAvigator = createStackNavigator({
     screen: ManagerGameUser,
     navigationOptions: {
       title: 'Quản lý ứng dụng',
+    },
+  },
+  SettingUser: {
+    screen: SettingUser,
+    navigationOptions: {
+      title: 'Cài đặt',
+    },
+  },
+  SupportUser: {
+    screen: SupportUser,
+    navigationOptions: {
+      title: 'Trợ giúp và phản hồi',
     },
   }
 
