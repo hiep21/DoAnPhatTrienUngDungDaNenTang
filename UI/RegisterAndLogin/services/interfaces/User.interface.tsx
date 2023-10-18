@@ -30,5 +30,6 @@ export interface LoginData {
 export interface LoginDataToken {
     user: string
     email: string
+    image:string
     password: string
 }

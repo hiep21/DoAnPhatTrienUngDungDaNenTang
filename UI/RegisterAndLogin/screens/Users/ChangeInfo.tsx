@@ -8,6 +8,7 @@ import { bool } from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Background from './Background';
 const ChangeInfo = ({ navigation }) => {
+    
     const users = navigation.getParam("user")
     const textChange = navigation.getParam("textChange")
     const [Users, setUsers] = useState<RegisterData>();
@@ -141,6 +142,7 @@ const ChangeInfo = ({ navigation }) => {
             });
             if (result.assets != null) {
                 setImage(result);
+                //setImage(result.assets[0].uri);
             }
             else {
                 return;
