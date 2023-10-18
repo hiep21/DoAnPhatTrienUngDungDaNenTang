@@ -4,19 +4,26 @@ import Carousel from './Carousel';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
+import { getByUser } from '../../services/todo';
+import { getItemAsync } from 'expo-secure-store';
 
 const MainScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
-    
+    const [image, setImage] = useState<string>()
     const loadTasks = async () => {
         setRefreshing(true)
+        const getUser = await getItemAsync('accessToken');
+        const tokenObject = JSON.parse(getUser);
+        
+        setImage(tokenObject.image);
+        
         try {
             const { data } = await getByName()
             // console.log(data)
             setListGame(data)
-
+            
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -41,7 +48,9 @@ const MainScreen = ({ navigation }) => {
 
 
                 }}>
-                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/games/cod/cod_1.jpg")} />
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/games/cod/cod_1.jpg")
+                        
+                    } />
                     <View style={{
                         marginLeft: 15,
                         width: "70%"
@@ -83,7 +92,9 @@ const MainScreen = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/tb.jpeg")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                    <Image style={{ width: 30, height: 30, }} source={{
+                            uri:image
+                        }} />
 
                     </TouchableOpacity>
 
