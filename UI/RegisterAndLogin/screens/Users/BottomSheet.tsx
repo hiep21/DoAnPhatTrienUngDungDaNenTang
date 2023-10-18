@@ -6,6 +6,7 @@ import * as SecureStore from 'expo-secure-store';
 import { deleteUsers, getByUser } from "../../services/todo";
 import { string } from "yup";
 import { LoginData, LoginDataToken, RegisterData } from "../../services/interfaces/User.interface";
+import ChangeInfo from "./ChangeInfo";
 
 const { height } = Dimensions.get("window");
 
@@ -14,7 +15,7 @@ class BottomSheet extends React.Component {
   static defaultProps = {
     draggableRange: { top: height + 180 - 64, bottom: 180 }
   };
-
+  
 
   _draggedValue = new Animated.Value(180);
 
@@ -24,6 +25,7 @@ class BottomSheet extends React.Component {
       isPanelVisible: false,
       userName: "",
       email: "",
+      image: "",
     };
   }
   async componentDidMount() {
@@ -33,8 +35,10 @@ class BottomSheet extends React.Component {
       const tokenObject = JSON.parse(getUser);
       const userName = tokenObject.user;
       const email = tokenObject.email;
+      const image = tokenObject.image;
       this.setState({ email })
       this.setState({ userName });
+      this.setState({ image});
     } catch (error) {
       console.log("Lỗi khi lấy thông tin người dùng", error);
     }
@@ -94,14 +98,14 @@ class BottomSheet extends React.Component {
         // Xử lý lỗi ở đây nếu cần
       }
     };
-
     const getData = await getUserToken();
     console.log(getData);
-
+    
   }
-
+  
+  
   render() {
-
+    
 
     const logout = async () => {
       try {
@@ -109,10 +113,12 @@ class BottomSheet extends React.Component {
         const tokenObject = JSON.parse(getUser);
         const userName = tokenObject.user;
         const email = tokenObject.email;
+        const image = tokenObject.image;
         console.log(userName);
         console.log(email);
-        await deleteUsers(userName);
         await SecureStore.deleteItemAsync('accessToken');
+        await deleteUsers(userName);
+        
         const { navigation } = this.props;
         navigation.navigate("HomeScreen");
         // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
@@ -125,6 +131,8 @@ class BottomSheet extends React.Component {
     };
     const { userName } = this.state;
     const { email } = this.state;
+    const {image} = this.state;
+    
 
     return (
       <View style={styles.container}>
@@ -140,11 +148,14 @@ class BottomSheet extends React.Component {
 
             <View style={styles.panelHeader}>
 
-              <Animated.View
-                style={styles.iconBg}
-              >
-                <Text style={styles.itemUser} >A</Text>
-              </Animated.View>
+              <Animated.View>
+                  {image && (
+                  <Image
+                  style={styles.iconBg}
+                  source={{ uri: this.state.image }}
+                  />
+                  )}
+              </Animated.View>  
               <View style={styles.user}>
                 <Text style={styles.name} onPress={this.navigateToUserScreen}>{userName}</Text>
                 <Text numberOfLines={1} style={styles.emailUser}>{email}</Text>
@@ -219,7 +230,7 @@ const styles = StyleSheet.create({
     zIndex: 1
   },
   iconBg: {
-    backgroundColor: "#2b8a3e",
+    
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -245,7 +256,8 @@ const styles = StyleSheet.create({
   emailUser: {
     fontSize: 22,
     color: '#999',
-    width: 250
+    width: 250,
+    textAlign:"center"
   },
   tool: {
     paddingTop: 18,

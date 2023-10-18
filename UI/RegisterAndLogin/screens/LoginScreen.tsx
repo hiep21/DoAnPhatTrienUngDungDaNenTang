@@ -56,6 +56,7 @@ const LoginScreen = ({ navigation }) => {
                 const result = await saveTokenToDevice({
                     user,
                     email: message.email,
+                    image: message.image,
                     password
                 })
                 if (!result) {

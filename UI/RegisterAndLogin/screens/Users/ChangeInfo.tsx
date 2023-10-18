@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator,Modal } from 'react-native';
 import { UpdateRegisterApi, getByUser } from '../../services/todo';
 import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
 import { bool } from 'yup';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Background from './Background';
 const ChangeInfo = ({ navigation }) => {
+    
     const users = navigation.getParam("user")
     const textChange = navigation.getParam("textChange")
     const [Users, setUsers] = useState<RegisterData>();
@@ -27,13 +29,55 @@ const ChangeInfo = ({ navigation }) => {
         }
     );
     const [isLoading, setIsLoading] = useState(false);
-    const [passwords, setPasswords] = useState<string>();
+    
+
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [changeDate, setChangeDate] = useState<string>();
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || selectedDate;
+        
+        setShowDatePicker(Platform.OS === 'ios'); 
+        setSelectedDate(currentDate);
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
+        const year = currentDate.getFullYear();
+        // const date = day+month+year;
+        // setChangeDate(date);
+        // console.log(`Ngày: ${day}, Tháng: ${month}, Năm: ${year}`);
+        
+        const date = day+"/"+month+"/"+year
+
+        setUsersUpdate({
+            ...usersUpdate,
+            dateOfBirth: date
+        });
+    };
+
+   
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedGender, setSelectedGender] = useState<string>("");
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
+    const selectGender = (Gender: string) => {
+        setSelectedGender(Gender);
+        setUsersUpdate({
+            ...usersUpdate,
+            gender: Gender
+        });
+        toggleModal();
+    };
 
     const loadTasks = async () => {
         const getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
         const password = tokenObject.password;
-        setPasswords(password)
+        
+        
         try {
             const { data } = await getByUser(users)
 
@@ -41,8 +85,8 @@ const ChangeInfo = ({ navigation }) => {
             setUsersUpdate(
                 {
                     user: users,
-                    password: passwords,
-                    newPassword: passwords,
+                    password: password,
+                    newPassword: password,
                     name: data[0].name,
                     email: data[0].email,
                     note: data[0].note,
@@ -53,6 +97,7 @@ const ChangeInfo = ({ navigation }) => {
                     image: data[0].image
                 }
             )
+           
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -97,6 +142,7 @@ const ChangeInfo = ({ navigation }) => {
             });
             if (result.assets != null) {
                 setImage(result);
+                //setImage(result.assets[0].uri);
             }
             else {
                 return;
@@ -148,7 +194,7 @@ const ChangeInfo = ({ navigation }) => {
 
     }
     useEffect(() => {
-
+    
         loadTasks();
     }, [users, textChange])
     const renderInputField = (key) => {
@@ -191,7 +237,7 @@ const ChangeInfo = ({ navigation }) => {
                 return (
                     <View>
                         <Text style={styles.textInput}>Sửa ngày sinh của bạn</Text>
-                        <TextInput
+                        {/* <TextInput
                             value={usersUpdate.dateOfBirth}
                             onChangeText={(value) => {
                                 setUsersUpdate({
@@ -201,7 +247,20 @@ const ChangeInfo = ({ navigation }) => {
                             }}
                             style={styles.input}
                             placeholder='xx/xx/xxxx'
-                        />
+                        /> */}
+                        <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
+                            <Text> {selectedDate.toDateString()}</Text>
+                        </TouchableOpacity>
+                        {showDatePicker && (
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={selectedDate}
+                                mode="date"
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChange}
+                            />
+                        )}
                         <TouchableOpacity style={{
                             backgroundColor: "#7FFF00",
                             width: 200,
@@ -225,7 +284,7 @@ const ChangeInfo = ({ navigation }) => {
                 return (
                     <View>
                         <Text style={styles.textInput}>Sửa giới tính của bạn</Text>
-                        <TextInput
+                        {/* <TextInput
                             value={usersUpdate.gender}
                             onChangeText={(value) => {
                                 setUsersUpdate({
@@ -235,7 +294,31 @@ const ChangeInfo = ({ navigation }) => {
                             }}
                             style={styles.input}
                             placeholder='Gender'
-                        />
+                        /> */}
+                        <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
+                            <Text>
+                                {selectedGender ? selectedGender : 'LGBT'}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalContent}>
+                                    <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
+                                        <Text>Male</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
+                                        <Text>Female</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
+                                        <Text>Other</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                        <Text>Close</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
                         <TouchableOpacity style={{
                             backgroundColor: "#7FFF00",
                             width: 200,
@@ -445,9 +528,46 @@ const styles = StyleSheet.create({
     textInput: {
         paddingHorizontal: 5
     },
-    textbtn: {
+    dropdownButton: {
+        borderWidth: 1.25,
+        paddingVertical: 1,
+        width: 200,
+        borderRadius: 5,
+        backgroundColor: "#7777",
+        borderColor: '#555',
+        paddingHorizontal: 15,
+        marginTop: 10,
+        height: 30,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    textbtn:{
 
-    }
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+    },
+    modalItem: {
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderColor: '#ccc',
+    },
+    closeButton: {
+        marginTop: 10,
+        backgroundColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        alignItems: 'center',
+    },
 
 })
 

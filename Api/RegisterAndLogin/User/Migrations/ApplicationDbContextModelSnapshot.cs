@@ -21,6 +21,26 @@ namespace User.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("User.Entities.GameManager", b =>
+                {
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsBuy")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsInstall")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameGame")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Username");
+
+                    b.ToTable("GameManagers");
+                });
+
             modelBuilder.Entity("User.Entities.Login", b =>
                 {
                     b.Property<string>("User")

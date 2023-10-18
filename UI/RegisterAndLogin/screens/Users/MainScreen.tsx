@@ -9,7 +9,7 @@ const MainScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
-
+    
     const loadTasks = async () => {
         setRefreshing(true)
         try {
