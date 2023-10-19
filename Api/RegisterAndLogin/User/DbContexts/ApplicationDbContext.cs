@@ -14,6 +14,7 @@ namespace User.DbContexts
         public DbSet<Register> Registers { get; set; }
         public DbSet<Login> Logins { get; set; }
         public DbSet<GameManager> GameManagers { get; set; }
+        public DbSet<ImageIcon> ImageIcons { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }
