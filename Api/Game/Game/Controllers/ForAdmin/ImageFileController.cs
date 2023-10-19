@@ -103,7 +103,7 @@ namespace Game.Controllers.ForAdmin
             }
         }
         [HttpGet("getImage/{fileName}/{image}")]
-        public IActionResult GetFile(string fileName, string image)
+        public IActionResult GetFile(string image, string fileName)
         {
             var filePath = Path.Combine(Directory.GetCurrentDirectory() + $"/uploads/{fileName.Replace(".apk", "")}/Image", image);
             if (!System.IO.File.Exists(filePath))
