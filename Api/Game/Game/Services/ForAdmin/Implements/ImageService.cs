@@ -19,9 +19,9 @@ namespace Game.Services.ForAdmin.Implements
             _context = context;
         }
 
-        public async Task<ImageFileDto> UploadImageAsync(ImageFileDto imageDto)//, InfoFileDto infoFileDto)
+        public async Task<ImageFileDto> UploadImageAsync(ImageFileDto imageDto, string oldFileName)//, InfoFileDto infoFileDto)
         {
-            var checkImageFile = _context.ImageFiles.FirstOrDefault(f => f.ImageName == imageDto.ImageName);
+            var checkImageFile = _context.ImageFiles.FirstOrDefault(f => f.OldFileName == imageDto.OldFileName);
             if (checkImageFile != null)
             {
                 throw new Exception("Tên file trò chơi bị trùng");
@@ -35,6 +35,7 @@ namespace Game.Services.ForAdmin.Implements
             {
                 ImageName = imageDto.ImageName,
                 ImagePath = imageDto.ImagePath,
+                OldFileName = imageDto.OldFileName,
             };
 
             _context.ImageFiles.Add(imageFile);
@@ -56,6 +57,7 @@ namespace Game.Services.ForAdmin.Implements
                 {
                     ImageName = imageFiles.ImageName,
                     ImagePath= imageFiles.ImagePath,
+                    OldFileName = imageFiles.OldFileName,
                 });
 
             }

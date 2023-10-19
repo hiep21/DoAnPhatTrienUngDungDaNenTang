@@ -19,7 +19,7 @@ namespace Game.Controllers.ForAdmin
         {
             _imageService = imageService;
         }
-
+        private static int _id = 0;
         [HttpPost("addimage/{FileName}")]
         public async Task<IActionResult> UploadImage(IFormFile imageFile,string FileName)//, InfoApkFile infoApkFile)
         {
@@ -37,16 +37,17 @@ namespace Game.Controllers.ForAdmin
                     await imageFile.CopyToAsync(memoryStream);
                     imageData = memoryStream.ToArray();
                 }
-
+                var count = ++_id;
                 var apkDto = new ImageFileDto
                 {
-                    ImageName = imageFile.FileName,
+                    ImageName = $"{count}.png",
                     ImagePath = FileName,
+                    OldFileName = imageFile.FileName,
                     // Các thông tin khác nếu cần
                 };
 
                 // Gọi service để xử lý tệp 
-                var uploadedImage = await _imageService.UploadImageAsync(apkDto);
+                var uploadedImage = await _imageService.UploadImageAsync(apkDto, imageFile.FileName);
 
                 if (uploadedImage == null)
                 {
@@ -61,7 +62,7 @@ namespace Game.Controllers.ForAdmin
                 }
 
                 // Lưu tệp APK vào thư mục uploads
-                var filePath = Path.Combine(uploadPath, imageFile.FileName);
+                var filePath = Path.Combine(uploadPath, $"{count}.png");
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     await imageFile.CopyToAsync(fileStream);
