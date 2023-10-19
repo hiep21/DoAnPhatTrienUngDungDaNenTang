@@ -9,7 +9,7 @@ const HomeScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <Text style={styles.mainText}>Welcome to the game store</Text>
                 <View>
-                    <Image source={require("../assets/game2.png")} style={styles.image} />
+                    <Image source={require("../assets/Icon/game2.png")} style={styles.image} />
                 </View>
                 <View style={styles.buttons}>
                     <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen')}>

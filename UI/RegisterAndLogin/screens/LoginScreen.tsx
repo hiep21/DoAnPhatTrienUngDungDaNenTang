@@ -126,7 +126,7 @@ const LoginScreen = ({ navigation }) => {
 
                     </View>
                     <View>
-                        <Image source={require("../assets/kisspng-joystick-game-controllers-xbox-accessory-computer-gamepad-5b3bee0604bfc9.5411179315306542140195.png")} style={styles.image} />
+                        <Image source={require("../assets/Icon/kisspng-joystick-game-controllers-xbox-accessory-computer-gamepad-5b3bee0604bfc9.5411179315306542140195.png")} style={styles.image} />
                     </View>
                 </View>
 

@@ -10,6 +10,8 @@ const Buy_Game_to_Id = ({ navigation }) => {
     const tenTroChoi = navigation.getParam("tenTroChoi")
     const [game, setGame] = useState<InfoGame>()
     const [checks, setChecks] = useState<boolean>(false)
+    const [selectedAmount, setSelectedAmount] = useState(null);
+
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
@@ -21,26 +23,30 @@ const Buy_Game_to_Id = ({ navigation }) => {
             alert(errorMessage)
         }
     }
-    const gia10$ = () => {
-        setChecks(false)
-    }
-    const gia20$ = () => {
-        setChecks(true)
+    // const gia10$ = () => {
+    //     setChecks(false)
+    // }
+    // const gia20$ = () => {
+    //     setChecks(true)
         
-    }
+    // }
     
-    const gia30$ = () => {
-        setChecks(true)
-    }
-    const gia40$ = () => {
-        setChecks(true)
-    }
-    const gia50$ = () => {
-        setChecks(true)
-    }
-    const gia60$ = () => {
-        setChecks(true)
-    }
+    // const gia30$ = () => {
+    //     setChecks(true)
+    // }
+    // const gia40$ = () => {
+    //     setChecks(true)
+    // }
+    // const gia50$ = () => {
+    //     setChecks(true)
+    // }
+    // const gia60$ = () => {
+    //     setChecks(true)
+    // }
+    const handleAmountSelection = (amount) => {
+        setSelectedAmount(amount);
+        console.log(selectedAmount)
+    };
 
 
     useEffect(() => {
@@ -58,77 +64,145 @@ const Buy_Game_to_Id = ({ navigation }) => {
 
                 }}>Chọn mệnh giá tạo mã QR để thanh toán</Text>
             <View style={styles.head}>
-                {!checks ? (
-                    <TouchableOpacity style={styles.search1} >
-                        <Text>10$</Text>
-                    </TouchableOpacity>
-                ) : (<Text>
-                        <TouchableOpacity style={styles.search}
-                            onPress={gia10$}>
-                            <Text>10$</Text>
-                        </TouchableOpacity>
-                    </Text>)}
-                {!checks ? (
-                    <TouchableOpacity style={styles.search} >
-                        <Text>20$</Text>
-                    </TouchableOpacity>
-                ) : (<Text>
-                    <TouchableOpacity style={styles.search1}
-                        onPress={gia20$}>
-                        <Text>20$</Text>
-                    </TouchableOpacity>
-                </Text>)}
-                <TouchableOpacity style={styles.search}>
-                    <Text style={{ alignItems:'center',justifyContent:'center' }}>30$</Text>
+                <TouchableOpacity
+                    style={[
+                        styles.search,
+                        selectedAmount === 10 && styles.search1,
+                    ]}
+                    onPress={() => handleAmountSelection(10)}
+                >
+                    <Text>10$</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[
+                        styles.search,
+                        selectedAmount === 20 && styles.search1,
+                    ]}
+                    onPress={() => handleAmountSelection(20)}
+                >
+                    <Text>20$</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[
+                        styles.search,
+                        selectedAmount === 30 && styles.search1,
+                    ]}
+                    onPress={() => handleAmountSelection(30)}
+                >
+                    <Text>30$</Text>
                 </TouchableOpacity>
                 
             </View>
             <View style={styles.head1}>
-                <TouchableOpacity style={styles.search}>
-                    <Text style={{ alignItems:'center',justifyContent:'center' }}>40$</Text>
+                <TouchableOpacity
+                    style={[
+                        styles.search,
+                        selectedAmount === 40 && styles.search1,
+                    ]}
+                    onPress={() => handleAmountSelection(40)}
+                >
+                    <Text>40$</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.search}>
-                    <Text style={{ alignItems:'center',justifyContent:'center' }}>50$</Text>
+                <TouchableOpacity
+                    style={[
+                        styles.search,
+                        selectedAmount === 50 && styles.search1,
+                    ]}
+                    onPress={() => handleAmountSelection(50)}
+                >
+                    <Text>50$</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.search}>
-                    <Text style={{ alignItems:'center',justifyContent:'center' }}>60$</Text>
+                <TouchableOpacity
+                    style={[
+                        styles.search,
+                        selectedAmount === 60 && styles.search1,
+                    ]}
+                    onPress={() => handleAmountSelection(60)}
+                >
+                    <Text>60$</Text>
                 </TouchableOpacity>
                 
             </View>
             <View style={styles.body}>
-                <Text style={{
+              {!checks ? (
+                <View>
+                    <Text style={{
                     textAlign: 'left',
                     padding: 30,
                     borderBottomWidth: 1,
                     fontSize: 17,
                     paddingTop: 60
-                    
 
-                }}>Chi tiết giao dịch</Text>
-                <View style={styles.describeGame}>
-                    <Text>Sản phẩm được chọn</Text>
-                    <Text>{game?.tenTroChoi}</Text>
+                    }}>Chi tiết giao dịch</Text>
+                    <View style={styles.describeGame}>
+                        <Text>Sản phẩm được chọn</Text>
+                        <Text>{game?.tenTroChoi}</Text>
+                    </View>
+                    <Text style={{borderBottomWidth: 1,}}/>
+                    <View style={styles.describeGame}>
+                        <Text>Giá tiền</Text>
+                        <Text>{selectedAmount} $</Text>
+                    </View>
+                    <Text style={{borderBottomWidth: 1,}}/>
+                    <View style={styles.describeGame}>
+                        <Text>Phương thức thanh toán</Text>
+                        <Text>QR Pay</Text>
+                    </View>
+                    <Text style={{borderBottomWidth: 1,}}/>
                 </View>
-                <Text style={{borderBottomWidth: 1,}}/>
-                <View style={styles.describeGame}>
-                    <Text>Phương thức thanh toán</Text>
-                    <Text>QR Pay</Text>
+              ):(
+                <View>
+                    <Text style={{
+                    textAlign: 'center',
+                    
+                    
+                    fontSize: 17,
+                    paddingTop: 10
+
+                    }}>Quét mã QR dưới đây bằng ứng dụng Internet Banking để thanh toán</Text>
+                    <View style={styles.image}>
+                        <Image style={{ width: 160, height: 160,borderRadius:15 }} source={require('../../assets/Icon/2.png')} />
+                    </View>
+                    <View style={styles.image}>
+                        <Text>Lưu ý: Mã QR sẽ hết hạn trong 24 giờ </Text>
+                    </View>
+                    <View style={styles.image}>
+                        <Text>Sau khi thanh toán nhấp vào nút bên dưới </Text>
+                    </View>
+                    
                 </View>
-                <Text style={{borderBottomWidth: 1,}}/>
+              )}
                 
             </View>
             <View style={styles.end}>
+            {!checks? ( 
                 <TouchableOpacity style={{
                     height: 45,
-                    width: "98%",
+                    
                     backgroundColor: "#FF6C6C",
-                    marginTop: 80,
+                    marginTop: 20,
                     justifyContent: 'center',
                     borderRadius: 5,
+                
+                }} onPress={()=>{setChecks(true)}}>
                     
-                }} >
                     <Text style={{ textAlign: 'center' }}>Xử lý thanh toán</Text>
                 </TouchableOpacity>
+            ):( 
+                    <TouchableOpacity style={{
+                        height: 45,
+                        
+                        backgroundColor: "#FF6C6C",
+                        marginTop: 20,
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                    
+                    }} onPress={()=>{setChecks(false); navigation.navigate('ManagerGameUser')}}>
+                        
+                        <Text style={{ textAlign: 'center' }}>Tôi đã hoàn tất thanh toán trên app</Text>
+                    </TouchableOpacity>
+            )}
+                
             </View>
         </View>
 
@@ -141,22 +215,24 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         paddingTop:20,
         width: "100%",
+        
     },
     head: {
-        width: "100%",
-        height: 40,
+        
+        height: 70,
         justifyContent:'center',
         flexDirection: 'row',
-        paddingTop: 30,
+        paddingTop: 20,
+        //backgroundColor: "#FF6C6C",
 
     },
     head1: {
         
-        height: 40,
+        height: 60,
         justifyContent:'center',
         flexDirection: 'row',
-        paddingTop: 30,
-
+        paddingTop: 10,
+        //backgroundColor: "blue",
     },
     search: {
         width: 80,
@@ -180,20 +256,17 @@ const styles = StyleSheet.create({
     },
     user: {
         flexDirection: 'row',
-        marginLeft: "20%"
+        marginLeft: "20%",
+        
     },
     body: {
-        backgroundColor: "white",
-        width: "100%",
-        height: "40%",
-        marginTop: 20,
+        //backgroundColor: "#7FFF00",
         justifyContent:'center',
 
     },
     describeGame: {
 
         height: 17,
-        width: "85%",
         //alignSelf: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -209,10 +282,14 @@ const styles = StyleSheet.create({
 
     },
     end: {
-        width: "95%",
-        height: 260,
+        
         marginHorizontal:15,
 
+    },
+    image:{
+        justifyContent:'center',
+        alignItems:'center',
+        paddingTop: 10
     }
 
 

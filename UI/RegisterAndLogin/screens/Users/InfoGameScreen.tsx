@@ -51,16 +51,16 @@ const InfoGameScreen = ({ navigation }) => {
         <View style={styles.container}>
             <View style={styles.head}>
                 <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/search.png")} />
+                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' />
                     <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/mic.jpg")} />
+                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/tb.jpeg")} />
+                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
@@ -83,7 +83,7 @@ const InfoGameScreen = ({ navigation }) => {
                         borderRadius: 5,
                         marginTop: 10,
                         marginLeft: 20
-                    }} source={require("../../assets/1.png")} />
+                    }} source={require("../../assets/Icon/1.png")} />
                     <View style={{
                         justifyContent: 'center',
                         width: "50%",
