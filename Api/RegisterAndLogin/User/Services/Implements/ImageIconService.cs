@@ -19,9 +19,13 @@ namespace User.Services.Implements
             _context = context;
         }
 
-        public async Task<ImageIconDto> UploadImageAsync(ImageIconDto imageDto, string oldFileName)//, InfoFileDto infoFileDto)
+        public async Task<ImageIconDto> UploadImageAsync(ImageIconDto imageDto, string username)//, InfoFileDto infoFileDto)
         {
-            
+            var checkImageimage = _context.Registers.FirstOrDefault(f => f.User == username);
+            if (checkImageimage == null)
+            {
+                
+            }
             var checkImageFile = _context.ImageIcons.FirstOrDefault(f => f.OldFileName == imageDto.OldFileName);
             if (checkImageFile != null)
             {
