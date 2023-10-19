@@ -4,13 +4,11 @@ import { InfoGame } from '../../services/interfaces/GameService';
 import { deleteApi, getById, getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
 
-const InfoGameScreen = ({ navigation }) => {
+const InfoGame_dont_Install = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
-    const muaTroChoi = navigation.getParam("muaTroChoi")
     const [game, setGame] = useState<InfoGame>()
-    const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
@@ -24,26 +22,6 @@ const InfoGameScreen = ({ navigation }) => {
     }
 
 
-    const deleteGame = async () => {
-        Alert.alert(
-            "Xác nhận",
-            "Bạn có chắc chắn muốn xóa không",
-            [
-                {
-                    text: "Hủy",
-                    style: "cancel",
-                },
-                {
-                    text: "Đồng ý",
-                    onPress: async () => {
-                        await deleteApi(deleteName);
-                        alert('Xóa game thành công');
-                        navigation.navigate("ManagerGameScreen");
-                    },
-                },
-            ]
-        );
-    }
     useEffect(() => {
         getGameById()
     }, [gameId, tenTroChoi])
@@ -97,6 +75,8 @@ const InfoGameScreen = ({ navigation }) => {
                     <View style={{
 
                         width: "30%",
+                        justifyContent:'center',
+                        alignItems:'center'
 
                     }}>
                         <TouchableOpacity style={{
@@ -106,19 +86,10 @@ const InfoGameScreen = ({ navigation }) => {
                             justifyContent: 'center',
                             borderRadius: 5
                         }}>
-                            <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
+                            <Text style={{ textAlign: 'center' }}>Mua game</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{
-                            height: "45%",
-                            width: "100%",
-                            backgroundColor: "#FF6C6C",
-                            marginTop: "5%",
-                            justifyContent: 'center',
-                            borderRadius: 5
-                        }} onPress={() => { deleteGame() }}>
-                            <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
-                        </TouchableOpacity>
+                        
                     </View>
                 </View>
                 <View style={{
@@ -222,4 +193,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default InfoGameScreen;
+export default InfoGame_dont_Install;

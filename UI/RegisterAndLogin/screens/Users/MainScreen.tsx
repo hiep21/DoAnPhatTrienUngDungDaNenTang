@@ -14,24 +14,38 @@ const MainScreen = ({ navigation }) => {
     const [image, setImage] = useState<string>()
     const loadTasks = async () => {
         setRefreshing(true)
-        const getUser = await getItemAsync('accessToken');
-        const tokenObject = JSON.parse(getUser);
-        
-        setImage(tokenObject.image);
         
         try {
             const { data } = await getByName()
             // console.log(data)
             setListGame(data)
-            
+           
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
         }
         setRefreshing(false)
     }
+    const loadimage = async () => {
+        const getUser = await getItemAsync('accessToken');
+        const tokenObject = JSON.parse(getUser);
+        const userName = tokenObject.user;
+        try {
+            setRefreshing(true)
+            const getImage = await getByUser(userName);
+        
+            setImage(getImage.data[0].image)
+            
+           
+        } catch (err) {
+            const errorMessage = err.response
+            alert(errorMessage.data)
+        }
+        setRefreshing(false)
+    }
     
     useEffect(() => {
+        loadimage()
         loadTasks()
     }, [])
     const goToDetail = (item: InfoGame) => {
