@@ -6,6 +6,9 @@ using System.Diagnostics;
 using Game.Services.ForAdmin.Interfaces;
 using Game.Dtos.ForAdmin.ApkFile;
 using Game.Dtos.ForAdmin.ImageFile;
+using Microsoft.EntityFrameworkCore;
+using Game.DbContexts;
+using Game.Services.ForAdmin.Implements;
 
 namespace Game.Controllers.ForAdmin
 {
@@ -19,9 +22,9 @@ namespace Game.Controllers.ForAdmin
         {
             _imageService = imageService;
         }
-
+    
         [HttpPost("addimage/{FileName}")]
-        public async Task<IActionResult> UploadImage(IFormFile imageFile,string FileName)//, InfoApkFile infoApkFile)
+        public async Task<IActionResult> UploadImage(IFormFile imageFile, string FileName)
         {
             try
             {
@@ -29,6 +32,9 @@ namespace Game.Controllers.ForAdmin
                 {
                     return BadRequest("Image không hợp lệ.");
                 }
+
+                // Tạo một tên file duy nhất sử dụng Guid
+                var uniqueFileName = $"{Guid.NewGuid()}.png";
 
                 // Đọc dữ liệu từ tệp APK
                 byte[] imageData;
@@ -40,20 +46,21 @@ namespace Game.Controllers.ForAdmin
 
                 var apkDto = new ImageFileDto
                 {
-                    ImageName = imageFile.FileName,
-                    ImagePath = FileName,
+                    ImageName = uniqueFileName,
+                    ImagePath = FileName+".apk",
+                    OldFileName = imageFile.FileName,
                     // Các thông tin khác nếu cần
                 };
 
                 // Gọi service để xử lý tệp 
-                var uploadedImage = await _imageService.UploadImageAsync(apkDto);
+                var uploadedImage = await _imageService.UploadImageAsync(apkDto, FileName +".apk");
 
                 if (uploadedImage == null)
                 {
                     return BadRequest("Image không hợp lệ.");
                 }
 
-                var uploadPath = Path.Combine(Directory.GetCurrentDirectory() + $"/uploads/{FileName.Replace(".apk", "")}", "Image");
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory() + $"/uploads/{FileName}", "Image");
 
                 if (!Directory.Exists(uploadPath))
                 {
@@ -61,7 +68,7 @@ namespace Game.Controllers.ForAdmin
                 }
 
                 // Lưu tệp APK vào thư mục uploads
-                var filePath = Path.Combine(uploadPath, imageFile.FileName);
+                var filePath = Path.Combine(uploadPath, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     await imageFile.CopyToAsync(fileStream);
@@ -103,16 +110,16 @@ namespace Game.Controllers.ForAdmin
             }
         }
         [HttpGet("getImage/{fileName}/{image}")]
-        public IActionResult GetFile(string image, string fileName)
+        public IActionResult GetFile(string fileName, string image)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory() + $"/uploads/{fileName.Replace(".apk", "")}/Image", image);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory() + $"/uploads/{fileName}/Image", image +".png");
             if (!System.IO.File.Exists(filePath))
             {
                 return NotFound("Tệp không tồn tại.");
             }
 
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(fileBytes, "application/octet-stream", image);
+            return File(fileBytes, "application/octet-stream", image+".png");
         }
 
     }

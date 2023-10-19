@@ -41,6 +41,24 @@ namespace User.Migrations
                     b.ToTable("GameManagers");
                 });
 
+            modelBuilder.Entity("User.Entities.ImageIcon", b =>
+                {
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ImageName");
+
+                    b.ToTable("ImageIcons");
+                });
+
             modelBuilder.Entity("User.Entities.Login", b =>
                 {
                     b.Property<string>("User")

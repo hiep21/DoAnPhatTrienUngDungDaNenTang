@@ -15,6 +15,9 @@ import ManagerGameUser from './screens/Users/ManagerGame';
 import SettingUser from './screens/Users/Setting';
 import SupportUser from './screens/Users/Support';
 import QRScannerScreen from './screens/NhaCungCap/QRScannerScreen';
+import InfoGame_dont_Install from './screens/Users/InfoGame_dont_Install';
+import Buy_Game_to_Id from './screens/Users/Buy_Game_to_Id';
+
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -81,9 +84,22 @@ const StackNAvigator = createStackNavigator({
     navigationOptions: {
       title: 'Trợ giúp và phản hồi',
     },
-  }
+  },
+  InfoGame_dont_Install: {
+    screen: InfoGame_dont_Install,
+    navigationOptions: {
+      title: 'Thông tin trò chơi',
+    },
+  },
+  Buy_Game_to_Id: {
+    screen: Buy_Game_to_Id,
+    navigationOptions: {
+      title: 'Phương thức thanh toán',
+    },
+  },
+  
 }, {
-  initialRouteName: 'QRScannerScreen'
+  initialRouteName: 'Buy_Game_to_Id'
 
 }
 )

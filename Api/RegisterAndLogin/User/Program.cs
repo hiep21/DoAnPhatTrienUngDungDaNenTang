@@ -24,7 +24,8 @@ namespace User
             });
             builder.Services.AddScoped<IRegisterService, RegisterService>();
             builder.Services.AddScoped<ILoginService, LoginService>();
-
+            builder.Services.AddScoped<IGameManagerService, GameManagerService>();
+            builder.Services.AddScoped<IImageIconService, ImageIconService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

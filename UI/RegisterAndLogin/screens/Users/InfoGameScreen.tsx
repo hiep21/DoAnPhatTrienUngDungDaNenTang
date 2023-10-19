@@ -8,6 +8,7 @@ const InfoGameScreen = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
+    const muaTroChoi = navigation.getParam("muaTroChoi")
     const [game, setGame] = useState<InfoGame>()
     const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
     const getGameById = async () => {
@@ -74,7 +75,7 @@ const InfoGameScreen = ({ navigation }) => {
                     fontSize: 17,
                     fontWeight: '600',
 
-                }}>Danh sách trò chơi</Text>
+                }}>Trò chơi</Text>
                 <View style={styles.describeGame}>
                     <Image style={{
                         height: 50,
@@ -86,13 +87,14 @@ const InfoGameScreen = ({ navigation }) => {
                     <View style={{
                         justifyContent: 'center',
                         width: "50%",
-                        marginRight: 50
+                        marginRight: 50,
+                        marginLeft:10
                     }}>
                         <Text style={{ fontSize: 15 }}>{game?.tenTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>{game?.moTaTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>Trạng thái: {game?.trangThai}</Text>
                     </View>
-                    {/* <View style={{
+                    <View style={{
 
                         width: "30%",
 
@@ -117,7 +119,7 @@ const InfoGameScreen = ({ navigation }) => {
                         }} onPress={() => { deleteGame() }}>
                             <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
                         </TouchableOpacity>
-                    </View> */}
+                    </View>
                 </View>
                 <View style={{
                     width: "100%",
@@ -197,8 +199,8 @@ const styles = StyleSheet.create({
     describeGame: {
 
         height: 70,
-        width: "85%",
-        alignSelf: 'center',
+        width: "75%",
+        //alignSelf: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 10
@@ -211,10 +213,10 @@ const styles = StyleSheet.create({
 
     },
     end: {
-        width: "100%",
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
+        width: "95%",
+        height: 260,
+        marginHorizontal:15,
+
     }
 
 

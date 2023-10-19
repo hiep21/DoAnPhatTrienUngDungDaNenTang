@@ -35,7 +35,8 @@ class BottomSheet extends React.Component {
       const tokenObject = JSON.parse(getUser);
       const userName = tokenObject.user;
       const email = tokenObject.email;
-      const image = tokenObject.image;
+      const getImage = await getByUser(userName);
+      const image = getImage.data[0].image;
       this.setState({ email })
       this.setState({ userName });
       this.setState({ image});
@@ -116,6 +117,7 @@ class BottomSheet extends React.Component {
         const image = tokenObject.image;
         console.log(userName);
         console.log(email);
+        console.log(image);
         await SecureStore.deleteItemAsync('accessToken');
         await deleteUsers(userName);
         

@@ -40,6 +40,10 @@ namespace Game.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OldFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ImageName");
 
                     b.ToTable("ImageFiles");
