@@ -176,6 +176,28 @@ const Buy_Game_to_Id = ({ navigation }) => {
             </View>
             <View style={styles.end}>
             {!checks? ( 
+                <TouchableOpacity
+                    style={{
+                        height: 45,
+                        backgroundColor: selectedAmount ? "#FF6C6C" : "#ccc", // Vô hiệu hóa nút khi selectedAmount là null
+                        marginTop: 20,
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                    }}
+                    onPress={() => {
+                        if (selectedAmount) {
+                            // Xử lý logic thanh toán
+                            setChecks(true);
+                        } else {
+                            // Hiển thị thông báo hoặc xử lý trường hợp khi không có mệnh giá nào được chọn
+                            alert('Vui lòng chọn một mệnh giá để tiếp tục.');
+                        }
+                    }}>
+                    <Text style={{ textAlign: 'center' }}>
+                        {selectedAmount ? "Xử lý thanh toán" : "Chọn một mệnh giá"}
+                    </Text>
+                </TouchableOpacity>
+                ):( 
                 <TouchableOpacity style={{
                     height: 45,
                     
@@ -184,23 +206,10 @@ const Buy_Game_to_Id = ({ navigation }) => {
                     justifyContent: 'center',
                     borderRadius: 5,
                 
-                }} onPress={()=>{setChecks(true)}}>
+                }} onPress={()=>{setChecks(false); navigation.navigate('ManagerGameUser')}}>
                     
-                    <Text style={{ textAlign: 'center' }}>Xử lý thanh toán</Text>
+                    <Text style={{ textAlign: 'center' }}>Tôi đã hoàn tất thanh toán trên app</Text>
                 </TouchableOpacity>
-            ):( 
-                    <TouchableOpacity style={{
-                        height: 45,
-                        
-                        backgroundColor: "#FF6C6C",
-                        marginTop: 20,
-                        justifyContent: 'center',
-                        borderRadius: 5,
-                    
-                    }} onPress={()=>{setChecks(false); navigation.navigate('ManagerGameUser')}}>
-                        
-                        <Text style={{ textAlign: 'center' }}>Tôi đã hoàn tất thanh toán trên app</Text>
-                    </TouchableOpacity>
             )}
                 
             </View>

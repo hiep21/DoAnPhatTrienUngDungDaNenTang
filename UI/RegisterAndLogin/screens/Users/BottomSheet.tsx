@@ -141,10 +141,11 @@ class BottomSheet extends React.Component {
 
         <SlidingUpPanel
           ref={c => (this._panel = c)}
-
+          
           snappingPoints={[360]}
           height={height + 180}
           friction={0.5}
+          allowDragging={false}
         >
           <View style={styles.panel}>
 
