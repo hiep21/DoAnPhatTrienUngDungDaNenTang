@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
                     password
                 })
                 const message = loginResponse.data
-                console.log(loginResponse.data);
+                console.log(loginResponse.data.note);
                 //Lưu token lại
 
                 const result = await saveTokenToDevice({
@@ -64,11 +64,14 @@ const LoginScreen = ({ navigation }) => {
                 }
                 alert("Đăng nhập thành công")
 
-
-                console.log(result)
-
+                if (loginResponse.data.note == "Khách hàng") {
+                    navigation.navigate("MainScreenUser")
+                }
+                else if (loginResponse.data.note == "Nhà Cung Cấp") {
+                    navigation.navigate("MainScreenNCC")
+                }
                 //Chuyển hướng sang màn home
-                navigation.navigate("MainScreen")
+
             } catch (err) {
                 const { data } = err.response
                 alert(err.response.data)

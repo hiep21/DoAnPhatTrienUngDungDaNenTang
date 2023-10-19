@@ -7,7 +7,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
-import MainScreen from './screens/Users/MainScreen';
+import MainScreenUser from './screens/Users/MainScreen';
 import UserScreen from './screens/Users/UserScreen';
 import InfoGameScreen from './screens/Users/InfoGameScreen';
 import ChangeInfo from './screens/Users/ChangeInfo';
@@ -17,7 +17,7 @@ import SupportUser from './screens/Users/Support';
 import QRScannerScreen from './screens/NhaCungCap/QRScannerScreen';
 import InfoGame_dont_Install from './screens/Users/InfoGame_dont_Install';
 import Buy_Game_to_Id from './screens/Users/Buy_Game_to_Id';
-
+import MainScreenNCC from './screens/NhaCungCap/MainScreen';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -37,8 +37,8 @@ const StackNAvigator = createStackNavigator({
       title: '',
     },
   },
-  MainScreen: {
-    screen: MainScreen,
+  MainScreenUser: {
+    screen: MainScreenUser,
     navigationOptions: {
       title: 'Màn hình chính',
     },
@@ -95,6 +95,12 @@ const StackNAvigator = createStackNavigator({
     screen: Buy_Game_to_Id,
     navigationOptions: {
       title: 'Phương thức thanh toán',
+    },
+  },
+  MainScreenNCC: {
+    screen: MainScreenNCC,
+    navigationOptions: {
+      title: 'Màn hình chính',
     },
   },
   
