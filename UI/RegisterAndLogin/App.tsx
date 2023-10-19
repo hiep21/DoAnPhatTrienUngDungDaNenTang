@@ -99,7 +99,7 @@ const StackNAvigator = createStackNavigator({
   },
   
 }, {
-  initialRouteName: 'Buy_Game_to_Id'
+  initialRouteName: 'HomeScreen'
 
 }
 )

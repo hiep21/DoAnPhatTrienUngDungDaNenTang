@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator,Modal } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal } from 'react-native';
 import { UpdateRegisterApi, getByUser } from '../../services/todo';
 import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
@@ -8,7 +8,7 @@ import { bool } from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Background from './Background';
 const ChangeInfo = ({ navigation }) => {
-    
+
     const users = navigation.getParam("user")
     const textChange = navigation.getParam("textChange")
     const [Users, setUsers] = useState<RegisterData>();
@@ -29,7 +29,7 @@ const ChangeInfo = ({ navigation }) => {
         }
     );
     const [isLoading, setIsLoading] = useState(false);
-    
+
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -37,8 +37,8 @@ const ChangeInfo = ({ navigation }) => {
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || selectedDate;
-        
-        setShowDatePicker(Platform.OS === 'ios'); 
+
+        setShowDatePicker(Platform.OS === 'ios');
         setSelectedDate(currentDate);
         const day = currentDate.getDate();
         const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
@@ -46,8 +46,8 @@ const ChangeInfo = ({ navigation }) => {
         // const date = day+month+year;
         // setChangeDate(date);
         // console.log(`Ngày: ${day}, Tháng: ${month}, Năm: ${year}`);
-        
-        const date = day+"/"+month+"/"+year
+
+        const date = day + "/" + month + "/" + year
 
         setUsersUpdate({
             ...usersUpdate,
@@ -55,7 +55,7 @@ const ChangeInfo = ({ navigation }) => {
         });
     };
 
-   
+
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedGender, setSelectedGender] = useState<string>("");
@@ -76,8 +76,8 @@ const ChangeInfo = ({ navigation }) => {
         const getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
         const password = tokenObject.password;
-        
-        
+
+
         try {
             const { data } = await getByUser(users)
 
@@ -97,7 +97,7 @@ const ChangeInfo = ({ navigation }) => {
                     image: data[0].image
                 }
             )
-           
+
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -162,7 +162,7 @@ const ChangeInfo = ({ navigation }) => {
         try {
             const response = await UpdateRegisterApi(users, usersUpdateImage)
 
-
+            navigation.navigate("HomeScreen")
             console.log('Upload success:', response.data);
         } catch (error) {
             console.log('Upload failed:', error.message);
@@ -185,6 +185,7 @@ const ChangeInfo = ({ navigation }) => {
                 const { data } = await UpdateRegisterApi(users, usersUpdate)
 
                 console.log('Upload success:', data);
+                navigation.navigate("HomeScreen")
             } catch (error) {
                 console.log('Upload failed:', error.response.data.errors.Address);
 
@@ -194,7 +195,7 @@ const ChangeInfo = ({ navigation }) => {
 
     }
     useEffect(() => {
-    
+
         loadTasks();
     }, [users, textChange])
     const renderInputField = (key) => {
@@ -538,10 +539,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginTop: 10,
         height: 30,
-        alignItems:'center',
-        justifyContent:'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    textbtn:{
+    textbtn: {
 
     },
     modalContainer: {
