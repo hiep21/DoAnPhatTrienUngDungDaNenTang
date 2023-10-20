@@ -29,10 +29,10 @@ const LoginScreen = ({ navigation }) => {
         if (token) {
             configAxiosWithAccessToken(token)
             if (note == "Khách hàng") {
-                navigation.navigate("MainScreenUser")
+                navigation.navigate("MainScreenUser", { user: tokenObject.user })
             }
             else if (note == "Nhà Cung Cấp") {
-                navigation.navigate("ManagerGameNCC")
+                navigation.navigate("ManagerGameNCC", { user: tokenObject.user })
             }
         }
     }
@@ -74,10 +74,10 @@ const LoginScreen = ({ navigation }) => {
                 alert("Đăng nhập thành công")
 
                 if (loginResponse.data.note == "Khách hàng") {
-                    navigation.navigate("MainScreenUser")
+                    navigation.navigate("MainScreenUser", { user: loginResponse.data.user })
                 }
                 else if (loginResponse.data.note == "Nhà Cung Cấp") {
-                    navigation.navigate("MainScreenNCC")
+                    navigation.navigate("MainScreenNCC", { user: loginResponse.data.user })
                 }
 
                 //Chuyển hướng sang màn home

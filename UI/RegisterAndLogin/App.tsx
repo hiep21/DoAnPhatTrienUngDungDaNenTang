@@ -14,7 +14,6 @@ import ChangeInfo from './screens/Users/ChangeInfo';
 import ManagerGameUser from './screens/Users/ManagerGame';
 import SettingUser from './screens/Users/Setting';
 import SupportUser from './screens/Users/Support';
-import QRScannerScreen from './screens/NhaCungCap/QRScannerScreen';
 import InfoGame_dont_Install from './screens/Users/InfoGame_dont_Install';
 import Buy_Game_to_Id from './screens/Users/Buy_Game_to_Id';
 import MainScreenNCC from './screens/NhaCungCap/MainScreen';
@@ -22,6 +21,7 @@ import ManagerGameNCC from './screens/NhaCungCap/ManagerGameScreen';
 import InfoGameNCC from './screens/NhaCungCap/InfoGameScreen';
 import AddGameNCC from './screens/NhaCungCap/AddGame';
 import UpdateGameNCC from './screens/NhaCungCap/UpdateGameScreen';
+
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -83,12 +83,7 @@ const StackNAvigator = createStackNavigator({
       title: 'Trợ giúp và phản hồi',
     },
   },
-  QRScannerScreen: {
-    screen: QRScannerScreen,
-    navigationOptions: {
-      title: 'Trợ giúp và phản hồi',
-    },
-  },
+
   InfoGame_dont_Install: {
     screen: InfoGame_dont_Install,
     navigationOptions: {

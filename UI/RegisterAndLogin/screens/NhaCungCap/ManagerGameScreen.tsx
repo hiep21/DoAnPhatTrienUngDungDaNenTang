@@ -4,11 +4,15 @@ import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } 
 
 import { getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
+import { getByUser } from '../../services/todo';
+import { RegisterData } from '../../services/interfaces/User.interface';
 
 const ManagerGameScreen = ({ navigation }) => {
+    const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
+    const [userNCC, setUserNCC] = useState<RegisterData>()
     const loadTasks = async () => {
         setRefreshing(true)
         try {
@@ -16,7 +20,8 @@ const ManagerGameScreen = ({ navigation }) => {
             // console.log(data)
             setReListGame(data)
             setListGame(data)
-
+            const response = await getByUser(user)
+            setUserNCC(response.data[0])
 
         } catch (err) {
             const errorMessage = err.response
@@ -44,40 +49,49 @@ const ManagerGameScreen = ({ navigation }) => {
     useEffect(() => {
 
         loadTasks()
-    }, [])
+    }, [user])
     const goToDetail = (item: InfoGame) => {
         navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item) }}>
-                <View style={{
-                    flexDirection: 'row',
-                    marginLeft: "5%",
-                    marginTop: 20,
+            <TouchableOpacity onPress={() => { goToDetail(item) }} >
 
-
-                }}>
-                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/Icon/1.png")} />
+                {item.nhaCungCap == userNCC?.name ? (
                     <View style={{
-                        marginLeft: 15,
-                        width: "70%"
+                        flexDirection: 'row',
+                        marginLeft: "5%",
+                        marginTop: 20
                     }}>
-                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
-                        <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
+                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/Icon/1.png")} />
                         <View style={{
-                            flexDirection: 'row',
-                            width: "100%",
-                            justifyContent: 'space-between'
+                            marginLeft: 15,
+                            width: "70%"
                         }}>
-                            <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
-                            <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
+                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
+                            <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
+                            <View style={{
+                                flexDirection: 'row',
+                                width: "100%",
+                                justifyContent: 'space-between'
+                            }}>
+                                <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
+                                {item.trangThai == "trên kệ" ? (
+                                    <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
+                                ) : (
+                                    <Text style={{ fontSize: 10, textAlign: 'right'}}>Trạng thái:<Text style={{ color: 'red' }}>{item.trangThai}</Text></Text>
+                                )}
+                            </View>
+
                         </View>
-
                     </View>
+                ) : (
+                    <View></View>
+                )}
 
-                </View>
+
+
             </TouchableOpacity >
 
         )
