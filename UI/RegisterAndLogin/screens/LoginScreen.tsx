@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Users/Background';
 import { LoginData, LoginDataToken } from '../services/interfaces/User.interface';
-import { deleteItemAsync } from 'expo-secure-store';
+import { deleteItemAsync, getItemAsync } from 'expo-secure-store';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -22,10 +22,18 @@ const LoginScreen = ({ navigation }) => {
 
     const loadToken = async () => {
         // await deleteItemAsync('accessToken');
+        const getUser = await getItemAsync('accessToken');
+        const tokenObject = JSON.parse(getUser);
+        const note = tokenObject.note;
         const token = await getAccessToken()
         if (token) {
             configAxiosWithAccessToken(token)
-            navigation.navigate("MainScreen", { user: users.user })
+            if (note == "Khách hàng") {
+                navigation.navigate("MainScreenUser")
+            }
+            else if (note == "Nhà Cung Cấp") {
+                navigation.navigate("ManagerGameNCC")
+            }
         }
     }
 
@@ -57,6 +65,7 @@ const LoginScreen = ({ navigation }) => {
                     user,
                     email: message.email,
                     image: message.image,
+                    note: loginResponse.data.note,
                     password
                 })
                 if (!result) {
@@ -70,6 +79,7 @@ const LoginScreen = ({ navigation }) => {
                 else if (loginResponse.data.note == "Nhà Cung Cấp") {
                     navigation.navigate("MainScreenNCC")
                 }
+
                 //Chuyển hướng sang màn home
 
             } catch (err) {

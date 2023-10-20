@@ -5,7 +5,9 @@ export interface CreateGame {
     theLoai: string,
     gia: string,
     nhaCungCap: string,
-    gioiThieuTroChoi: string
+    gioiThieuTroChoi: string,
+    kichCoFile: string,
+    trangThai: string
 }
 export interface InfoGame {
     tenTroChoi: string,

@@ -9,9 +9,7 @@ const MainScreenNCC = ({ navigation }) => {
     useEffect(() => {
 
     }, [user])
-    const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameScreen", { gameId: item.id })
-    }
+   
 
 
 

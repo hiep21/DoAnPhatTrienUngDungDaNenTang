@@ -64,7 +64,7 @@ const ManagerGameUser = ({ navigation }) => {
     }, [users])
     return (
         <View style={styles.container}>
-            
+
             <View style={{
                 flexDirection: 'row',
 

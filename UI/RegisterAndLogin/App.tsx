@@ -18,6 +18,10 @@ import QRScannerScreen from './screens/NhaCungCap/QRScannerScreen';
 import InfoGame_dont_Install from './screens/Users/InfoGame_dont_Install';
 import Buy_Game_to_Id from './screens/Users/Buy_Game_to_Id';
 import MainScreenNCC from './screens/NhaCungCap/MainScreen';
+import ManagerGameNCC from './screens/NhaCungCap/ManagerGameScreen';
+import InfoGameNCC from './screens/NhaCungCap/InfoGameScreen';
+import AddGameNCC from './screens/NhaCungCap/AddGame';
+import UpdateGameNCC from './screens/NhaCungCap/UpdateGameScreen';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -103,9 +107,33 @@ const StackNAvigator = createStackNavigator({
       title: 'Màn hình chính',
     },
   },
-  
+  ManagerGameNCC: {
+    screen: ManagerGameNCC,
+    navigationOptions: {
+      title: 'Quản lý trò chơi',
+    },
+  },
+  InfoGameNCC: {
+    screen: InfoGameNCC,
+    navigationOptions: {
+      title: 'Thông tin trò chơi',
+    },
+  },
+  AddGameNCC: {
+    screen: AddGameNCC,
+    navigationOptions: {
+      title: 'Thêm trò chơi',
+    },
+  },
+  UpdateGameNCC: {
+    screen: UpdateGameNCC,
+    navigationOptions: {
+      title: 'Cập nhật trò chơi',
+    },
+  }
+
 }, {
-  initialRouteName: 'MainScreenUser'
+  initialRouteName: 'HomeScreen'
 
 }
 )
