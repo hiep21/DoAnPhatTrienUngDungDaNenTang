@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
                 navigation.navigate("MainScreenUser", { user: tokenObject.user })
             }
             else if (note == "Nhà Cung Cấp") {
-                navigation.navigate("ManagerGameNCC", { user: tokenObject.user })
+                navigation.navigate("MainScreenNCC", { user: tokenObject.user })
             }
         }
     }
