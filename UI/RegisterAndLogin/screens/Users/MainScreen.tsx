@@ -43,9 +43,9 @@ const MainScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
- 
+
     useEffect(() => {
-      
+
         loadimage()
         loadTasks()
     }, [])
@@ -59,8 +59,7 @@ const MainScreen = ({ navigation }) => {
                 <View style={{
                     flexDirection: 'row',
                     marginLeft: "5%",
-                    marginTop: 20,
-
+                    marginVertical: 10,
 
                 }}>
                     <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/games/cod/cod_1.jpg")
@@ -93,7 +92,7 @@ const MainScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            
+
             <View style={styles.head}>
                 <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
@@ -108,9 +107,13 @@ const MainScreen = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={{
-                            uri: image
-                        }} />
+                        {image != "" ? (
+                            <Image style={{ width: 30, height: 30, }} source={{
+                                uri: image
+                            }} />
+                        ) : (
+                            <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                        )}
 
                     </TouchableOpacity>
 
@@ -142,7 +145,7 @@ const MainScreen = ({ navigation }) => {
                         alignSelf: 'center',
                         borderRadius: 5,
                         borderColor: "#bbb",
-
+                        height: 100
                     }}
                 />
 
@@ -217,9 +220,9 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: "white",
         width: 340,
-        height: 250,
+        height: 265,
         marginTop: 20,
-        marginHorizontal: 5
+        marginHorizontal: 5,
 
     },
 

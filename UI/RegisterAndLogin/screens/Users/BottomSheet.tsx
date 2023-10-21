@@ -15,7 +15,7 @@ class BottomSheet extends React.Component {
   static defaultProps = {
     draggableRange: { top: height + 180 - 64, bottom: 180 }
   };
-  
+
 
   _draggedValue = new Animated.Value(180);
 
@@ -39,7 +39,7 @@ class BottomSheet extends React.Component {
       const image = getImage.data[0].image;
       this.setState({ email })
       this.setState({ userName });
-      this.setState({ image});
+      this.setState({ image });
     } catch (error) {
       console.log("Lỗi khi lấy thông tin người dùng", error);
     }
@@ -101,12 +101,12 @@ class BottomSheet extends React.Component {
     };
     const getData = await getUserToken();
     console.log(getData);
-    
+
   }
-  
-  
+
+
   render() {
-    
+
 
     const logout = async () => {
       try {
@@ -120,7 +120,7 @@ class BottomSheet extends React.Component {
         console.log(image);
         await SecureStore.deleteItemAsync('accessToken');
         await deleteUsers(userName);
-        
+
         const { navigation } = this.props;
         navigation.navigate("HomeScreen");
         // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
@@ -133,15 +133,15 @@ class BottomSheet extends React.Component {
     };
     const { userName } = this.state;
     const { email } = this.state;
-    const {image} = this.state;
-    
+    const { image } = this.state;
+
 
     return (
       <View style={styles.container}>
 
         <SlidingUpPanel
           ref={c => (this._panel = c)}
-          
+
           snappingPoints={[360]}
           height={height + 180}
           friction={0.5}
@@ -152,13 +152,14 @@ class BottomSheet extends React.Component {
             <View style={styles.panelHeader}>
 
               <Animated.View>
-                  {image && (
-                  <Image
-                  style={styles.iconBg}
-                  source={{ uri: this.state.image }}
-                  />
-                  )}
-              </Animated.View>  
+                {image != "" ? (
+                  <Image style={styles.iconBg} source={{
+                    uri: this.state.image
+                  }} />
+                ) : (
+                  <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                )}
+              </Animated.View>
               <View style={styles.user}>
                 <Text style={styles.name} onPress={this.navigateToUserScreen}>{userName}</Text>
                 <Text numberOfLines={1} style={styles.emailUser}>{email}</Text>
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
     zIndex: 1
   },
   iconBg: {
-    
+
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#999',
     width: 250,
-    textAlign:"center"
+    textAlign: "center"
   },
   tool: {
     paddingTop: 18,

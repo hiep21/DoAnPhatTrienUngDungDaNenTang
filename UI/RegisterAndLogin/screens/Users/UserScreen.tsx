@@ -13,7 +13,6 @@ const UserScreen = ({ navigation }) => {
             const { data } = await getByUser(user)
 
             setUsers(data[0])
-
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -32,12 +31,12 @@ const UserScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <View style={styles.iconBg}>
                     <TouchableOpacity onPress={() => { changeInfo(users?.user, "image") }}>
-                        {users?.image == "" ? (
+                        {users?.image =="" ? (
                             <Image style={{
                                 height: 60,
                                 width: 60,
                                 borderRadius: 100
-                            }} source={require("../../assets/games/cod/cod_1.jpg")} />
+                            }} source={require("../../assets/favicon.png")} />
                         ) : (
                             <Image style={{
                                 height: 60,
