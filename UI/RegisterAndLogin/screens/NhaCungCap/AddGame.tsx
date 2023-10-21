@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button } from 'react-native';
+import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button,ActivityIndicator } from 'react-native';
 import { CreateGame } from '../../services/interfaces/GameService';
 import { createGame, deleteApkFile, deleteFolder, deleteImage, getByName, postFileApk, postImage } from '../../services/Game';
 import * as DocumentPicker from 'expo-document-picker';
 
 
 const AddGameNCC = ({ navigation }) => {
-
+    const nameNCC = navigation.getParam("nameNCC")
+    const [isLoading, setIsLoading] = useState(false);
     const [game, setgame] = useState<CreateGame>({
         tenTroChoi: "",
         moTaTroChoi: "",
         doTuoi: "",
         theLoai: "",
         gia: "",
-        nhaCungCap: "string",
+        nhaCungCap: "",
         gioiThieuTroChoi: "",
         kichCoFile: "0Mb",
         trangThai: "Trên kệ"
@@ -32,13 +33,17 @@ const AddGameNCC = ({ navigation }) => {
             Alert.alert("Lỗi", "Giới thiệu trò chơi phải tối thiểu 50 ký tự");
             return false;
         }
-
         return true;
     };
     const addgameAction = async () => {
+       
         if (!validateInputs()) {
             return;
         }
+        setgame({
+            ...game,
+            nhaCungCap:nameNCC
+        })
         try {
             const response = await createGame(game)
             alert("Thành công")
@@ -135,19 +140,26 @@ const AddGameNCC = ({ navigation }) => {
         }
     };
     const uploadData = async () => {
-        try {
-            // Gọi các hàm upload lần lượt và chờ cho đến khi hoàn thành mỗi hàm trước khi gọi hàm tiếp theo
-            await uploadDocument();
-            await uploadImage();
-            await addgameAction();
-            // Nếu tất cả các hàm trên chạy thành công, bạn có thể thực hiện các hành động tiếp theo ở đây
-        } catch (error) {
-            alert(error.response.data);
-            const response = await deleteApkFile(nameDocumentUri)
-            const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
-            const response2 = await deleteFolder(nameDocumentUri)
+        if (!isLoading) {
+            try {
+                // Gọi các hàm upload lần lượt và chờ cho đến khi hoàn thành mỗi hàm trước khi gọi hàm tiếp theo
+                await uploadDocument();
+                await uploadImage();
+                await addgameAction();
+                // Nếu tất cả các hàm trên chạy thành công, bạn có thể thực hiện các hành động tiếp theo ở đây
+            } catch (error) {
+                alert(error.response.data);
+                const response = await deleteApkFile(nameDocumentUri)
+                const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
+                const response2 = await deleteFolder(nameDocumentUri)
+            }
+            setIsLoading(false)
         }
+
+        
     };
+    useEffect(() => {
+    }, [nameNCC])
     return (
 
         <View style={{ height: "100%" }}>
@@ -237,7 +249,11 @@ const AddGameNCC = ({ navigation }) => {
                             <Text >Hủy bỏ</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonSave} onPress={() => { uploadData() }}>
-                            <Text>Upload File</Text>
+                        {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text>Up load file</Text>
+                            )}
                         </TouchableOpacity>
 
                     </View>

@@ -31,7 +31,7 @@ const MainScreenNCC = ({ navigation }) => {
 
     return (
         <Background>
-            <TouchableOpacity onPress={() => { navigation.navigate("ManagerGameNCC", { user: user }) }}>
+            <TouchableOpacity onPress={() => { navigation.navigate("ManagerGameNCC", { user: user, nameNCC:userNCC?.name }) }}>
                 <View style={styles.container}>
 
                     <Text style={[{ fontSize: 20, fontWeight: "900", backgroundColor: "rgba(255, 255, 255, 0.7)", padding: 10, color: "green" }]}>

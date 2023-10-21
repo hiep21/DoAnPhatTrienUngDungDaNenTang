@@ -6,9 +6,11 @@ import { getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
+import BottomSheet from '../Users/BottomSheet';
 
 const ManagerGameScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
+
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
@@ -47,7 +49,7 @@ const ManagerGameScreen = ({ navigation }) => {
         }
     }
     useEffect(() => {
-
+     
         loadTasks()
     }, [user])
     const goToDetail = (item: InfoGame) => {
@@ -83,20 +85,16 @@ const ManagerGameScreen = ({ navigation }) => {
                                     <Text style={{ fontSize: 10, textAlign: 'right'}}>Trạng thái:<Text style={{ color: 'red' }}>{item.trangThai}</Text></Text>
                                 )}
                             </View>
-
                         </View>
                     </View>
                 ) : (
                     <View></View>
                 )}
 
-
-
             </TouchableOpacity >
 
         )
     }
-
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -113,7 +111,7 @@ const ManagerGameScreen = ({ navigation }) => {
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/1.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                 </View>
@@ -143,7 +141,7 @@ const ManagerGameScreen = ({ navigation }) => {
                 />
             </View>
             <View style={styles.end}>
-                <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC") }} style={{
+                <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC",{nameNCC:userNCC?.name} )}} style={{
                     backgroundColor: "#DFEEF6",
                     width: "90%",
                     height: 30,
@@ -154,6 +152,7 @@ const ManagerGameScreen = ({ navigation }) => {
                     <Text style={{ fontWeight: '700', fontSize: 20 }}>+</Text>
                 </TouchableOpacity>
             </View>
+            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
         </View>
 
     );
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: "white",
         width: "100%",
-        height: "70%",
+        height: "80%",
         marginTop: 20,
 
     },
