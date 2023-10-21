@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
             if (note == "Khách hàng") {
                 navigation.navigate("MainScreenUser", { user: tokenObject.user })
             }
-            else if (note == "Nhà Cung Cấp") {
+            else if (note == "Nhà cung cấp") {
                 navigation.navigate("MainScreenNCC", { user: tokenObject.user })
             }
         }
@@ -76,7 +76,7 @@ const LoginScreen = ({ navigation }) => {
                 if (loginResponse.data.note == "Khách hàng") {
                     navigation.navigate("MainScreenUser", { user: loginResponse.data.user })
                 }
-                else if (loginResponse.data.note == "Nhà Cung Cấp") {
+                else if (loginResponse.data.note == "Nhà cung cấp") {
                     navigation.navigate("MainScreenNCC", { user: loginResponse.data.user })
                 }
 

@@ -5,6 +5,7 @@ import { LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./inter
 
 const BASE_URL_REGISTER = 'http://26.115.177.223:5133/Register/'
 const BASE_URL_LOGIN = 'http://26.115.177.223:5133/Login/'
+export const BASE_URL_Image = 'http://26.115.177.223:5133/ImageIcon/'
 
 export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone, image }: RegisterData) => {
     return axios({
@@ -107,4 +108,21 @@ export const configAxiosWithAccessToken = (token: string) => {
             return Promise.reject(error);
         }
     );
+}
+export const postImageAva = (imageUri: string, nameImageUri: string, nameGame: string) => {
+    let formData = new FormData();
+    formData.append('imageFile', {
+        uri: imageUri,
+        type: 'image/jpeg', // Hoặc 'image/png', tùy thuộc vào loại hình ảnh bạn chọn
+        name: nameImageUri, // Tên tệp hình ảnh khi gửi lên server
+    });
+    return axios({
+        method: "POST",
+        url: BASE_URL_Image.concat("addimage/").concat(username),
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        data: formData
+
+    })
 }

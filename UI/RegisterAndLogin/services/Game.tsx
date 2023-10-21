@@ -41,7 +41,7 @@ export const getById = (id: string) => {
     })
 
 }
-export const getImage = (filename: string, imageName: string) => {
+export const getImageGame = (filename: string, imageName: string) => {
 
     return axios({
         method: "GET",
