@@ -130,6 +130,5 @@ const StackNAvigator = createStackNavigator({
 }, {
   initialRouteName: 'HomeScreen'
 
-}
-)
+})
 export default createAppContainer(StackNAvigator)

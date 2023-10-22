@@ -85,7 +85,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
                             backgroundColor: "#6C9EFF",
                             justifyContent: 'center',
                             borderRadius: 5
-                        }}>
+                        }} onPress={()=>{navigation.navigate('Buy_Game_to_Id')}}>
                             <Text style={{ textAlign: 'center' }}>Mua game</Text>
                         </TouchableOpacity>
 

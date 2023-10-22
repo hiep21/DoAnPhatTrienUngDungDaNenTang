@@ -112,7 +112,7 @@ const AddUserScreen = ({ navigation }) => {
 
             Alert.alert("Register complete!")
             await uploadImage()
-            navigation.navigate("LoginScreen")
+          
         } catch (err) {
             const message = err.response
             setUserVal(err.response.data.errors)

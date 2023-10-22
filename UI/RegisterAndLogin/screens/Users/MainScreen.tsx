@@ -4,9 +4,10 @@ import Carousel from './Carousel';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
-import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
+import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
 import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
+import { GameManager } from '../../services/interfaces/User.interface';
 
 const MainScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
@@ -14,6 +15,7 @@ const MainScreen = ({ navigation }) => {
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [image, setImage] = useState<string>()
     const [imageUri, setImageUri] = useState<string>();
+    
     const loadTasks = async () => {
         setRefreshing(true)
 
@@ -69,8 +71,25 @@ const MainScreen = ({ navigation }) => {
         loadimage()
         loadTasks()
     }, [])
+
+    const [checkBuyAndInstall, setCheckBuyAndInstall] = useState<GameManager>()
+    const CheckBuyAndInstall = async () =>{
+        try {
+            const {data} = await getGameManager(user);
+            setCheckBuyAndInstall(data[0])
+        } catch (error) {
+           console.log(error.response.data)
+        }
+    }
     const goToDetail = (item: InfoGame) => {
+        CheckBuyAndInstall()
+    
+       if (checkBuyAndInstall?.isInstall) {
         navigation.navigate("InfoGameScreen", { gameId: item.id })
+       }
+       else{
+        navigation.navigate("InfoGame_dont_Install", { gameId: item.id })
+       }
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {

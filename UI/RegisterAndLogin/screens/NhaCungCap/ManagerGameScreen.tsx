@@ -60,7 +60,7 @@ const ManagerGameScreen = ({ navigation }) => {
         return (
             <TouchableOpacity onPress={() => { goToDetail(item) }} >
 
-                {item.nhaCungCap == userNCC?.name ? (
+                {item.nhaCungCap == userNCC?.user ? (
                     <View style={{
                         flexDirection: 'row',
                         marginLeft: "5%",
@@ -141,7 +141,7 @@ const ManagerGameScreen = ({ navigation }) => {
                 />
             </View>
             <View style={styles.end}>
-                <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC",{nameNCC:userNCC?.name} )}} style={{
+                <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC",{nameNCC:userNCC?.user} )}} style={{
                     backgroundColor: "#DFEEF6",
                     width: "90%",
                     height: 30,

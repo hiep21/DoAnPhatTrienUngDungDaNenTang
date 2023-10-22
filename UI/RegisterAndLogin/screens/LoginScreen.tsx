@@ -1,8 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
-
 import { useState, useEffect } from 'react';
-
 import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Users/Background';
 import { LoginData, LoginDataToken } from '../services/interfaces/User.interface';
@@ -19,6 +17,7 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
+    const [userVal, setUserVal] = useState(null);
 
     const loadToken = async () => {
         // await deleteItemAsync('accessToken');
@@ -47,10 +46,10 @@ const LoginScreen = ({ navigation }) => {
 
 
     const login = async () => {
-        if (!users.user || !users.password) {
-            alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
-            return;
-        }
+        // if (!users.user || !users.password) {
+        //     alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
+        //     return;
+        // }
 
         if (!isLoading) {
             setIsLoading(true)
@@ -76,7 +75,6 @@ const LoginScreen = ({ navigation }) => {
                 }
                 alert("Đăng nhập thành công")
 
-
                 if (loginResponse.data.note == "User") {
                     navigation.navigate("MainScreenUser", { user: loginResponse.data.user })
                 }
@@ -90,11 +88,13 @@ const LoginScreen = ({ navigation }) => {
 
             } catch (err) {
                 const { data } = err.response
+                setUserVal(err.response.data.errors)
                 alert(err.response.data)
                 alert(data.message.data)
+                
             }
-
             setIsLoading(false)
+            
         }
 
     }
@@ -115,6 +115,11 @@ const LoginScreen = ({ navigation }) => {
 
                                 setUser(value)
                         }} style={styles.input} placeholder="" />
+                        {userVal != null && !users.user ? (
+                            <View>
+                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
+                            </View>
+                        ) : null}
                         <Text style={styles.label}>Password</Text>
                         <TextInput value={users.password} onChangeText={(value) => {
                             setUsers({
@@ -124,6 +129,11 @@ const LoginScreen = ({ navigation }) => {
 
                                 setPassword(value)
                         }} style={styles.input} secureTextEntry />
+                        {userVal != null && !users.password ? (
+                            <View>
+                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
+                            </View>
+                        ) : null}
                     </View>
                     <View style={styles.buttons}>
                         <TouchableOpacity style={styles.button} onPress={login}>
@@ -232,6 +242,9 @@ const styles = StyleSheet.create({
         marginTop: 10,
         width: 200,
         height: 200
+    },
+    textError: {
+        color: "red"
     }
 
 })

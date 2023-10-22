@@ -23,26 +23,7 @@ const Buy_Game_to_Id = ({ navigation }) => {
             alert(errorMessage)
         }
     }
-    // const gia10$ = () => {
-    //     setChecks(false)
-    // }
-    // const gia20$ = () => {
-    //     setChecks(true)
-        
-    // }
-    
-    // const gia30$ = () => {
-    //     setChecks(true)
-    // }
-    // const gia40$ = () => {
-    //     setChecks(true)
-    // }
-    // const gia50$ = () => {
-    //     setChecks(true)
-    // }
-    // const gia60$ = () => {
-    //     setChecks(true)
-    // }
+
     const handleAmountSelection = (amount) => {
         setSelectedAmount(amount);
         console.log(selectedAmount)

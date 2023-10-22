@@ -34,3 +34,9 @@ export interface LoginDataToken {
     image: string
     password: string
 }
+export interface GameManager {
+    username: string,
+    nameGame: string,
+    isBuy: boolean,
+    isInstall: boolean
+}
