@@ -156,7 +156,7 @@ const ChangeInfo = ({ navigation }) => {
             await deleteImage(users, images.data[0].imageName)
             const response = await postImageAva(image.assets[0].uri, image.assets[0].name, users)
             console.log('Upload Image success:', response.data);
-
+            navigation.navigate("HomeScreen")
         } catch (error) {
             console.error('Upload failed:', error.response.data);
         }

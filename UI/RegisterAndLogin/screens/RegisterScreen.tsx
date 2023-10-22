@@ -1,12 +1,13 @@
 
 // screens/Screen1.js
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView } from 'react-native';
+import { View, Text, Image, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView } from 'react-native';
 import { RegisterData } from '../services/interfaces/User.interface';
 import * as Yup from 'yup'
-import { registerApi } from '../services/todo';
+import { postImageAva, registerApi } from '../services/todo';
 import Background from './Users/Background';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as DocumentPicker from 'expo-document-picker';
 // const validationSchema = Yup.object().shape({
 //     user: Yup.string()
 //         .min(2, 'To Short!')
@@ -98,6 +99,10 @@ const AddUserScreen = ({ navigation }) => {
         //     alert("Confirm Password error");
         //     return;
         // }
+        if (!image) {
+            alert("Chưa chọn ảnh")
+            return
+        }
         user.dateOfBirth = changeDate;
 
         try {
@@ -106,6 +111,7 @@ const AddUserScreen = ({ navigation }) => {
             const { data } = await registerApi(user)
 
             Alert.alert("Register complete!")
+            await uploadImage()
             navigation.navigate("LoginScreen")
         } catch (err) {
             const message = err.response
@@ -133,6 +139,36 @@ const AddUserScreen = ({ navigation }) => {
             ]
         );
     };
+
+    const [image, setImage] = useState(null);
+    const pickImage = async () => {
+        try {
+            let result = await DocumentPicker.getDocumentAsync({
+                type: 'image/*',
+                copyToCacheDirectory: false, // Tránh sao chép tệp vào thư mục bộ nhớ cache của ứng dụng
+            });
+            if (result.assets != null) {
+                setImage(result);
+            }
+        } catch (error) {
+            console.error('Lỗi khi chọn hình ảnh:', error);
+        }
+    };
+
+    const uploadImage = async () => {
+        if (!image) {
+            console.error('Chưa chọn hình ảnh.');
+            return;
+        }
+
+        try {
+            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, user.user)
+            console.log('Upload Image success:', response.data);
+            navigation.navigate("HomeScreen")
+        } catch (error) {
+            console.error('Upload failed:', error.response.data);
+        }
+    };
     return (
         <Background>
             <KeyboardAvoidingView>
@@ -147,6 +183,28 @@ const AddUserScreen = ({ navigation }) => {
                                 marginLeft: 20,
 
                             }}>
+                                <Text style={styles.label}>Avatar</Text>
+
+                                {image != null ? (
+                                    <Image source={{ uri: image.assets[0].uri }} style={{ width: 100, height: 100, marginVertical: 20, alignSelf: 'center' }} />
+                                ) : (
+                                    <Text style={{
+                                        paddingLeft: 10,
+                                        paddingVertical: 5,
+                                        color: "red"
+                                    }}>
+                                        Chưa chọn ảnh
+                                    </Text>
+                                )}
+
+
+                                <TouchableOpacity style={[styles.input, { height: 35, justifyContent: 'center' }]} onPress={() => { pickImage(); }}>
+                                    <Text  >
+                                        Chọn ảnh
+                                    </Text>
+
+                                </TouchableOpacity>
+
                                 <Text style={styles.label}>User</Text>
                                 <TextInput value={user.user} onChangeText={(value) => {
                                     setUser({
