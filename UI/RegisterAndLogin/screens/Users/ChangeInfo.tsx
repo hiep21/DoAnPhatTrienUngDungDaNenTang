@@ -139,7 +139,9 @@ const ChangeInfo = ({ navigation }) => {
                 type: 'image/*',
                 copyToCacheDirectory: false, // Tránh sao chép tệp vào thư mục bộ nhớ cache của ứng dụng
             });
-            setImage(result);
+            if (result.assets != null) {
+                setImage(result);
+            }
         } catch (error) {
             console.error('Lỗi khi chọn hình ảnh:', error);
         }
@@ -150,7 +152,7 @@ const ChangeInfo = ({ navigation }) => {
             console.error('Chưa chọn hình ảnh.');
             return;
         }
-        
+
         try {
             const images = await getImageIcon(users)
             await deleteImage(users, images.data[0].imageName)
