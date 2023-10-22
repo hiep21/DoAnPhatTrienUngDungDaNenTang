@@ -26,7 +26,7 @@ const AddUserScreen = ({ navigation }) => {
         name: "",
         email: "",
         password: "",
-        note: "Khách hàng",
+        note: "User",
         gender: "LGBT",
         dateOfBirth: "",
         address: "",
@@ -57,7 +57,7 @@ const AddUserScreen = ({ navigation }) => {
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || selectedDate;
         console.log(currentDate.toDateString());
-        setShowDatePicker(Platform.OS === 'ios'); 
+        setShowDatePicker(Platform.OS === 'ios');
         setSelectedDate(currentDate); // Nếu không có ngày nào được chọn, thì sử dụng ngày hiện tại
         const day = currentDate.getDate();
         const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
@@ -68,9 +68,9 @@ const AddUserScreen = ({ navigation }) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         const date = currentDate.toLocaleDateString(undefined, options);
         setChangeDate(date);
-        
+
     };
-    
+
     const validateInputs = () => {
         if (user.user.length < 5 && (user.user == null || user.user.includes(""))) {
             Alert.alert("Lỗi", "User phải tối thiểu 5 ký tự, không được bỏ trống");
@@ -90,7 +90,7 @@ const AddUserScreen = ({ navigation }) => {
         return true;
     };
     const addUserAction = async () => {
-        
+
         // if (!validateInputs()) {
         //     return;
         // }
@@ -101,10 +101,10 @@ const AddUserScreen = ({ navigation }) => {
         user.dateOfBirth = changeDate;
 
         try {
-            
-           
+
+
             const { data } = await registerApi(user)
-            
+
             Alert.alert("Register complete!")
             navigation.navigate("LoginScreen")
         } catch (err) {
@@ -112,7 +112,7 @@ const AddUserScreen = ({ navigation }) => {
             setUserVal(err.response.data.errors)
             console.log(err.response.data.errors)
         }
-        
+
 
     }
     const onCancel = () => {
@@ -210,19 +210,19 @@ const AddUserScreen = ({ navigation }) => {
                                     </View>
                                 </Modal>
                                 <Text style={styles.label}>Date Of Birth</Text>
-                                
-                
+
+
                                 <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
                                     <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
                                 </TouchableOpacity>
                                 {showDatePicker && (
                                     <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={selectedDate}
-                                    mode="date"
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={onChange}
+                                        testID="dateTimePicker"
+                                        value={selectedDate}
+                                        mode="date"
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={onChange}
                                     />
                                 )}
                                 <Text style={styles.label}>Address</Text>
@@ -245,7 +245,7 @@ const AddUserScreen = ({ navigation }) => {
                                         phone: value
                                     })
                                 }} style={styles.input} placeholder='XXXX-XXX-XXX' />
-                                {userVal != null && !user.phone? (
+                                {userVal != null && !user.phone ? (
                                     <View>
                                         <Text style={styles.textError}>{userVal.Phone}</Text>
                                     </View>
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 15
     },
-    textError:{
+    textError: {
         color: "red"
     }
 })

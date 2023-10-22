@@ -28,11 +28,14 @@ const LoginScreen = ({ navigation }) => {
         const token = await getAccessToken()
         if (token) {
             configAxiosWithAccessToken(token)
-            if (note == "Khách hàng") {
+            if (note == "User") {
                 navigation.navigate("MainScreenUser", { user: tokenObject.user })
             }
-            else if (note == "Nhà cung cấp") {
+            else if (note == "NCC") {
                 navigation.navigate("MainScreenNCC", { user: tokenObject.user })
+            }
+            else if (note == "Admin") {
+                navigation.navigate("MainScreenAdmin", { user: tokenObject.user })
             }
         }
     }
@@ -73,13 +76,16 @@ const LoginScreen = ({ navigation }) => {
                 }
                 alert("Đăng nhập thành công")
 
-                if (loginResponse.data.note == "Khách hàng") {
+
+                if (loginResponse.data.note == "User") {
                     navigation.navigate("MainScreenUser", { user: loginResponse.data.user })
                 }
-                else if (loginResponse.data.note == "Nhà cung cấp") {
+                else if (loginResponse.data.note == "NCC") {
                     navigation.navigate("MainScreenNCC", { user: loginResponse.data.user })
                 }
-
+                else if (loginResponse.data.note == "Admin") {
+                    navigation.navigate("MainScreenAdmin", { user: loginResponse.data.user })
+                }
                 //Chuyển hướng sang màn home
 
             } catch (err) {
