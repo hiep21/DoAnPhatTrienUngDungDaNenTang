@@ -3,24 +3,43 @@ import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInp
 import { InfoGame } from '../../services/interfaces/GameService';
 import { deleteApi, getById, getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
-
+import { BASE_URL_Image, getImageIcon } from '../../services/todo';
+import * as FileSystem from 'expo-file-system';
 const InfoGame_dont_Install = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
     const user = navigation.getParam("user")
     const [game, setGame] = useState<InfoGame>()
     const getGameById = async () => {
+        
         try {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
-
+            const response = await getImageIcon(user)
+            const name = response.data[0].imageName
+            
+            fetchImage(name)
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
         }
     }
+    const [imageUri, setImageUri] = useState<string>();
+    const fetchImage = async (imageName: string) => {
 
+        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName.replace(".png", ""));
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+            setImageUri(response.uri);
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+
+        }
+
+    };
 
     useEffect(() => {
         getGameById()
@@ -41,7 +60,11 @@ const InfoGame_dont_Install = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                        {imageUri !="undefined"?(
+                            <Image style={{ width: 30, height: 30, }} source={{uri : imageUri}} />
+                        ):(
+                            <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                        ) }
                     </TouchableOpacity>
                 </View>
             </View>

@@ -7,7 +7,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import { GameManager } from '../../services/interfaces/User.interface';
-import { UpdateGameManager } from '../../services/todo';
+import { BASE_URL_Image, UpdateGameManager, getImageIcon } from '../../services/todo';
 const InfoGameScreen = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
@@ -21,6 +21,11 @@ const InfoGameScreen = ({ navigation }) => {
             // console.log(data)
             setGame(data[0])
 
+            const response = await getImageIcon(itemGameManager.username)
+            const name = response.data[0].imageName
+            console.log(response.data)
+            fetchImage(name)
+            console.log(gameManager)
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -33,7 +38,7 @@ const InfoGameScreen = ({ navigation }) => {
             ...itemGameManager,
             isInstall: true
         })
-        setCheckDownload(true)
+       
         if (itemGameManager.isInstall) {
             try {
                 await console.log(itemGameManager)
@@ -63,6 +68,7 @@ const InfoGameScreen = ({ navigation }) => {
         else {
             alert("Mời bạn ấn lại")
         }
+        setCheckDownload(true)
     };
 
     const deleteGame = async () => {
@@ -86,8 +92,24 @@ const InfoGameScreen = ({ navigation }) => {
         );
     }
     useEffect(() => {
+        
         getGameById()
     }, [gameId, gameManager, installGame])
+    const [imageUri, setImageUri] = useState<string>();
+    const fetchImage = async (imageName: string) => {
+
+        const url = BASE_URL_Image.concat("getImage/").concat(itemGameManager.username).concat("/").concat(imageName.replace(".png", ""));
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+            setImageUri(response.uri);
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+
+        }
+
+    };
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -104,7 +126,12 @@ const InfoGameScreen = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                        {imageUri !="undefined"?(
+                            <Image style={{ width: 30, height: 30, }} source={{uri : imageUri}} />
+                        ):(
+                            <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                        ) }
+                        
                     </TouchableOpacity>
                 </View>
             </View>
@@ -175,8 +202,8 @@ const InfoGameScreen = ({ navigation }) => {
                                 justifyContent: 'center',
 
                                 borderRadius: 5
-                            }} onPress={() => {
-                                downloadApk(game?.tenTroChoi)
+                            }} onPress={async () => {
+                                await downloadApk(game?.tenTroChoi)
                                 if (checkDownload == true) {
                                     navigation.navigate("LoginScreen")
                                 }

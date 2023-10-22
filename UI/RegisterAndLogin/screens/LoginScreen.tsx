@@ -80,15 +80,7 @@ const LoginScreen = ({ navigation }) => {
                 }
                 alert("Đăng nhập thành công")
 
-                if (loginResponse.data.note == "User") {
-                    navigation.navigate("MainScreenUser", { user: loginResponse.data.user })
-                }
-                else if (loginResponse.data.note == "NCC") {
-                    navigation.navigate("MainScreenNCC", { user: loginResponse.data.user })
-                }
-                else if (loginResponse.data.note == "Admin") {
-                    navigation.navigate("MainScreenAdmin", { user: loginResponse.data.user })
-                }
+                navigation.navigate("HomeScreen")
                 //Chuyển hướng sang màn home
 
             } catch (err) {

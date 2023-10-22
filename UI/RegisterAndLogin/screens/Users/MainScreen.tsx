@@ -9,6 +9,7 @@ import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 import { GameManager } from '../../services/interfaces/User.interface';
 
+
 const MainScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -95,8 +96,15 @@ const MainScreen = ({ navigation }) => {
         
 
         } catch (error) {
-
-            console.log(error.response.data)
+            if (error.response.data =="Tài khoản "+user+" chưa mua với tải game") {
+              
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user })
+                
+            }
+            else{
+                console.log(error.response.data)
+            }
+            
 
 
         }
