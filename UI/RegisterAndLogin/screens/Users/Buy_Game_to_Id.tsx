@@ -3,15 +3,22 @@ import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInp
 import { InfoGame } from '../../services/interfaces/GameService';
 import { deleteApi, getById, getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
+import { CreateGameManager } from '../../services/todo';
+import { GameManager } from '../../services/interfaces/User.interface';
 
 const Buy_Game_to_Id = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
-    const tenTroChoi = navigation.getParam("tenTroChoi")
+    const username = navigation.getParam("user")
     const [game, setGame] = useState<InfoGame>()
     const [checks, setChecks] = useState<boolean>(false)
     const [selectedAmount, setSelectedAmount] = useState(null);
-
+    const [create, setCreate] = useState<GameManager>({
+        username:"",
+        nameGame:"",
+        isBuy:false,
+        isInstall:false
+    });
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
@@ -28,82 +35,32 @@ const Buy_Game_to_Id = ({ navigation }) => {
         setSelectedAmount(amount);
         console.log(selectedAmount)
     };
-
+    const buyGame = async ()=>{
+        setChecks(false)
+        await setCreate({
+            username:username,
+            nameGame:game?.tenTroChoi,
+            isBuy:true,
+            isInstall:false
+        })
+        console.log(create)
+        try {
+            
+            await CreateGameManager(create)
+            alert("Mua thành công")
+            navigation.navigate('ManagerGameUser',{user :username})
+        } catch (error) {
+           alert("Quét mã không thành công xin vui lòng thử lại")
+        }
+      
+    }
 
     useEffect(() => {
         getGameById()
-    }, [gameId, tenTroChoi])
+    }, [gameId,username])
     
     return (
         <View style={styles.container}>
-            <Text style={{
-                    textAlign: 'left',
-                    paddingLeft: 30,
-                    borderBottomWidth: 1.5,
-                    fontSize: 17,
-                    
-
-                }}>Chọn mệnh giá tạo mã QR để thanh toán</Text>
-            <View style={styles.head}>
-                <TouchableOpacity
-                    style={[
-                        styles.search,
-                        selectedAmount === 10 && styles.search1,
-                    ]}
-                    onPress={() => handleAmountSelection(10)}
-                >
-                    <Text>10$</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.search,
-                        selectedAmount === 20 && styles.search1,
-                    ]}
-                    onPress={() => handleAmountSelection(20)}
-                >
-                    <Text>20$</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.search,
-                        selectedAmount === 30 && styles.search1,
-                    ]}
-                    onPress={() => handleAmountSelection(30)}
-                >
-                    <Text>30$</Text>
-                </TouchableOpacity>
-                
-            </View>
-            <View style={styles.head1}>
-                <TouchableOpacity
-                    style={[
-                        styles.search,
-                        selectedAmount === 40 && styles.search1,
-                    ]}
-                    onPress={() => handleAmountSelection(40)}
-                >
-                    <Text>40$</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.search,
-                        selectedAmount === 50 && styles.search1,
-                    ]}
-                    onPress={() => handleAmountSelection(50)}
-                >
-                    <Text>50$</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.search,
-                        selectedAmount === 60 && styles.search1,
-                    ]}
-                    onPress={() => handleAmountSelection(60)}
-                >
-                    <Text>60$</Text>
-                </TouchableOpacity>
-                
-            </View>
             <View style={styles.body}>
               {!checks ? (
                 <View>
@@ -122,9 +79,9 @@ const Buy_Game_to_Id = ({ navigation }) => {
                     <Text style={{borderBottomWidth: 1,}}/>
                     <View style={styles.describeGame}>
                         <Text>Giá tiền</Text>
-                        <Text>{selectedAmount} $</Text>
+                        <Text>{game?.gia} $</Text>
                     </View>
-                    <Text style={{borderBottomWidth: 1,}}/>
+                    <Text style={{borderBottomWidth: 1}}/>
                     <View style={styles.describeGame}>
                         <Text>Phương thức thanh toán</Text>
                         <Text>QR Pay</Text>
@@ -160,22 +117,13 @@ const Buy_Game_to_Id = ({ navigation }) => {
                 <TouchableOpacity
                     style={{
                         height: 45,
-                        backgroundColor: selectedAmount ? "#FF6C6C" : "#ccc", // Vô hiệu hóa nút khi selectedAmount là null
+                        backgroundColor:  "#FF6C6C", // Vô hiệu hóa nút khi selectedAmount là null
                         marginTop: 20,
                         justifyContent: 'center',
                         borderRadius: 5,
-                    }}
-                    onPress={() => {
-                        if (selectedAmount) {
-                            // Xử lý logic thanh toán
-                            setChecks(true);
-                        } else {
-                            // Hiển thị thông báo hoặc xử lý trường hợp khi không có mệnh giá nào được chọn
-                            alert('Vui lòng chọn một mệnh giá để tiếp tục.');
-                        }
-                    }}>
+                    }}onPress={()=>{setChecks(true)}}>
                     <Text style={{ textAlign: 'center' }}>
-                        {selectedAmount ? "Xử lý thanh toán" : "Chọn một mệnh giá"}
+                        Xử lý thanh toán
                     </Text>
                 </TouchableOpacity>
                 ):( 
@@ -187,12 +135,11 @@ const Buy_Game_to_Id = ({ navigation }) => {
                     justifyContent: 'center',
                     borderRadius: 5,
                 
-                }} onPress={()=>{setChecks(false); navigation.navigate('ManagerGameUser')}}>
+                }} onPress={()=>{buyGame()}}>
                     
                     <Text style={{ textAlign: 'center' }}>Tôi đã hoàn tất thanh toán trên app</Text>
                 </TouchableOpacity>
             )}
-                
             </View>
         </View>
 

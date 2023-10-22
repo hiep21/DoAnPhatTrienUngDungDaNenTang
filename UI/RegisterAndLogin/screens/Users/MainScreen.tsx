@@ -72,29 +72,45 @@ const MainScreen = ({ navigation }) => {
         loadTasks()
     }, [])
 
-    const [checkBuyAndInstall, setCheckBuyAndInstall] = useState<GameManager>()
-    const CheckBuyAndInstall = async () =>{
+    const [checkBuyAndInstall, setCheckBuyAndInstall] = useState<GameManager>(null)
+    const CheckBuyAndInstall = async (name : string) =>{
         try {
             const {data} = await getGameManager(user);
-            setCheckBuyAndInstall(data[0])
+            // console.log(data)
+            for (let index = 0; index < data.length; index++) {
+                if (data[index].nameGame == name) {
+                    await setCheckBuyAndInstall(data[index])
+                }
+            }
         } catch (error) {
            console.log(error.response.data)
         }
     }
+    const loadGameInfo = async (item: InfoGame)=>
+    {
+        if (checkBuyAndInstall?.nameGame == item.tenTroChoi) {
+            await CheckBuyAndInstall(item.tenTroChoi)
+            await goToDetail(item)
+        }
+        else{
+            await CheckBuyAndInstall(item.tenTroChoi)
+            
+        }
+    }
     const goToDetail = (item: InfoGame) => {
-        CheckBuyAndInstall()
-    
-       if (checkBuyAndInstall?.isInstall) {
-        navigation.navigate("InfoGameScreen", { gameId: item.id })
+        
+        console.log(checkBuyAndInstall)
+       if (checkBuyAndInstall?.isBuy && checkBuyAndInstall.nameGame == item.tenTroChoi ) {
+        navigation.navigate("InfoGameScreen", { gameId: item.id,user,installGame: checkBuyAndInstall.isInstall})
        }
        else{
-        navigation.navigate("InfoGame_dont_Install", { gameId: item.id })
+        navigation.navigate("InfoGame_dont_Install", { gameId: item.id ,user})
        }
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item) }}>
+            <TouchableOpacity onPress={() => { loadGameInfo(item) }}>
                 <View style={{
                     flexDirection: 'row',
                     marginLeft: "5%",

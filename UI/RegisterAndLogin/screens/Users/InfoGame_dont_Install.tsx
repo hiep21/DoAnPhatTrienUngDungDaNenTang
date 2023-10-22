@@ -7,7 +7,7 @@ import BottomSheet from "./BottomSheet";
 const InfoGame_dont_Install = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
-    const tenTroChoi = navigation.getParam("tenTroChoi")
+    const user = navigation.getParam("user")
     const [game, setGame] = useState<InfoGame>()
     const getGameById = async () => {
         try {
@@ -24,7 +24,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, tenTroChoi])
+    }, [gameId, user])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -85,7 +85,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
                             backgroundColor: "#6C9EFF",
                             justifyContent: 'center',
                             borderRadius: 5
-                        }} onPress={()=>{navigation.navigate('Buy_Game_to_Id')}}>
+                        }} onPress={()=>{navigation.navigate('Buy_Game_to_Id',{gameId,user})}}>
                             <Text style={{ textAlign: 'center' }}>Mua game</Text>
                         </TouchableOpacity>
 

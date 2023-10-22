@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { deleteApi, getById, getByName } from '../../services/Game';
+import { BASE_URL_APK_FILE, deleteApi, getById, getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
-
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
+import * as Permissions from 'expo-permissions';
 const InfoGameScreen = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
-    const tenTroChoi = navigation.getParam("tenTroChoi")
-    const muaTroChoi = navigation.getParam("muaTroChoi")
+    const installGame = navigation.getParam("installGame")
+    
     const [game, setGame] = useState<InfoGame>()
-    const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
+
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
@@ -22,7 +24,31 @@ const InfoGameScreen = ({ navigation }) => {
             alert(errorMessage)
         }
     }
-
+    
+    const downloadApk = async (nameGame:string) => {
+        const apkUrl = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame); // Thay thế bằng URL của tệp APK bạn muốn tải về
+    
+        try {
+          const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+          if (status === 'granted') {
+            const downloadResumable = FileSystem.createDownloadResumable(
+              apkUrl,
+              FileSystem.documentDirectory + nameGame
+            );
+    
+            const { uri } = await downloadResumable.downloadAsync();
+            await MediaLibrary.createAssetAsync(uri);
+            
+           
+            console.log('APK downloaded successfully:', uri);
+          } else {
+            return
+          }
+        } catch (error) {
+          console.error('Error downloading APK:', error.response.data);
+         
+        }
+      };
 
     const deleteGame = async () => {
         Alert.alert(
@@ -36,7 +62,7 @@ const InfoGameScreen = ({ navigation }) => {
                 {
                     text: "Đồng ý",
                     onPress: async () => {
-                        await deleteApi(deleteName);
+                        // await deleteApi(deleteName);
                         alert('Xóa game thành công');
                         navigation.navigate("ManagerGameScreen");
                     },
@@ -46,7 +72,7 @@ const InfoGameScreen = ({ navigation }) => {
     }
     useEffect(() => {
         getGameById()
-    }, [gameId, tenTroChoi])
+    }, [gameId, installGame])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -94,32 +120,52 @@ const InfoGameScreen = ({ navigation }) => {
                         <Text style={{ fontSize: 10 }}>{game?.moTaTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>Trạng thái: {game?.trangThai}</Text>
                     </View>
-                    <View style={{
+                    {installGame ?(
+                        <View style={{
 
-                        width: "30%",
+                            width: "30%",
 
-                    }}>
-                        <TouchableOpacity style={{
-                            height: "45%",
-                            width: "100%",
-                            backgroundColor: "#6C9EFF",
-                            justifyContent: 'center',
-                            borderRadius: 5
+                            }}>
+                            <TouchableOpacity style={{
+                                height: "45%",
+                                width: "100%",
+                                backgroundColor: "#6C9EFF",
+                                justifyContent: 'center',
+                                borderRadius: 5
+                            }}>
+                                <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={{
+                                height: "45%",
+                                width: "100%",
+                                backgroundColor: "#FF6C6C",
+                                marginTop: "5%",
+                                justifyContent: 'center',
+                                borderRadius: 5
+                            }} onPress={() => { deleteGame() }}>
+                                <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ):(
+                        <View style={{
+
+                            width: "30%",
+                            alignSelf:"center",
                         }}>
-                            <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={{
-                            height: "45%",
-                            width: "100%",
-                            backgroundColor: "#FF6C6C",
-                            marginTop: "5%",
-                            justifyContent: 'center',
-                            borderRadius: 5
-                        }} onPress={() => { deleteGame() }}>
-                            <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity style={{
+                                height: "45%",
+                                width: "100%",
+                                backgroundColor: "#6C9EFF",
+                                justifyContent: 'center',
+                                
+                                borderRadius: 5
+                            }} onPress={()=>{downloadApk(game?.tenTroChoi)}}>
+                                <Text style={{ textAlign: 'center' }}>Cài đặt</Text>
+                            </TouchableOpacity>
+    
+                        </View>
+                    )}
                 </View>
                 <View style={{
                     width: "100%",

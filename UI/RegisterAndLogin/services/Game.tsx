@@ -3,7 +3,7 @@ import { CreateGame } from "./interfaces/GameService";
 
 const BASE_URL = 'http://26.115.177.223:5221/InfoFile/'
 
-const BASE_URL_APK_FILE = 'http://26.115.177.223:5221/ApkFiles/'
+export const BASE_URL_APK_FILE = 'http://26.115.177.223:5221/ApkFiles/'
 
 export const BASE_URL_Image = 'http://26.115.177.223:5221/ImageFile/'
 
