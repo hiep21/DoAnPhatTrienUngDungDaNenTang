@@ -50,6 +50,7 @@ const Buy_Game_to_Id = ({ navigation }) => {
             alert("Mua thành công")
             navigation.navigate('ManagerGameUser',{user :username})
         } catch (error) {
+            console.log(error.response.data)
            alert("Quét mã không thành công xin vui lòng thử lại")
         }
       

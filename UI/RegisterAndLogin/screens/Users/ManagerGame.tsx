@@ -22,6 +22,7 @@ const ManagerGameUser = ({ navigation }) => {
             const { data } = await getByName()
             // console.log(data)
             const response = await getGameManager(users)
+            
             if (!check) {
                 const listGameInstall = []
                 const listGameInfo = []
@@ -38,7 +39,7 @@ const ManagerGameUser = ({ navigation }) => {
                 }
                 await setListGame(listGameInfo)
                 await setListGameIsInstall(listGameInstall)
-                console.log(listGame)
+                
             }
             else{
                 const listGameBuy = []
@@ -56,7 +57,7 @@ const ManagerGameUser = ({ navigation }) => {
                 }
                 await setListGame(listGameInfo)
                 await setListGameHaveBuy(listGameBuy)
-                console.log(listGame)
+        
             }
           
           

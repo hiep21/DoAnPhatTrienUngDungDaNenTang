@@ -15,7 +15,7 @@ const MainScreen = ({ navigation }) => {
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [image, setImage] = useState<string>()
     const [imageUri, setImageUri] = useState<string>();
-    
+
     const loadTasks = async () => {
         setRefreshing(true)
 
@@ -72,45 +72,39 @@ const MainScreen = ({ navigation }) => {
         loadTasks()
     }, [])
 
-    const [checkBuyAndInstall, setCheckBuyAndInstall] = useState<GameManager>(null)
-    const CheckBuyAndInstall = async (name : string) =>{
+
+    const CheckBuyAndInstall = async (name: string, item: InfoGame) => {
         try {
-            const {data} = await getGameManager(user);
+
+            const { data } = await getGameManager(user);
             // console.log(data)
+            const GameCheck = []
             for (let index = 0; index < data.length; index++) {
                 if (data[index].nameGame == name) {
-                    await setCheckBuyAndInstall(data[index])
+                    GameCheck.push(data[index])
                 }
             }
-        } catch (error) {
-           console.log(error.response.data)
-        }
-    }
-    const loadGameInfo = async (item: InfoGame)=>
-    {
-        if (checkBuyAndInstall?.nameGame == item.tenTroChoi) {
-            await CheckBuyAndInstall(item.tenTroChoi)
-            await goToDetail(item)
-        }
-        else{
-            await CheckBuyAndInstall(item.tenTroChoi)
-            
-        }
-    }
-    const goToDetail = (item: InfoGame) => {
+
+
+            if (GameCheck.length == 0) {
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user })
+            }
+            else {
+                navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager :GameCheck[0] , installGame: GameCheck[0].isInstall })
+            }
         
-        console.log(checkBuyAndInstall)
-       if (checkBuyAndInstall?.isBuy && checkBuyAndInstall.nameGame == item.tenTroChoi ) {
-        navigation.navigate("InfoGameScreen", { gameId: item.id,user,installGame: checkBuyAndInstall.isInstall})
-       }
-       else{
-        navigation.navigate("InfoGame_dont_Install", { gameId: item.id ,user})
-       }
+
+        } catch (error) {
+
+            console.log(error.response.data)
+
+
+        }
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <TouchableOpacity onPress={() => { loadGameInfo(item) }}>
+            <TouchableOpacity onPress={() => { CheckBuyAndInstall(item.tenTroChoi, item) }}>
                 <View style={{
                     flexDirection: 'row',
                     marginLeft: "5%",
@@ -162,7 +156,7 @@ const MainScreen = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        {imageUri? (
+                        {imageUri ? (
                             <Image style={{ width: 30, height: 30, }} source={{
                                 uri: imageUri
                             }} />

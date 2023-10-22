@@ -10,7 +10,7 @@ const BASE_URL_GameManager = "http://26.115.177.223:5133/GameManager/"
 export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone, image }: RegisterData) => {
     return axios({
         method: "POST",
-        url:BASE_URL_REGISTER.concat('createRegister'),
+        url: BASE_URL_REGISTER.concat('createRegister'),
         data: {
             user,
             name,
@@ -47,17 +47,31 @@ export const UpdateRegisterApi = (username: string, { user, name, email, passwor
         }
     })
 }
+export const UpdateGameManager = ({ username, nameGame, isBuy, isInstall }: GameManager) => {
+    return axios({
+        method: "put",
+        url: BASE_URL_GameManager.concat("update"),
+
+        data: {
+            username,
+            nameGame,
+            isBuy,
+            isInstall
+
+        }
+    })
+}
 export const loginApi = ({ user, password }: LoginData) => {
     return axios({
         method: "POST",
-        url: BASE_URL_LOGIN.concat("createLogin") ,
+        url: BASE_URL_LOGIN.concat("createLogin"),
         data: {
             user,
             password
         }
     })
 }
-export const CreateGameManager = ({ username,nameGame,isBuy,isInstall}:GameManager) => {
+export const CreateGameManager = ({ username, nameGame, isBuy, isInstall }: GameManager) => {
     return axios({
         method: "POST",
         url: BASE_URL_GameManager.concat("create"),

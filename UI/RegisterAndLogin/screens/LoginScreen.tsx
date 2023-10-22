@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
 import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
 import Background from './Users/Background';
 import { LoginData, LoginDataToken } from '../services/interfaces/User.interface';
 import { deleteItemAsync, getItemAsync } from 'expo-secure-store';
+
 
 
 const LoginScreen = ({ navigation }) => {
@@ -40,11 +42,14 @@ const LoginScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
+        console.log("Load token called!");
         loadToken()
-
+        return () => {
+            loadToken()
+        };
     }, [])
 
-
+ 
     const login = async () => {
         // if (!users.user || !users.password) {
         //     alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
@@ -91,10 +96,10 @@ const LoginScreen = ({ navigation }) => {
                 setUserVal(err.response.data.errors)
                 alert(err.response.data)
                 alert(data.message.data)
-                
+
             }
             setIsLoading(false)
-            
+
         }
 
     }

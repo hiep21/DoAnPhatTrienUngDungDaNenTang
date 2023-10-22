@@ -6,13 +6,15 @@ import BottomSheet from "./BottomSheet";
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
+import { GameManager } from '../../services/interfaces/User.interface';
+import { UpdateGameManager } from '../../services/todo';
 const InfoGameScreen = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
     const installGame = navigation.getParam("installGame")
-    
+    const gameManager = navigation.getParam("gameManager")
     const [game, setGame] = useState<InfoGame>()
-
+    const [itemGameManager, setitemGameManager] = useState<GameManager>(gameManager)
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
@@ -24,31 +26,44 @@ const InfoGameScreen = ({ navigation }) => {
             alert(errorMessage)
         }
     }
-    
-    const downloadApk = async (nameGame:string) => {
+    const [checkDownload, setCheckDownload] = useState<boolean>()
+    const downloadApk = async (nameGame: string) => {
         const apkUrl = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame); // Thay thế bằng URL của tệp APK bạn muốn tải về
-    
-        try {
-          const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
-          if (status === 'granted') {
-            const downloadResumable = FileSystem.createDownloadResumable(
-              apkUrl,
-              FileSystem.documentDirectory + nameGame
-            );
-    
-            const { uri } = await downloadResumable.downloadAsync();
-            await MediaLibrary.createAssetAsync(uri);
-            
-           
-            console.log('APK downloaded successfully:', uri);
-          } else {
-            return
-          }
-        } catch (error) {
-          console.error('Error downloading APK:', error.response.data);
-         
+        setitemGameManager({
+            ...itemGameManager,
+            isInstall: true
+        })
+        setCheckDownload(true)
+        if (itemGameManager.isInstall) {
+            try {
+                await console.log(itemGameManager)
+                const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+
+                if (status === 'granted') {
+                    const downloadResumable = FileSystem.createDownloadResumable(
+                        apkUrl,
+                        FileSystem.documentDirectory + nameGame
+                    );
+
+                    const { uri } = await downloadResumable.downloadAsync();
+                    await MediaLibrary.createAssetAsync(uri);
+
+                    console.log('APK downloaded successfully:', uri);
+
+                    await UpdateGameManager(itemGameManager)
+                    alert("Download thành công")
+
+                } else {
+                    return
+                }
+            } catch (error) {
+                console.error('Error downloading APK:', error.response.data);
+            }
         }
-      };
+        else {
+            alert("Mời bạn ấn lại")
+        }
+    };
 
     const deleteGame = async () => {
         Alert.alert(
@@ -72,7 +87,7 @@ const InfoGameScreen = ({ navigation }) => {
     }
     useEffect(() => {
         getGameById()
-    }, [gameId, installGame])
+    }, [gameId, gameManager, installGame])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -114,18 +129,18 @@ const InfoGameScreen = ({ navigation }) => {
                         justifyContent: 'center',
                         width: "50%",
                         marginRight: 50,
-                        marginLeft:10
+                        marginLeft: 10
                     }}>
                         <Text style={{ fontSize: 15 }}>{game?.tenTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>{game?.moTaTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>Trạng thái: {game?.trangThai}</Text>
                     </View>
-                    {installGame ?(
+                    {installGame ? (
                         <View style={{
 
                             width: "30%",
 
-                            }}>
+                        }}>
                             <TouchableOpacity style={{
                                 height: "45%",
                                 width: "100%",
@@ -147,23 +162,28 @@ const InfoGameScreen = ({ navigation }) => {
                                 <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
                             </TouchableOpacity>
                         </View>
-                    ):(
+                    ) : (
                         <View style={{
 
                             width: "30%",
-                            alignSelf:"center",
+                            alignSelf: "center",
                         }}>
                             <TouchableOpacity style={{
                                 height: "45%",
                                 width: "100%",
                                 backgroundColor: "#6C9EFF",
                                 justifyContent: 'center',
-                                
+
                                 borderRadius: 5
-                            }} onPress={()=>{downloadApk(game?.tenTroChoi)}}>
+                            }} onPress={() => {
+                                downloadApk(game?.tenTroChoi)
+                                if (checkDownload == true) {
+                                    navigation.navigate("LoginScreen")
+                                }
+                            }}>
                                 <Text style={{ textAlign: 'center' }}>Cài đặt</Text>
                             </TouchableOpacity>
-    
+
                         </View>
                     )}
                 </View>
@@ -261,7 +281,7 @@ const styles = StyleSheet.create({
     end: {
         width: "95%",
         height: 260,
-        marginHorizontal:15,
+        marginHorizontal: 15,
 
     }
 

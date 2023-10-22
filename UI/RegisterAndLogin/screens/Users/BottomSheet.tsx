@@ -122,11 +122,12 @@ class BottomSheet extends React.Component {
         await deleteUsers(userName);
 
         const { navigation } = this.props;
+        alert("Đăng xuất thành công");
         navigation.navigate("HomeScreen");
         // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
         // Ví dụ: Xoá dữ liệu người dùng khỏi trạng thái ứng dụng hoặc thực hiện các thao tác khác liên quan đến đăng xuất.
         // ...
-        console.log("Đăng xuất thành công");
+        
       } catch (error) {
         console.log("Lỗi khi đăng xuất", error.response.data);
       }
