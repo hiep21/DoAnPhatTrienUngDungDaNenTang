@@ -1,24 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
 import Background from './Background';
-import { getByUser } from '../../services/todo';
+import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
-
+import * as FileSystem from 'expo-file-system';
 const UserScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
     const [users, setUsers] = useState<RegisterData>();
+    const [imageUri, setImageUri] = useState<string>();
+
     const loadTasks = async () => {
         try {
 
             const { data } = await getByUser(user)
-
             setUsers(data[0])
+            const response = await getImageIcon(user)
+            const name = response.data[0].imageName
+            console.log(response.data)
+            fetchImage(name)
+
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
         }
 
     }
+    const fetchImage = async (imageName: string) => {
+
+        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName.replace(".png", ""));
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+            setImageUri(response.uri);
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+
+        }
+
+    };
     const changeInfo = (username: string, textChange: string) => {
 
         navigation.navigate("ChangeInfo", { user: username, textChange: textChange });
@@ -31,18 +51,18 @@ const UserScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <View style={styles.iconBg}>
                     <TouchableOpacity onPress={() => { changeInfo(users?.user, "image") }}>
-                        {users?.image =="" ? (
+                        {imageUri ? (
                             <Image style={{
                                 height: 60,
                                 width: 60,
                                 borderRadius: 100
-                            }} source={require("../../assets/favicon.png")} />
+                            }} source={{ uri: imageUri }} />
                         ) : (
                             <Image style={{
                                 height: 60,
                                 width: 60,
                                 borderRadius: 100
-                            }} source={{ uri: users?.image }} />
+                            }} source={require("../../assets/favicon.png")} />
                         )}
                     </TouchableOpacity>
 
@@ -51,7 +71,7 @@ const UserScreen = ({ navigation }) => {
                 <View style={styles.mainContainer}>
 
                     <View style={styles.content}>
-                        
+
                         <Text style={styles.label}>Thông tin cá nhân</Text>
                     </View>
                     <View style={styles.contents}>

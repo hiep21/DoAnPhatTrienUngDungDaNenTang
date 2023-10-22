@@ -4,14 +4,16 @@ import Carousel from './Carousel';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
-import { getByUser } from '../../services/todo';
+import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
 import { getItemAsync } from 'expo-secure-store';
+import * as FileSystem from 'expo-file-system';
 
 const MainScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [image, setImage] = useState<string>()
+    const [imageUri, setImageUri] = useState<string>();
     const loadTasks = async () => {
         setRefreshing(true)
 
@@ -19,6 +21,10 @@ const MainScreen = ({ navigation }) => {
             const { data } = await getByName()
             // console.log(data)
             setListGame(data)
+            const response = await getImageIcon(user)
+            const name = response.data[0].imageName
+            console.log(response.data)
+            fetchImage(name)
 
         } catch (err) {
             const errorMessage = err.response
@@ -26,6 +32,20 @@ const MainScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
+    const fetchImage = async (imageName: string) => {
+
+        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName.replace(".png", ""));
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+            setImageUri(response.uri);
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+
+        }
+
+    };
     const loadimage = async () => {
         const getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
@@ -107,9 +127,9 @@ const MainScreen = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        {image != "" ? (
+                        {imageUri? (
                             <Image style={{ width: 30, height: 30, }} source={{
-                                uri: image
+                                uri: imageUri
                             }} />
                         ) : (
                             <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />

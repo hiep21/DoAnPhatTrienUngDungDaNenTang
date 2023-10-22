@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal } from 'react-native';
-import { UpdateRegisterApi, getByUser } from '../../services/todo';
+import { UpdateRegisterApi, deleteImage, getByUser, getImageIcon, postImageAva } from '../../services/todo';
 import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
@@ -134,43 +134,34 @@ const ChangeInfo = ({ navigation }) => {
 
     const [image, setImage] = useState(null);
     const pickImage = async () => {
-
         try {
             let result = await DocumentPicker.getDocumentAsync({
                 type: 'image/*',
                 copyToCacheDirectory: false, // Tránh sao chép tệp vào thư mục bộ nhớ cache của ứng dụng
             });
-            if (result.assets != null) {
-                setImage(result);
-                //setImage(result.assets[0].uri);
-            }
-            else {
-                return;
-            }
-
+            setImage(result);
         } catch (error) {
-            alert('Lỗi khi chọn hình ảnh:', error);
+            console.error('Lỗi khi chọn hình ảnh:', error);
         }
+    };
 
-    }
     const uploadImage = async () => {
         if (!image) {
             console.error('Chưa chọn hình ảnh.');
             return;
         }
-
+        
         try {
-            const response = await UpdateRegisterApi(users, usersUpdateImage)
+            const images = await getImageIcon(users)
+            await deleteImage(users, images.data[0].imageName)
+            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, users)
+            console.log('Upload Image success:', response.data);
 
-            navigation.navigate("HomeScreen")
-            console.log('Upload success:', response.data);
         } catch (error) {
-            console.log('Upload failed:', error.message);
-
+            console.error('Upload failed:', error.response.data);
         }
-        setIsLoading(false)
+    };
 
-    }
     const uploadTextChange = async (change: string) => {
 
         if (!isLoading) {

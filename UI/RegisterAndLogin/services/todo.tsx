@@ -30,7 +30,7 @@ export const UpdateRegisterApi = (username: string, { user, name, email, passwor
     return axios({
         method: "put",
         url: BASE_URL_REGISTER.concat("updateRegister/").concat(username),
-        
+
         data: {
             user,
             password,
@@ -109,7 +109,7 @@ export const configAxiosWithAccessToken = (token: string) => {
         }
     );
 }
-export const postImageAva = (imageUri: string, nameImageUri: string, nameGame: string) => {
+export const postImageAva = (imageUri: string, nameImageUri: string, username: string) => {
     let formData = new FormData();
     formData.append('imageFile', {
         uri: imageUri,
@@ -124,5 +124,20 @@ export const postImageAva = (imageUri: string, nameImageUri: string, nameGame: s
         },
         data: formData
 
+    })
+}
+export const getImageIcon = (username: string) => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_Image.concat("GetImageByUser/").concat(username)
+
+    })
+
+}
+export const deleteImage = (user: string, imageName: string) => {
+    return axios({
+        method: "delete",
+        url: BASE_URL_Image.concat("deleteImage/").concat(user).concat("/").concat(imageName.replace(".png", "")),
     })
 }
