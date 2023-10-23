@@ -17,23 +17,25 @@ const ListAccountScreen = ({ navigation }) => {
     const [listAccount, setListAccount] = useState<RegisterData[]>([])
     const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
     const loadTasks = async () => {
+        console.log(user)
         setRefreshing(true)
         try {
             const { data } = await getAllAccount()
             // console.log(data)
             setListAccount(data)
             setReListAccount(data)
-            const response = await getImageIcon("po123lop456")
+            const response = await getImageIcon("po123lop123")
             const name = response.data[0].imageName
 
-            fetchImage("po123lop456", name)
+            fetchImage("po123lop123", name)
 
-            for (let i = 0; i < listAccount.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 const response = await getImageIcon(listAccount[i].user)
                 const ImageName = response.data[0].imageName
                 await fetchImage(listAccount[i].user, ImageName)
 
             }
+
             setListImageUri(checklist)
 
         } catch (err) {
@@ -45,6 +47,7 @@ const ListAccountScreen = ({ navigation }) => {
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
     const [imageAdminUri, setImageAdminUri] = useState<string>();
     let checklist: ImageUri[] = [];
+
     const fetchImage = async (username: string, imageName: string) => {
 
         let check: ImageUri = {
@@ -113,6 +116,7 @@ const ListAccountScreen = ({ navigation }) => {
                         marginLeft: "5%",
                         marginTop: 20
                     }}>
+
                         {listImageUri.length != 0 ? (
                             <Image style={{ width: 50, height: 50, marginTop: 7 }} source={{ uri: listImageUri.find(f => f.username == item.user)?.imageUri }} />
                         ) : (
@@ -198,7 +202,7 @@ const ListAccountScreen = ({ navigation }) => {
                     justifyContent: 'center',
                     borderRadius: 5,
                 }}>
-       
+
                 </TouchableOpacity>
             </View>
             <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />

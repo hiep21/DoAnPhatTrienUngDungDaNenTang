@@ -17,6 +17,7 @@ const MainScreenAdmin = ({ navigation }) => {
     const [imageUri, setImageUri] = useState<string>();
 
     const loadTasks = async () => {
+        
         setRefreshing(true)
         try {
             const { data } = await getByName()

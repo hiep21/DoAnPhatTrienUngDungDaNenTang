@@ -40,7 +40,7 @@ class BottomSheet extends React.Component {
       const response2 = await getImageIcon(userName)
       const name = response2.data[0].imageName
       const check = await this.fetchImage(userName, name)
-
+      console.log(check?.uri)
       const image = check?.uri;
       this.setState({ email })
       this.setState({ userName });
