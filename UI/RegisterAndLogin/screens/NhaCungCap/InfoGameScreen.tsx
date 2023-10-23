@@ -50,7 +50,7 @@ const InfoGameNCC = ({ navigation }) => {
     }, [gameId, tenTroChoi, imageUri])
     return (
         <View style={styles.container}>
-            <View style={styles.head}>
+            {/* <View style={styles.head}>
                 <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' />
@@ -67,7 +67,7 @@ const InfoGameNCC = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                     </TouchableOpacity>
                 </View>
-            </View>
+            </View> */}
             <View style={styles.body}>
                 <Text style={{
                     textAlign: 'left',
@@ -76,7 +76,7 @@ const InfoGameNCC = ({ navigation }) => {
                     fontSize: 17,
                     fontWeight: '600',
 
-                }}>Danh sách trò chơi</Text>
+                }}>Trò chơi</Text>
                 <View style={styles.describeGame}>
                     <Image style={{
                         height: 50,

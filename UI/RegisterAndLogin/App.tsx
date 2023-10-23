@@ -25,6 +25,7 @@ import MainScreenAdmin from "./screens/Admin/MainScreen";
 import ListAccountScreen from "./screens/Admin/ListAccount";
 import InfoAccount from "./screens/Admin/InfoAccount";
 import CreateAccountNCC from "./screens/Admin/CreateAccountNCC";
+import ChartComponent from './screens/Admin/ChartComponent';
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -152,10 +153,17 @@ const StackNAvigator = createStackNavigator({
     navigationOptions: {
       title: 'Tạo tài khoản cho nhà cung cấp',
     },
+  },
+  ChartComponent:{
+    screen: ChartComponent,
+    navigationOptions: {
+      title: 'Doanh thu',
+    },
   }
+  
 
 }, {
-  initialRouteName: 'HomeScreen',
+  initialRouteName: 'ChartComponent',
   
 })
 export default createAppContainer(StackNAvigator)
