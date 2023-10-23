@@ -3,11 +3,11 @@ import { Text, View, Dimensions, Animated, StyleSheet, Image, TouchableOpacity }
 
 import SlidingUpPanel from "rn-sliding-up-panel";
 import * as SecureStore from 'expo-secure-store';
-import { deleteUsers, getByUser } from "../../services/todo";
+import { BASE_URL_Image, deleteUsers, getByUser, getImageIcon } from "../../services/todo";
 import { string } from "yup";
 import { LoginData, LoginDataToken, RegisterData } from "../../services/interfaces/User.interface";
 import ChangeInfo from "./ChangeInfo";
-
+import * as FileSystem from 'expo-file-system';
 const { height } = Dimensions.get("window");
 
 
@@ -36,7 +36,12 @@ class BottomSheet extends React.Component {
       const userName = tokenObject.user;
       const email = tokenObject.email;
       const getImage = await getByUser(userName);
-      const image = getImage.data[0].image;
+
+      const response2 = await getImageIcon(userName)
+      const name = response2.data[0].imageName
+      const check = await this.fetchImage(userName, name)
+
+      const image = check?.uri;
       this.setState({ email })
       this.setState({ userName });
       this.setState({ image });
@@ -44,6 +49,19 @@ class BottomSheet extends React.Component {
       console.log("Lỗi khi lấy thông tin người dùng", error);
     }
   }
+
+  fetchImage = async (username: string, imageName: string) => {
+
+    const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName.replace(".png", ""));
+    try {
+      const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+      return response;
+    } catch (error) {
+      console.error('Error fetching image:', error.response.data);
+
+    }
+
+  };
   showPanel = () => {
     //this._panel.show(480);
     this.setState((prevState) => ({

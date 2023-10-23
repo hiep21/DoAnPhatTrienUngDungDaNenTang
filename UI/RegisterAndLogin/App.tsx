@@ -163,7 +163,7 @@ const StackNAvigator = createStackNavigator({
   
 
 }, {
-  initialRouteName: 'ChartComponent',
+  initialRouteName: 'HomeScreen',
   
 })
 export default createAppContainer(StackNAvigator)

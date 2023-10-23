@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button, ActivityIndicator } from 'react-native';
 import { CreateGame } from '../../services/interfaces/GameService';
-import { createGame, deleteApkFile, deleteFolder, deleteImage, getByName, postFileApk, postImage, postImageIcon } from '../../services/Game';
+import { createGame, deleteApkFile, deleteFolder, deleteImage, deleteImageIcon, getByName, postFileApk, postImage, postImageIcon } from '../../services/Game';
 import * as DocumentPicker from 'expo-document-picker';
 
 
@@ -16,8 +16,8 @@ const AddGameNCC = ({ navigation }) => {
         gia: "",
         nhaCungCap: "",
         gioiThieuTroChoi: "",
-        kichCoFile: "0Mb",
-        trangThai: "Trên kệ"
+        kichCoFile: "",
+        trangThai: "Chờ xét duyệt"
     });
 
     const validateInputs = () => {
@@ -47,7 +47,7 @@ const AddGameNCC = ({ navigation }) => {
         try {
             const response = await createGame(game)
             alert("Thành công")
-            
+
             console.log('Upload success:', response.data);
         } catch (err) {
             const message = err.response.data
@@ -114,7 +114,7 @@ const AddGameNCC = ({ navigation }) => {
                 setNameDocumentUri(result.assets[0].name);
                 setgame({
                     ...game,
-                    kichCoFile: ((result.assets[0].size / 1024) / 1024).toString()
+                    kichCoFile: ((result.assets[0].size / 1024) / 1024).toFixed(2)
                 })
             } else {
                 Alert.alert("Cảnh báo", 'Chưa chọn file.');
@@ -140,19 +140,22 @@ const AddGameNCC = ({ navigation }) => {
         }
     };
     const uploadData = async () => {
+        console.log(nameDocumentUri)
         if (!isLoading) {
             try {
                 // Gọi các hàm upload lần lượt và chờ cho đến khi hoàn thành mỗi hàm trước khi gọi hàm tiếp theo
                 await uploadDocument();
                 await uploadImage();
                 await addgameAction();
-                await navigation.navigate("ManagerGameScreen")
+                await navigation.navigate("MainScreenNCC")
                 // Nếu tất cả các hàm trên chạy thành công, bạn có thể thực hiện các hành động tiếp theo ở đây
             } catch (error) {
-                alert(error.response.data);
+
                 const response = await deleteApkFile(nameDocumentUri)
                 const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
-                const response2 = await deleteFolder(nameDocumentUri)
+                const response2 = await deleteImageIcon(nameDocumentUri, image.assets[0].name)
+                const response3 = await deleteFolder(nameDocumentUri)
+                console.log(error.response.data);
             }
             setIsLoading(false)
         }
