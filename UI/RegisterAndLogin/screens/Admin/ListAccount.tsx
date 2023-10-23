@@ -15,12 +15,14 @@ const ListAccountScreen = ({ navigation }) => {
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
     const [listAccount, setListAccount] = useState<RegisterData[]>([])
+    const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
     const loadTasks = async () => {
         setRefreshing(true)
         try {
             const { data } = await getAllAccount()
             // console.log(data)
             setListAccount(data)
+            setReListAccount(data)
             const response = await getImageIcon("po123lop456")
             const name = response.data[0].imageName
 
@@ -33,6 +35,7 @@ const ListAccountScreen = ({ navigation }) => {
 
             }
             setListImageUri(checklist)
+
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -87,12 +90,14 @@ const ListAccountScreen = ({ navigation }) => {
         if (filteredTasks != null) {
 
             setListAccount(filteredTasks);
-
+        }
+        else {
+            setListAccount(reListAccount)
         }
 
     }
     useEffect(() => {
-
+        handleSearch()
         loadTasks()
     }, [user])
     const goToDetail = (item: RegisterData) => {
@@ -108,7 +113,11 @@ const ListAccountScreen = ({ navigation }) => {
                         marginLeft: "5%",
                         marginTop: 20
                     }}>
-                        <Image style={{ width: 50, height: 50, marginTop: 7 }} source={{ uri: listImageUri.find(f => f.username == item.user)?.imageUri }} />
+                        {listImageUri.length != 0 ? (
+                            <Image style={{ width: 50, height: 50, marginTop: 7 }} source={{ uri: listImageUri.find(f => f.username == item.user)?.imageUri }} />
+                        ) : (
+                            <Image style={{ width: 50, height: 50, marginTop: 7 }} source={require("../../assets/favicon.png")} />
+                        )}
                         <View style={{
                             marginLeft: 15,
                             width: "70%"
@@ -140,14 +149,17 @@ const ListAccountScreen = ({ navigation }) => {
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' value={searchKeyword}
                         onChangeText={(text) => setSearchKeyword(text)} />
-                    <TouchableOpacity onPress={() => { handleSearch() }}>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
+                    <TouchableOpacity style={{
+
+                        paddingTop: 5
+                    }} onPress={() => { handleSearch() }}>
+                        <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/1.png")} />
+                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={{ uri: imageAdminUri }} />

@@ -127,7 +127,7 @@ class BottomSheet extends React.Component {
         // Nếu bạn muốn thực hiện thêm bất kỳ thao tác đăng xuất nào khác ở đây, bạn có thể thực hiện chúng.
         // Ví dụ: Xoá dữ liệu người dùng khỏi trạng thái ứng dụng hoặc thực hiện các thao tác khác liên quan đến đăng xuất.
         // ...
-        
+
       } catch (error) {
         console.log("Lỗi khi đăng xuất", error.response.data);
       }
@@ -167,19 +167,19 @@ class BottomSheet extends React.Component {
               </View>
               <View style={styles.tool}>
                 <TouchableOpacity style={styles.itemTool} onPress={this.navigateToManageGame}>
-                  <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                  <Image style={[styles.image, { height: 35 }]} source={require("../../assets/Icon/checklist-153371_1280.png")} />
                   <Text style={styles.textTool}>Quản lý ứng dụng</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.itemTool} >
-                  <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                  <Image style={styles.image} source={require("../../assets/Icon/cheque-guarantee-card-2103509_1280.png")} />
                   <Text style={styles.textTool}>Thanh toán</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSettingUser}>
-                  <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                  <Image style={styles.image} source={require("../../assets/Icon/gear-1119298_1280.png")} />
                   <Text style={styles.textTool}>Cài đặt</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSupportUser}>
-                  <Image style={styles.image} source={require("../../assets/favicon.png")} />
+                  <Image style={styles.image} source={require("../../assets/Icon/question-mark-295272_1280.png")} />
                   <Text style={styles.textTool}>Trợ giúp và phản hồi</Text>
                 </TouchableOpacity>
               </View>
