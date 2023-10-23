@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button,ActivityIndicator } from 'react-native';
+import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button, ActivityIndicator } from 'react-native';
 import { CreateGame } from '../../services/interfaces/GameService';
-import { createGame, deleteApkFile, deleteFolder, deleteImage, getByName, postFileApk, postImage } from '../../services/Game';
+import { createGame, deleteApkFile, deleteFolder, deleteImage, getByName, postFileApk, postImage, postImageIcon } from '../../services/Game';
 import * as DocumentPicker from 'expo-document-picker';
 
 
@@ -36,18 +36,18 @@ const AddGameNCC = ({ navigation }) => {
         return true;
     };
     const addgameAction = async () => {
-       
+
         if (!validateInputs()) {
             return;
         }
         setgame({
             ...game,
-            nhaCungCap:nameNCC
+            nhaCungCap: nameNCC
         })
         try {
             const response = await createGame(game)
             alert("Thành công")
-            navigation.navigate("ManagerGameScreen")
+            
             console.log('Upload success:', response.data);
         } catch (err) {
             const message = err.response.data
@@ -93,7 +93,7 @@ const AddGameNCC = ({ navigation }) => {
         }
 
         try {
-            const response = await postImage(image.assets[0].uri, image.assets[0].name, nameDocumentUri.replace(".apk", ""))
+            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, nameDocumentUri.replace(".apk", ""))
 
             console.log('Upload success:', response.data);
         } catch (error) {
@@ -146,6 +146,7 @@ const AddGameNCC = ({ navigation }) => {
                 await uploadDocument();
                 await uploadImage();
                 await addgameAction();
+                await navigation.navigate("ManagerGameScreen")
                 // Nếu tất cả các hàm trên chạy thành công, bạn có thể thực hiện các hành động tiếp theo ở đây
             } catch (error) {
                 alert(error.response.data);
@@ -156,7 +157,7 @@ const AddGameNCC = ({ navigation }) => {
             setIsLoading(false)
         }
 
-        
+
     };
     useEffect(() => {
     }, [nameNCC])
@@ -171,6 +172,27 @@ const AddGameNCC = ({ navigation }) => {
                         width: "100%",
                         height: "50%"
                     }}>
+                        <Text style={styles.label}>Chọn file</Text>
+                        <TouchableOpacity onPress={() => { pickDocument() }}>
+                            <Text style={styles.input} >
+                                {nameDocumentUri}
+                            </Text>
+                        </TouchableOpacity>
+
+
+
+                        <Text style={styles.label}>Icon file</Text>
+
+                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+
+
+                        <TouchableOpacity onPress={() => { pickImage(); }}>
+                            <Text style={styles.input} >
+
+                            </Text>
+
+                        </TouchableOpacity>
+
                         <Text style={styles.label}>Tên trò chơi</Text>
                         <TextInput value={game?.tenTroChoi} onChangeText={(value) => {
                             setgame({
@@ -218,26 +240,6 @@ const AddGameNCC = ({ navigation }) => {
                             })
                         }} style={styles.inputAdd} />
 
-                        <Text style={styles.label}>Chọn file</Text>
-                        <TouchableOpacity onPress={() => { pickDocument() }}>
-                            <Text style={styles.input} >
-                                {nameDocumentUri}
-                            </Text>
-                        </TouchableOpacity>
-
-
-
-                        <Text style={styles.label}>Icon file</Text>
-
-                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
-
-
-                        <TouchableOpacity onPress={() => { pickImage(); }}>
-                            <Text style={styles.input} >
-
-                            </Text>
-
-                        </TouchableOpacity>
 
 
 
@@ -249,7 +251,7 @@ const AddGameNCC = ({ navigation }) => {
                             <Text >Hủy bỏ</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonSave} onPress={() => { uploadData() }}>
-                        {isLoading ? (
+                            {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
                                 <Text>Up load file</Text>

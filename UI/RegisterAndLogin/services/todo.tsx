@@ -108,7 +108,19 @@ export const deleteUsers = (user: string) => {
         url: BASE_URL_LOGIN.concat("delete/").concat(user),
     })
 }
-
+export const DeleteAccount = (user: string) => {
+    return axios({
+        method: "delete",
+        url: BASE_URL_REGISTER.concat("delete/").concat(user),
+    })
+}
+// export const DeleteAva = (user: string) => {
+//     return axios({
+//         method: "delete",
+//         url: BASE_URL_REGISTER.concat("delete/").concat(user),
+//     })
+// }
+// http://26.115.177.223:5133/ImageIcon/deleteImage/
 
 export const saveTokenToDevice = async (tokenToSave: LoginDataToken) => {
     try {

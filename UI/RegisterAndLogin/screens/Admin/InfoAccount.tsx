@@ -4,6 +4,7 @@ import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInp
 import { deleteApi, getById, getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { RegisterData } from '../../services/interfaces/User.interface';
+import { DeleteAccount, deleteImage, deleteUsers, getImageIcon } from '../../services/todo';
 const InfoAccount = ({ navigation }) => {
 
     const item = navigation.getParam("item")
@@ -13,7 +14,10 @@ const InfoAccount = ({ navigation }) => {
 
 
 
-    const deleteGame = async () => {
+    const deleteAccount = async () => {
+        const response = await getImageIcon(Account.user)
+        const imageName = response.data[0].imageName
+       
         Alert.alert(
             "Xác nhận",
             "Bạn có chắc chắn muốn xóa không",
@@ -25,9 +29,16 @@ const InfoAccount = ({ navigation }) => {
                 {
                     text: "Đồng ý",
                     onPress: async () => {
+                        try {
+                            await DeleteAccount(Account.user)
+                            await deleteImage(Account.user, imageName.replace(".png",""))
+                            
+                            alert('Xóa game thành công');
+                            navigation.navigate("MainScreenAdmin");
+                        } catch (error) {
+                            console.log(error.response.data)
+                        }
 
-                        alert('Xóa game thành công');
-                        navigation.navigate("ManagerGameScreen");
                     },
                 },
             ]
@@ -88,7 +99,7 @@ const InfoAccount = ({ navigation }) => {
                             marginTop: "5%",
                             justifyContent: 'center',
                             borderRadius: 5
-                        }} onPress={() => { deleteGame() }}>
+                        }} onPress={() => { deleteAccount() }}>
                             <Text style={{ textAlign: 'center' }}>Xóa tài khoản</Text>
                         </TouchableOpacity>
                     </View>

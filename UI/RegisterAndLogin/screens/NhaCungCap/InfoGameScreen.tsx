@@ -131,7 +131,7 @@ const InfoGameNCC = ({ navigation }) => {
                 }}>
                     <View style={[styles.itemInfo, { width: 80 }]}>
                         <Text>Giá cho thuê</Text>
-                        <Text>{game?.gia}</Text>
+                        <Text>{game?.gia}$</Text>
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Tuổi</Text>
@@ -143,7 +143,13 @@ const InfoGameNCC = ({ navigation }) => {
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Kích cỡ</Text>
-                        <Text>{game?.kichCoFile}</Text>
+                        <View style={{
+                            flexDirection: "row"
+                        }}>
+                            <Text numberOfLines={1} style={{ paddingLeft:30 }}>{game?.kichCoFile}</Text>
+                            <Text style={{ paddingRight:20 }}>Mb</Text>
+                        </View>
+
                     </View>
                 </View>
 

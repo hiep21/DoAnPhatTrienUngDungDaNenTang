@@ -191,15 +191,14 @@ const ListAccountScreen = ({ navigation }) => {
                 />
             </View>
             <View style={styles.end}>
-                <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.user }) }} style={{
-                    backgroundColor: "#DFEEF6",
+                <TouchableOpacity style={{
                     width: "90%",
                     height: 30,
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderRadius: 5,
                 }}>
-                    <Text style={{ fontWeight: '700', fontSize: 20 }}>+</Text>
+       
                 </TouchableOpacity>
             </View>
             <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />

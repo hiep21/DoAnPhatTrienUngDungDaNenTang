@@ -21,7 +21,7 @@ const MainScreenAdmin = ({ navigation }) => {
         try {
             const { data } = await getByName()
             // console.log(data)
-  
+
             const response = await getImageIcon(user)
             const name = response.data[0].imageName
 
@@ -108,7 +108,7 @@ const MainScreenAdmin = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     paddingBottom: 10
-                }}>
+                }} onPress={() => { navigation.navigate("CreateAccountNCC", { user }) }}>
                     <Text style={{
                         fontSize: 17,
                         fontWeight: '700'
