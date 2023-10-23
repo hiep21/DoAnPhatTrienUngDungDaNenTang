@@ -52,7 +52,15 @@ export const getImageGame = (filename: string, imageName: string) => {
     })
 
 }
+export const getImageIconGame = (fileName: string) => {
 
+    return axios({
+        method: "GET",
+        url: BASE_URL_Image_Icon.concat("getImageName/").concat(fileName)
+
+    })
+
+}
 export const deleteApi = (tenTroChoi: string) => {
     return axios({
         method: "DELETE",

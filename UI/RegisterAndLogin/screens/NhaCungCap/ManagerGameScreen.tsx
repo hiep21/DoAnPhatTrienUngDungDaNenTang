@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-import { getByName } from '../../services/Game';
+import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { getByUser } from '../../services/todo';
-import { RegisterData } from '../../services/interfaces/User.interface';
+import { getByUser, getImageIcon } from '../../services/todo';
+import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
 import BottomSheet from '../Users/BottomSheet';
+import * as FileSystem from 'expo-file-system';
 
 const ManagerGameScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
@@ -17,6 +18,7 @@ const ManagerGameScreen = ({ navigation }) => {
     const [userNCC, setUserNCC] = useState<RegisterData>()
     const loadTasks = async () => {
         setRefreshing(true)
+
         try {
             const { data } = await getByName()
             // console.log(data)
@@ -25,12 +27,47 @@ const ManagerGameScreen = ({ navigation }) => {
             const response = await getByUser(user)
             setUserNCC(response.data[0])
 
+            for (let i = 0; i < listGame.length; i++) {
+                const response = await getImageIconGame(listGame[i].tenTroChoi)
+                const ImageName = response.data[0].imageName
+                await fetchImage(listGame[i].tenTroChoi, ImageName)
+
+            }
+            setListImageUri(checklist)
+
+
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
         }
         setRefreshing(false)
     }
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+    const [imageAdminUri, setImageAdminUri] = useState<string>();
+    let checklist: ImageUri[] = [];
+    const fetchImage = async (username: string, imageName: string) => {
+
+        let check: ImageUri = {
+            username: "",
+            imageUri: ""
+        };
+
+
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
+            check.username = username
+            check.imageUri = response.uri
+            checklist.push(check)
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+
+        }
+
+
+    };
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const handleSearch = () => {
         const filteredTasks = listGame.filter((item) =>
@@ -52,13 +89,13 @@ const ManagerGameScreen = ({ navigation }) => {
 
         loadTasks()
     }, [user])
-    const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi })
+    const goToDetail = (item: InfoGame, imageUri: string) => {
+        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item) }} >
+            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri) }} >
 
                 {item.nhaCungCap == userNCC?.user ? (
                     <View style={{
@@ -66,7 +103,12 @@ const ManagerGameScreen = ({ navigation }) => {
                         marginLeft: "5%",
                         marginTop: 20
                     }}>
-                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/Icon/1.png")} />
+                        {listImageUri.length != 0 ? (
+                            // <Text>{listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri}</Text>
+                            <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }} />
+                        ) : (
+                            <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/favicon.png")} />
+                        )}
                         <View style={{
                             marginLeft: 15,
                             width: "70%"
@@ -170,16 +212,20 @@ const ManagerGameScreen = ({ navigation }) => {
                 />
             </View>
             <View style={styles.end}>
-                <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.user }) }} style={{
-                    backgroundColor: "#DFEEF6",
-                    width: "90%",
-                    height: 30,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 5,
-                }}>
-                    <Text style={{ fontWeight: '700', fontSize: 20 }}>+</Text>
-                </TouchableOpacity>
+                {userNCC?.note != "Admin" ? (
+                    <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.user }) }} style={{
+                        backgroundColor: "#DFEEF6",
+                        width: "90%",
+                        height: 30,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                    }}>
+                        <Text style={{ fontWeight: '700', fontSize: 20 }}>+</Text>
+                    </TouchableOpacity>
+                ) : (
+                    <View></View>
+                )}
             </View>
             <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
         </View>

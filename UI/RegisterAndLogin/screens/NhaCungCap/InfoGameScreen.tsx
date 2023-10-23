@@ -7,6 +7,8 @@ const InfoGameNCC = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
+    const imageUri = navigation.getParam("imageUri")
+
     const [game, setGame] = useState<InfoGame>()
     const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
     const getGameById = async () => {
@@ -45,7 +47,7 @@ const InfoGameNCC = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, tenTroChoi])
+    }, [gameId, tenTroChoi, imageUri])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -81,7 +83,7 @@ const InfoGameNCC = ({ navigation }) => {
                         width: 50,
                         borderRadius: 5,
                         marginTop: 10
-                    }} source={require("../../assets/Icon/1.png")} />
+                    }} source={{ uri: imageUri }} />
                     <View style={{
 
                         justifyContent: 'center',
@@ -146,8 +148,8 @@ const InfoGameNCC = ({ navigation }) => {
                         <View style={{
                             flexDirection: "row"
                         }}>
-                            <Text numberOfLines={1} style={{ paddingLeft:30 }}>{game?.kichCoFile}</Text>
-                            <Text style={{ paddingRight:20 }}>Mb</Text>
+                            <Text numberOfLines={1} style={{ paddingLeft: 30 }}>{game?.kichCoFile}</Text>
+                            <Text style={{ paddingRight: 20 }}>Mb</Text>
                         </View>
 
                     </View>
