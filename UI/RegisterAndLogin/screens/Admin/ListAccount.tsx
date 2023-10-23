@@ -100,13 +100,13 @@ const ListAccountScreen = ({ navigation }) => {
         handleSearch()
         loadTasks()
     }, [user])
-    const goToDetail = (item: RegisterData) => {
-        navigation.navigate("InfoGameNCC", {})
+    const goToDetail = (item: RegisterData, imageUri: string) => {
+        navigation.navigate("InfoAccount", { item, imageUri })
     }
 
     const renderTask = ({ item }: { item: RegisterData }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item) }} >
+            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.username == item.user)?.imageUri) }} >
                 {item.user != user ? (
                     <View style={{
                         flexDirection: 'row',
