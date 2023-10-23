@@ -40,3 +40,7 @@ export interface GameManager {
     isBuy: boolean,
     isInstall: boolean
 }
+export interface ImageUri {
+    username: string,
+    imageUri: string
+}

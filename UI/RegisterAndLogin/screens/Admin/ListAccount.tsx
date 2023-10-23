@@ -4,122 +4,131 @@ import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } 
 
 import { getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { getByUser } from '../../services/todo';
-import { RegisterData } from '../../services/interfaces/User.interface';
+import { BASE_URL_Image, getAllAccount, getByUser, getImageIcon } from '../../services/todo';
+import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
 import BottomSheet from '../Users/BottomSheet';
+import * as FileSystem from 'expo-file-system';
 
-const ManagerGameScreen = ({ navigation }) => {
+const ListAccountScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const [listGame, setListGame] = useState<InfoGame[]>([])
-    const [reListGame, setReListGame] = useState<InfoGame[]>([])
-    const [userNCC, setUserNCC] = useState<RegisterData>()
+
+    const [listAccount, setListAccount] = useState<RegisterData[]>([])
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            const { data } = await getByName()
+            const { data } = await getAllAccount()
             // console.log(data)
-            setReListGame(data)
-            setListGame(data)
-            const response = await getByUser(user)
-            setUserNCC(response.data[0])
+            setListAccount(data)
+            const response = await getImageIcon("po123lop456")
+            const name = response.data[0].imageName
 
+            fetchImage("po123lop456", name)
+
+            for (let i = 0; i < listAccount.length; i++) {
+                const response = await getImageIcon(listAccount[i].user)
+                const ImageName = response.data[0].imageName
+                await fetchImage(listAccount[i].user, ImageName)
+
+            }
+            setListImageUri(checklist)
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
         }
         setRefreshing(false)
     }
-    const [searchKeyword, setSearchKeyword] = useState<string>("");
-    const handleSearch = () => {
-        const filteredTasks = listGame.filter((item) =>
-            item.tenTroChoi.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-            item.gia.toLowerCase().includes(searchKeyword.toLowerCase())
-        );
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+    const [imageAdminUri, setImageAdminUri] = useState<string>();
+    let checklist: ImageUri[] = [];
+    const fetchImage = async (username: string, imageName: string) => {
 
-        if (filteredTasks != "" && filteredTasks != null) {
+        let check: ImageUri = {
+            username: "",
+            imageUri: ""
+        };
 
-            setListGame(filteredTasks);
+        if (username == user) {
+            const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName.replace(".png", ""));
 
+            try {
+                const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+                setImageAdminUri(response.uri);
+
+            } catch (error) {
+                console.error('Error fetching image:', error.response.data);
+
+            }
         }
         else {
-            console.log(reListGame);
-            setListGame(reListGame);
+            const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName.replace(".png", ""));
+
+            try {
+                const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+                check.username = username
+                check.imageUri = response.uri
+                checklist.push(check)
+
+            } catch (error) {
+                console.error('Error fetching image:', error.response.data);
+
+            }
         }
+
+    };
+    const [searchKeyword, setSearchKeyword] = useState<string>("");
+    const handleSearch = () => {
+        const filteredTasks = listAccount.filter((item) =>
+            item.user.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.name.toLowerCase().includes(searchKeyword.toLowerCase())
+        );
+
+        if (filteredTasks != null) {
+
+            setListAccount(filteredTasks);
+
+        }
+
     }
     useEffect(() => {
 
         loadTasks()
     }, [user])
-    const goToDetail = (item: InfoGame) => {
-        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi })
+    const goToDetail = (item: RegisterData) => {
+        navigation.navigate("InfoGameNCC", {})
     }
 
-    const renderTask = ({ item }: { item: InfoGame }) => {
+    const renderTask = ({ item }: { item: RegisterData }) => {
         return (
             <TouchableOpacity onPress={() => { goToDetail(item) }} >
+                {item.user != user ? (
+                    <View style={{
+                        flexDirection: 'row',
+                        marginLeft: "5%",
+                        marginTop: 20
+                    }}>
+                        <Image style={{ width: 50, height: 50, marginTop: 7 }} source={{ uri: listImageUri.find(f => f.username == item.user)?.imageUri }} />
+                        <View style={{
+                            marginLeft: 15,
+                            width: "70%"
+                        }}>
+                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.name}</Text>
+                            <Text style={{ fontSize: 10, marginTop: 10 }}>Email: {item.email}</Text>
+                            <View style={{
+                                flexDirection: 'row',
+                                width: "100%",
+                                justifyContent: 'space-between'
+                            }}>
+                                <Text style={{ fontSize: 10 }}>Quyền: {item.note}</Text>
 
-                {item.nhaCungCap == userNCC?.user ? (
-                    <View style={{
-                        flexDirection: 'row',
-                        marginLeft: "5%",
-                        marginTop: 20
-                    }}>
-                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/Icon/1.png")} />
-                        <View style={{
-                            marginLeft: 15,
-                            width: "70%"
-                        }}>
-                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
-                            <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
-                            <View style={{
-                                flexDirection: 'row',
-                                width: "100%",
-                                justifyContent: 'space-between'
-                            }}>
-                                <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
-                                {item.trangThai == "trên kệ" ? (
-                                    <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
-                                ) : (
-                                    <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:<Text style={{ color: 'red' }}>{item.trangThai}</Text></Text>
-                                )}
                             </View>
                         </View>
                     </View>
                 ) : (
                     <View></View>
                 )}
-                {userNCC?.note == "Admin" ? (
-                    <View style={{
-                        flexDirection: 'row',
-                        marginLeft: "5%",
-                        marginTop: 20
-                    }}>
-                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/Icon/1.png")} />
-                        <View style={{
-                            marginLeft: 15,
-                            width: "70%"
-                        }}>
-                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
-                            <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
-                            <View style={{
-                                flexDirection: 'row',
-                                width: "100%",
-                                justifyContent: 'space-between'
-                            }}>
-                                <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
-                                {item.trangThai == "trên kệ" ? (
-                                    <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
-                                ) : (
-                                    <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:<Text style={{ color: 'red' }}>{item.trangThai}</Text></Text>
-                                )}
-                            </View>
-                        </View>
-                    </View>
-                ) : (
-                    <View></View>
-                )}
+
             </TouchableOpacity >
 
         )
@@ -141,7 +150,7 @@ const ManagerGameScreen = ({ navigation }) => {
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/1.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                        <Image style={{ width: 30, height: 30, }} source={{ uri: imageAdminUri }} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -153,9 +162,9 @@ const ManagerGameScreen = ({ navigation }) => {
                     fontSize: 17,
                     fontWeight: '600',
 
-                }}>Danh sách trò chơi</Text>
+                }}>Danh sách tài khoản</Text>
                 <FlatList
-                    data={listGame}
+                    data={listAccount}
                     renderItem={(list) => renderTask(list)}
                     onRefresh={loadTasks}
                     refreshing={refreshing}
@@ -229,4 +238,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ManagerGameScreen;
+export default ListAccountScreen;

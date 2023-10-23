@@ -89,6 +89,12 @@ export const getByUser = (user: string) => {
         url: BASE_URL_REGISTER.concat("getByUser/").concat(user),
     })
 }
+export const getAllAccount = () => {
+    return axios({
+        method: "GET",
+        url: BASE_URL_REGISTER.concat("getAll"),
+    })
+}
 export const getGameManager = (user: string) => {
     return axios({
         method: "GET",

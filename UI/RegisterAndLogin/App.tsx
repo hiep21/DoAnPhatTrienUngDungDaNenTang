@@ -21,7 +21,8 @@ import ManagerGameNCC from './screens/NhaCungCap/ManagerGameScreen';
 import InfoGameNCC from './screens/NhaCungCap/InfoGameScreen';
 import AddGameNCC from './screens/NhaCungCap/AddGame';
 import UpdateGameNCC from './screens/NhaCungCap/UpdateGameScreen';
-
+import MainScreenAdmin from "./screens/Admin/MainScreen";
+import ListAccountScreen from "./screens/Admin/ListAccount";
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -125,8 +126,19 @@ const StackNAvigator = createStackNavigator({
     navigationOptions: {
       title: 'Cập nhật trò chơi',
     },
+  },
+  MainScreenAdmin: {
+    screen: MainScreenAdmin,
+    navigationOptions: {
+      title: 'Màn hình chính',
+    },
+  },
+  ListAccountScreen: {
+    screen: ListAccountScreen,
+    navigationOptions: {
+      title: 'Danh sách tài khoản',
+    },
   }
-
 }, {
   initialRouteName: 'HomeScreen'
 
