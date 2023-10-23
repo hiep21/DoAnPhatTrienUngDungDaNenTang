@@ -120,7 +120,7 @@ const MainScreenAdmin = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                     paddingBottom: 10
-                }}>
+                }} onPress={() => { navigation.navigate("ChartComponent" )}}>
                     <Text style={{
                         fontSize: 17,
                         fontWeight: '700'
