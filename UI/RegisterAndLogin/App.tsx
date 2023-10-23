@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { useState } from 'react';
 import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { HeaderBackButton, createStackNavigator } from 'react-navigation-stack';
 
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
@@ -148,7 +148,15 @@ const StackNAvigator = createStackNavigator({
   }
 
 }, {
-  initialRouteName: 'HomeScreen'
-
+  initialRouteName: 'HomeScreen',
+  defaultNavigationOptions: ({ navigation }) => ({
+    headerLeft: () => (
+      <HeaderBackButton
+        onPress={() => {
+          navigation.navigate('MainScreenUser'); // Chắc chắn rằng navigation được truyền vào đúng cách
+        }}
+      />
+    ),
+  }),
 })
 export default createAppContainer(StackNAvigator)

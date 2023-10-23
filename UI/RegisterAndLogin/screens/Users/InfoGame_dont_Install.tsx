@@ -47,17 +47,19 @@ const InfoGame_dont_Install = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.head}>
-                <View style={styles.search}>
+                {/* <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
+                    <TouchableOpacity style={{
+                        paddingTop: 5
+                    }} onPress={() => {  }}>
+                    <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
+                        <Image style={{ width: 20, height:20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         {imageUri !="undefined"?(
@@ -66,7 +68,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
                             <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
                         ) }
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
             <View style={styles.body}>
                 <Text style={{
@@ -149,7 +151,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
                     {game?.gioiThieuTroChoi}
                 </Text>
             </View>
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+            {/* <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} /> */}
         </View>
 
 

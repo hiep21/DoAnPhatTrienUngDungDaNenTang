@@ -14,6 +14,7 @@ const MainScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
+    const [reListGame, setReListGame] = useState<InfoGame[]>([])
     const [image, setImage] = useState<string>()
     const [imageUri, setImageUri] = useState<string>();
 
@@ -24,8 +25,16 @@ const MainScreen = ({ navigation }) => {
             const { data } = await getByName()
             // console.log(data)
             setListGame(data)
+            setReListGame(data)
             const response = await getImageIcon(user)
             const name = response.data[0].imageName
+
+            // for (let i = 0; i < listGame.length; i++) {
+            //     const response = await getImageIcon(listGame[i].tenTroChoi)
+            //     const ImageName = response.data[0].imageName
+            //     await fetchImage(listGame[i].tenTroChoi, ImageName)
+
+            // }
             console.log(response.data)
             fetchImage(name)
 
@@ -38,7 +47,6 @@ const MainScreen = ({ navigation }) => {
     const fetchImage = async (imageName: string) => {
 
         const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName.replace(".png", ""));
-
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
             setImageUri(response.uri);
@@ -85,8 +93,6 @@ const MainScreen = ({ navigation }) => {
                     GameCheck.push(data[index])
                 }
             }
-
-
             if (GameCheck.length == 0) {
                 navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user })
             }
@@ -154,14 +160,17 @@ const MainScreen = ({ navigation }) => {
                 <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
+                    <TouchableOpacity style={{
+
+                        paddingTop: 5
+                    }} onPress={() => {  }}>
+                        <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
 
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                        <Image style={{ width: 20, height:20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         {imageUri ? (

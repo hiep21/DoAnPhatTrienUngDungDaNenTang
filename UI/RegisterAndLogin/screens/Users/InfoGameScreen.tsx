@@ -85,7 +85,7 @@ const InfoGameScreen = ({ navigation }) => {
                     onPress: async () => {
                         // await deleteApi(deleteName);
                         alert('Xóa game thành công');
-                        navigation.navigate("ManagerGameScreen");
+                        navigation.navigate("MainScreen");
                     },
                 },
             ]
@@ -113,17 +113,19 @@ const InfoGameScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.head}>
-                <View style={styles.search}>
+                {/* <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
+                    <TouchableOpacity style={{
+                        paddingTop: 5
+                    }} onPress={() => {  }}>
+                    <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
+                        <Image style={{ width: 20, height:20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         {imageUri !="undefined"?(
@@ -133,7 +135,7 @@ const InfoGameScreen = ({ navigation }) => {
                         ) }
                         
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
             <View style={styles.body}>
                 <Text style={{
@@ -166,9 +168,11 @@ const InfoGameScreen = ({ navigation }) => {
                         <View style={{
 
                             width: "30%",
+                            justifyContent:'center',
+                            alignItems:'center'
 
                         }}>
-                            <TouchableOpacity style={{
+                            {/* <TouchableOpacity style={{
                                 height: "45%",
                                 width: "100%",
                                 backgroundColor: "#6C9EFF",
@@ -176,7 +180,7 @@ const InfoGameScreen = ({ navigation }) => {
                                 borderRadius: 5
                             }}>
                                 <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                             <TouchableOpacity style={{
                                 height: "45%",
@@ -186,7 +190,7 @@ const InfoGameScreen = ({ navigation }) => {
                                 justifyContent: 'center',
                                 borderRadius: 5
                             }} onPress={() => { deleteGame() }}>
-                                <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
+                                <Text style={{ textAlign: 'center' }}>Gỡ cài đặt</Text>
                             </TouchableOpacity>
                         </View>
                     ) : (
@@ -248,7 +252,7 @@ const InfoGameScreen = ({ navigation }) => {
                     {game?.gioiThieuTroChoi}
                 </Text>
             </View>
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+            {/* <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} /> */}
         </View>
 
 
