@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 
 import { getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
@@ -16,39 +16,36 @@ const ListAccountScreen = ({ navigation }) => {
 
     const [listAccount, setListAccount] = useState<RegisterData[]>([])
     const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
-
+    let list: RegisterData[] = [];
     const loadTasks = async () => {
         setRefreshing(true)
         try {
             const { data } = await getAllAccount()
-            // console.log(data)
+            list = data;
             setListAccount(data)
             setReListAccount(data)
             const response = await getImageIcon("po123lop123")
             const name = response.data[0].imageName
 
             fetchImage("po123lop123", name)
-
             for (let i = 0; i < data.length; i++) {
-                const response = await getImageIcon(listAccount[i].user)
+                const response = await getImageIcon(list[i].user)
                 const ImageName = response.data[0].imageName
-                await fetchImage(listAccount[i].user, ImageName)
+                await fetchImage(list[i].user, ImageName)
 
             }
 
             setListImageUri(checklist)
-
         } catch (err) {
-            if (err.TypeError == undefined) {
-                alert("Mời bạn load lại")
-            }
-            else {
-                console.log(err.TypeError)
-            }
+
+            console.log(err.TypeError)
+
 
         }
         setRefreshing(false)
     }
+   
+
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
     const [imageAdminUri, setImageAdminUri] = useState<string>();
     let checklist: ImageUri[] = [];
@@ -107,6 +104,7 @@ const ListAccountScreen = ({ navigation }) => {
     useEffect(() => {
         handleSearch()
         loadTasks()
+
     }, [user])
     const goToDetail = (item: RegisterData, imageUri: string) => {
         navigation.navigate("InfoAccount", { item, imageUri })
