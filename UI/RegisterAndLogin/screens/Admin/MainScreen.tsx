@@ -17,7 +17,7 @@ const MainScreenAdmin = ({ navigation }) => {
     const [imageUri, setImageUri] = useState<string>();
 
     const loadTasks = async () => {
-        
+
         setRefreshing(true)
         try {
             const { data } = await getByName()
@@ -53,86 +53,105 @@ const MainScreenAdmin = ({ navigation }) => {
         loadTasks()
     }, [])
 
+    const renderTask = () => {
+        return (
+            <View style={{
 
+            }}>
+                <View style={styles.head}>
+
+                    <View style={styles.search}>
+                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
+                        <TextInput placeholder='Tìm kiếm trò chơi' />
+                        <TouchableOpacity style={{
+                            paddingTop: 5
+                        }}>
+                            <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
+                        </TouchableOpacity>
+                    </View>
+                    <View >
+
+                    </View>
+                    <View style={styles.user}>
+                        <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
+
+                            <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
+                            {imageUri ? (
+                                <Image style={{ width: 30, height: 30, }} source={{
+                                    uri: imageUri
+                                }} />
+                            ) : (
+                                <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                            )}
+
+                        </TouchableOpacity>
+
+                    </View>
+                </View>
+                <View style={{ borderBottomWidth: 1, width: 400 }}></View>
+                <View style={styles.body}>
+                    <TouchableOpacity style={{
+                        paddingBottom: 10
+                    }} onPress={() => { navigation.navigate("ManagerGameNCC", { user }) }}>
+                        <Text style={{
+                            fontSize: 17,
+                            fontWeight: '700'
+                        }}>
+                            Danh sách trò chơi
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        paddingBottom: 10
+                    }} onPress={() => { navigation.navigate("ListAccountScreen", { user }) }}>
+                        <Text style={{
+                            fontSize: 17,
+                            fontWeight: '700'
+                        }}>
+                            Danh sách tài khoản
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        paddingBottom: 10
+                    }} onPress={() => { navigation.navigate("CreateAccountNCC", { user }) }}>
+                        <Text style={{
+                            fontSize: 17,
+                            fontWeight: '700'
+                        }}>
+                            Tạo tài khoản cho nhà cung cấp
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        paddingBottom: 10
+                    }} onPress={() => { navigation.navigate("ChartComponent", { user }) }}>
+                        <Text style={{
+                            fontSize: 17,
+                            fontWeight: '700'
+                        }}>
+                            Doanh thu
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+            </View>
+        )
+    }
 
 
     return (
         <View style={styles.container}>
-
-            <View style={styles.head}>
-                <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity style={{
-                        paddingTop: 5
-                        }}>
-                        <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
-
-                        <Image style={{ width: 20, height:20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        {imageUri ? (
-                            <Image style={{ width: 30, height: 30, }} source={{
-                                uri: imageUri
-                            }} />
-                        ) : (
-                            <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
-                        )}
-
-                    </TouchableOpacity>
-
-                </View>
-            </View>
-            <View style={{ borderBottomWidth: 1, width: 400 }}></View>
-            <View style={styles.body}>
-                <TouchableOpacity style={{
-                    paddingBottom: 10
-                }} onPress={() => { navigation.navigate("ManagerGameNCC", { user }) }}>
-                    <Text style={{
-                        fontSize: 17,
-                        fontWeight: '700'
-                    }}>
-                        Danh sách trò chơi
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    paddingBottom: 10
-                }} onPress={() => { navigation.navigate("ListAccountScreen", { user }) }}>
-                    <Text style={{
-                        fontSize: 17,
-                        fontWeight: '700'
-                    }}>
-                        Danh sách tài khoản
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    paddingBottom: 10
-                }} onPress={() => { navigation.navigate("CreateAccountNCC", { user }) }}>
-                    <Text style={{
-                        fontSize: 17,
-                        fontWeight: '700'
-                    }}>
-                        Tạo tài khoản cho nhà cung cấp
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    paddingBottom: 10
-                }} onPress={() => { navigation.navigate("ChartComponent" )}}>
-                    <Text style={{
-                        fontSize: 17,
-                        fontWeight: '700'
-                    }}>
-                        Doanh thu
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
-
+            <FlatList
+                data={"1"}
+                renderItem={() => renderTask()}
+                onRefresh={loadTasks}
+                refreshing={refreshing}
+                style={{
+                    marginTop: "5%",
+                    width: "100%",
+                }}
+            />
         </View>
 
 
@@ -142,7 +161,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        padding: 10,
         justifyContent: 'flex-start',
         width: "100%",
 
@@ -164,6 +182,7 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'space-between',
         flexDirection: 'row',
+        paddingHorizontal: 20
 
     },
     user: {
@@ -200,13 +219,14 @@ const styles = StyleSheet.create({
     },
     body: {
         backgroundColor: "#eee",
-        width: 340,
-        height: 470,
+        width: 325,
+        height: 450,
         marginTop: 20,
         marginHorizontal: 5,
         borderRadius: 5,
         borderWidth: 1,
-        padding: 30
+        padding: 30,
+        marginHorizontal: 15
 
     },
 

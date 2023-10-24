@@ -49,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
         };
     }, [])
 
- 
+
     const login = async () => {
         // if (!users.user || !users.password) {
         //     alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
@@ -84,10 +84,8 @@ const LoginScreen = ({ navigation }) => {
                 //Chuyển hướng sang màn home
 
             } catch (err) {
-                const { data } = err.response
-                setUserVal(err.response.data.errors)
                 alert(err.response.data)
-                alert(data.message.data)
+                setUserVal(err.response.data.errors)
 
             }
             setIsLoading(false)

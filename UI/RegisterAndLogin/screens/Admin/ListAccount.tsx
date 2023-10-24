@@ -16,8 +16,8 @@ const ListAccountScreen = ({ navigation }) => {
 
     const [listAccount, setListAccount] = useState<RegisterData[]>([])
     const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
+
     const loadTasks = async () => {
-        console.log(user)
         setRefreshing(true)
         try {
             const { data } = await getAllAccount()
@@ -39,8 +39,13 @@ const ListAccountScreen = ({ navigation }) => {
             setListImageUri(checklist)
 
         } catch (err) {
-            const errorMessage = err.response
-            alert(errorMessage)
+            if (err.TypeError == undefined) {
+                alert("Mời bạn load lại")
+            }
+            else {
+                console.log(err.TypeError)
+            }
+
         }
         setRefreshing(false)
     }
