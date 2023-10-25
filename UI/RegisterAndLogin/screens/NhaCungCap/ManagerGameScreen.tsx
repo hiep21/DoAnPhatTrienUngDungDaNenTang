@@ -2,19 +2,20 @@ import React, { useEffect, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileNCC } from '../../services/Game';
+import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
 import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
 import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
-const ManagerGameScreen = ({ navigation }) => {
+const ManagerGameNCC = ({ navigation }) => {
     const user = navigation.getParam("user")
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
+    const [listGameAdmin, setListGameAdmin] = useState<InfoGame[]>([])
     const [userNCC, setUserNCC] = useState<RegisterData>()
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {
@@ -25,6 +26,8 @@ const ManagerGameScreen = ({ navigation }) => {
             // console.log(data)
             setReListGame(data)
             setListGame(data)
+            const responseAdmin = await getInfoFileAdmin()
+            setListGameAdmin(responseAdmin.data)
             const response = await getByUser(user)
             setUserNCC(response.data[0])
             ListGame = data
@@ -109,7 +112,7 @@ const ManagerGameScreen = ({ navigation }) => {
         loadTasks()
     }, [user])
     const goToDetail = (item: InfoGame, imageUri: string) => {
-        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri })
+        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri, user })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
@@ -215,20 +218,37 @@ const ManagerGameScreen = ({ navigation }) => {
                     fontWeight: '600',
 
                 }}>Danh sách trò chơi</Text>
-                <FlatList
-                    data={listGame}
-                    renderItem={(list) => renderTask(list)}
-                    onRefresh={loadTasks}
-                    refreshing={refreshing}
-                    style={{
-                        marginTop: "5%",
-                        borderWidth: 1,
-                        width: "95%",
-                        alignSelf: 'center',
-                        borderRadius: 5,
-                        borderColor: "#bbb"
-                    }}
-                />
+                {userNCC?.note != "Admin" ? (
+                    <FlatList
+                        data={listGame}
+                        renderItem={(list) => renderTask(list)}
+                        onRefresh={loadTasks}
+                        refreshing={refreshing}
+                        style={{
+                            marginTop: "5%",
+                            borderWidth: 1,
+                            width: "95%",
+                            alignSelf: 'center',
+                            borderRadius: 5,
+                            borderColor: "#bbb"
+                        }}
+                    />
+                ) : (
+                    <FlatList
+                        data={listGameAdmin}
+                        renderItem={(list) => renderTask(list)}
+                        onRefresh={loadTasks}
+                        refreshing={refreshing}
+                        style={{
+                            marginTop: "5%",
+                            borderWidth: 1,
+                            width: "95%",
+                            alignSelf: 'center',
+                            borderRadius: 5,
+                            borderColor: "#bbb"
+                        }}
+                    />
+                )}
             </View>
             <View style={styles.end}>
                 {userNCC?.note != "Admin" ? (
@@ -294,4 +314,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ManagerGameScreen;
+export default ManagerGameNCC;

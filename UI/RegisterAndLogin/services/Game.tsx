@@ -40,7 +40,12 @@ export const getInfoFileNCC = (username: string) => {
         url: BASE_URL.concat("getInfoFileNCC/").concat(username)
     })
 }
-
+export const getInfoFileAdmin = () => {
+    return axios({
+        method: "GET",
+        url: BASE_URL.concat("getInfoFileAdmin")
+    })
+}
 export const getById = (id: string) => {
 
     return axios({

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 
-import { deleteApi, getById, getByName } from '../../services/Game';
+import { deleteApi, deleteFolder, getById, getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 const InfoGameNCC = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
     const imageUri = navigation.getParam("imageUri")
-
+    const user = navigation.getParam("user")
     const [game, setGame] = useState<InfoGame>()
     const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
     const getGameById = async () => {
@@ -16,7 +16,6 @@ const InfoGameNCC = ({ navigation }) => {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
-
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -36,9 +35,13 @@ const InfoGameNCC = ({ navigation }) => {
                 {
                     text: "Đồng ý",
                     onPress: async () => {
-                        await deleteApi(deleteName);
-                        alert('Xóa game thành công');
-                        navigation.navigate("ManagerGameScreen");
+                        try {
+                            await deleteFolder(deleteName);
+                            navigation.navigate("ManagerGameNCC", { user });
+                            alert('Xóa game thành công');
+                        } catch (error) {
+                            console.log(error.response)
+                        }
                     },
                 },
             ]
@@ -47,7 +50,7 @@ const InfoGameNCC = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, tenTroChoi, imageUri])
+    }, [gameId, tenTroChoi, imageUri, user])
     return (
         <View style={styles.container}>
             {/* <View style={styles.head}>

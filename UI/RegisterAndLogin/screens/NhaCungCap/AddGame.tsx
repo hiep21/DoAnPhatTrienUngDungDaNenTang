@@ -49,7 +49,7 @@ const AddGameNCC = ({ navigation }) => {
         } catch (err) {
            
             const message = err.response.data
-            // const response3 = await deleteFolder(nameDocumentUri)
+            await deleteFolder(nameDocumentUri)
             console.log(message)
         }
     }
@@ -141,22 +141,22 @@ const AddGameNCC = ({ navigation }) => {
     const uploadData = async () => {
         console.log(nameDocumentUri)
         if (!isLoading) {
-            // try {
-            //     await uploadDocument();
+            try {
+                await uploadDocument();
 
-            // } catch (error) {
+            } catch (error) {
 
-            //     const response = await deleteApkFile(nameDocumentUri)
-            //     console.log(error.response.data);
-            // }
-            // try {
-            //     await uploadImage();
-            // } catch (error) {
-            //     // const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
-            //     const response2 = await deleteImageIcon(nameDocumentUri, image.assets[0].name)
-            //     const response = await deleteApkFile(nameDocumentUri)
-            //     console.log(error.response.data);
-            // }
+                const response = await deleteApkFile(nameDocumentUri)
+                console.log(error.response.data);
+            }
+            try {
+                await uploadImage();
+            } catch (error) {
+                // const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
+                const response2 = await deleteImageIcon(nameDocumentUri, image.assets[0].name)
+                const response = await deleteApkFile(nameDocumentUri)
+                console.log(error.response.data);
+            }
 
             await addgameAction();
 
