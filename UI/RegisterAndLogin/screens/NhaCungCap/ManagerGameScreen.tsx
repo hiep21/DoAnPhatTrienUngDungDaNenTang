@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
+import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileNCC } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
 import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
@@ -16,28 +16,30 @@ const ManagerGameScreen = ({ navigation }) => {
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
     const [userNCC, setUserNCC] = useState<RegisterData>()
+    let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
 
         try {
-            const { data } = await getByName()
+            const { data } = await getInfoFileNCC(user)
             // console.log(data)
             setReListGame(data)
             setListGame(data)
             const response = await getByUser(user)
             setUserNCC(response.data[0])
+            ListGame = data
 
-            for (let i = 0; i < listGame.length; i++) {
-                const response = await getImageIconGame(listGame[i].tenTroChoi)
+            for (let i = 0; i < ListGame.length; i++) {
+                const response = await getImageIconGame(ListGame[i].tenTroChoi)
                 const ImageName = response.data[0].imageName
-                console.log(ImageName)
-                await fetchImage(listGame[i].tenTroChoi, ImageName)
+                // console.log(ImageName)
+                await fetchImage(ListGame[i].tenTroChoi, ImageName)
 
             }
             setListImageUri(checklist)
             const response2 = await getImageIcon(user)
             const name = response2.data[0].imageName
-            
+
             fetchImageUser(name)
 
         } catch (err) {
@@ -200,7 +202,7 @@ const ManagerGameScreen = ({ navigation }) => {
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={{uri:imageUri}} />
+                        <Image style={{ width: 30, height: 30, }} source={{ uri: imageUri }} />
                     </TouchableOpacity>
                 </View>
             </View>

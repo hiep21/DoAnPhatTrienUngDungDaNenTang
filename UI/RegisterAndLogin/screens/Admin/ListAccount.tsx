@@ -154,7 +154,7 @@ const ListAccountScreen = ({ navigation }) => {
             <View style={styles.head}>
                 <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' value={searchKeyword}
+                    <TextInput placeholder='Tìm kiếm tài khoản' value={searchKeyword}
                         onChangeText={(text) => setSearchKeyword(text)} />
                     <TouchableOpacity style={{
 

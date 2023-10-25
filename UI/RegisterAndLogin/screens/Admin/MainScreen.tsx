@@ -60,18 +60,7 @@ const MainScreenAdmin = ({ navigation }) => {
             }}>
                 <View style={styles.head}>
 
-                    <View style={styles.search}>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                        <TextInput placeholder='Tìm kiếm trò chơi' />
-                        <TouchableOpacity style={{
-                            paddingTop: 5
-                        }}>
-                            <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
-                        </TouchableOpacity>
-                    </View>
-                    <View >
 
-                    </View>
                     <View style={styles.user}>
                         <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
 
@@ -180,13 +169,13 @@ const styles = StyleSheet.create({
 
         width: "100%",
         height: 40,
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         flexDirection: 'row',
         paddingHorizontal: 20
-
     },
     user: {
         flexDirection: 'row',
+        width:100
     },
     danhsachtrochoi: {
         fontSize: 15,

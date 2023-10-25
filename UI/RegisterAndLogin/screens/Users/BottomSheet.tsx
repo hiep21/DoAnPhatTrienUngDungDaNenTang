@@ -26,6 +26,7 @@ class BottomSheet extends React.Component {
       userName: "",
       email: "",
       image: "",
+      note: ""
     };
   }
   async componentDidMount() {
@@ -35,16 +36,20 @@ class BottomSheet extends React.Component {
       const tokenObject = JSON.parse(getUser);
       const userName = tokenObject.user;
       const email = tokenObject.email;
-      const getImage = await getByUser(userName);
+      const note = tokenObject.note
+      const getAccount = await getByUser(userName);
 
       const response2 = await getImageIcon(userName)
       const name = response2.data[0].imageName
       const check = await this.fetchImage(userName, name)
       console.log(check?.uri)
       const image = check?.uri;
+      const nameAdmin = getAccount.data[0].name
       this.setState({ email })
       this.setState({ userName });
       this.setState({ image });
+      this.setState({ note })
+      this.setState({ nameAdmin });
     } catch (error) {
       console.log("Lỗi khi lấy thông tin người dùng", error);
     }
@@ -71,7 +76,6 @@ class BottomSheet extends React.Component {
     if (isPanelVisible == true) {
       // this.test();
       this._panel.show(480);
-
     }
     else {
       this._panel.show(-48);
@@ -153,7 +157,8 @@ class BottomSheet extends React.Component {
     const { userName } = this.state;
     const { email } = this.state;
     const { image } = this.state;
-
+    const { note } = this.state;
+    const { nameAdmin } = this.state;
 
     return (
       <View style={styles.container}>
@@ -183,24 +188,33 @@ class BottomSheet extends React.Component {
                 <Text style={styles.name} onPress={this.navigateToUserScreen}>{userName}</Text>
                 <Text numberOfLines={1} style={styles.emailUser}>{email}</Text>
               </View>
-              <View style={styles.tool}>
-                <TouchableOpacity style={styles.itemTool} onPress={this.navigateToManageGame}>
-                  <Image style={[styles.image, { height: 35 }]} source={require("../../assets/Icon/checklist-153371_1280.png")} />
-                  <Text style={styles.textTool}>Quản lý ứng dụng</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool} >
-                  <Image style={styles.image} source={require("../../assets/Icon/cheque-guarantee-card-2103509_1280.png")} />
-                  <Text style={styles.textTool}>Thanh toán</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSettingUser}>
-                  <Image style={styles.image} source={require("../../assets/Icon/gear-1119298_1280.png")} />
-                  <Text style={styles.textTool}>Cài đặt</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSupportUser}>
-                  <Image style={styles.image} source={require("../../assets/Icon/question-mark-295272_1280.png")} />
-                  <Text style={styles.textTool}>Trợ giúp và phản hồi</Text>
-                </TouchableOpacity>
-              </View>
+              {note != "Admin" ?
+                (<View style={styles.tool}>
+                  <TouchableOpacity style={styles.itemTool} onPress={this.navigateToManageGame}>
+                    <Image style={[styles.image, { height: 35 }]} source={require("../../assets/Icon/checklist-153371_1280.png")} />
+                    <Text style={styles.textTool}>Quản lý ứng dụng</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.itemTool} >
+                    <Image style={styles.image} source={require("../../assets/Icon/cheque-guarantee-card-2103509_1280.png")} />
+                    <Text style={styles.textTool}>Thanh toán</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSettingUser}>
+                    <Image style={styles.image} source={require("../../assets/Icon/gear-1119298_1280.png")} />
+                    <Text style={styles.textTool}>Cài đặt</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.itemTool} onPress={this.navigateToSupportUser}>
+                    <Image style={styles.image} source={require("../../assets/Icon/question-mark-295272_1280.png")} />
+                    <Text style={styles.textTool}>Trợ giúp và phản hồi</Text>
+                  </TouchableOpacity>
+                </View>) : (
+                  <View>
+                    <Text style={{
+                      color: "#fff",
+                      fontSize: 17
+                    }}>Chào mừng admin {nameAdmin}</Text>
+                  </View>
+                )
+              }
               <View style={styles.button}>
                 <TouchableOpacity style={styles.buttons} onPress={logout}>
                   <Text>Đăng xuất</Text>

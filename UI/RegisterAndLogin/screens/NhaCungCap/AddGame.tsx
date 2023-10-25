@@ -14,9 +14,9 @@ const AddGameNCC = ({ navigation }) => {
         doTuoi: "",
         theLoai: "",
         gia: "",
-        nhaCungCap: "",
+        nhaCungCap: nameNCC,
         gioiThieuTroChoi: "",
-        kichCoFile: "",
+        kichCoFile: "23",
         trangThai: "Chờ xét duyệt"
     });
 
@@ -40,18 +40,17 @@ const AddGameNCC = ({ navigation }) => {
         if (!validateInputs()) {
             return;
         }
-        setgame({
-            ...game,
-            nhaCungCap: nameNCC
-        })
+
         try {
             const response = await createGame(game)
             alert("Thành công")
-
             console.log('Upload success:', response.data);
+            await navigation.navigate("MainScreenNCC")
         } catch (err) {
+           
             const message = err.response.data
-            alert(message)
+            // const response3 = await deleteFolder(nameDocumentUri)
+            console.log(message)
         }
     }
     const onCancel = () => {
@@ -142,21 +141,25 @@ const AddGameNCC = ({ navigation }) => {
     const uploadData = async () => {
         console.log(nameDocumentUri)
         if (!isLoading) {
-            try {
-                // Gọi các hàm upload lần lượt và chờ cho đến khi hoàn thành mỗi hàm trước khi gọi hàm tiếp theo
-                await uploadDocument();
-                await uploadImage();
-                await addgameAction();
-                await navigation.navigate("MainScreenNCC")
-                // Nếu tất cả các hàm trên chạy thành công, bạn có thể thực hiện các hành động tiếp theo ở đây
-            } catch (error) {
+            // try {
+            //     await uploadDocument();
 
-                const response = await deleteApkFile(nameDocumentUri)
-                const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
-                const response2 = await deleteImageIcon(nameDocumentUri, image.assets[0].name)
-                const response3 = await deleteFolder(nameDocumentUri)
-                console.log(error.response.data);
-            }
+            // } catch (error) {
+
+            //     const response = await deleteApkFile(nameDocumentUri)
+            //     console.log(error.response.data);
+            // }
+            // try {
+            //     await uploadImage();
+            // } catch (error) {
+            //     // const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
+            //     const response2 = await deleteImageIcon(nameDocumentUri, image.assets[0].name)
+            //     const response = await deleteApkFile(nameDocumentUri)
+            //     console.log(error.response.data);
+            // }
+
+            await addgameAction();
+
             setIsLoading(false)
         }
 
