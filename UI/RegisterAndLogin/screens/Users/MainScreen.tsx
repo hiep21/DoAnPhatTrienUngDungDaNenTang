@@ -154,7 +154,7 @@ const MainScreen = ({ navigation }) => {
         } catch (error) {
             if (error.response.data == "Tài khoản " + user + " chưa mua với tải game") {
 
-                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user })
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user,imageGameUri })
 
             }
             else {
