@@ -8,17 +8,18 @@ import * as FileSystem from 'expo-file-system';
 const InfoGame_dont_Install = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
+    const imageGameUri = navigation.getParam("imageGameUri")
     const user = navigation.getParam("user")
     const [game, setGame] = useState<InfoGame>()
     const getGameById = async () => {
-        
+
         try {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
             const response = await getImageIcon(user)
             const name = response.data[0].imageName
-            
+
             fetchImage(name)
         } catch (err) {
             const errorMessage = err.response
@@ -43,32 +44,10 @@ const InfoGame_dont_Install = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, user])
+    }, [gameId, user, imageGameUri])
     return (
         <View style={styles.container}>
             <View style={styles.head}>
-                {/* <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity style={{
-                        paddingTop: 5
-                    }} onPress={() => {  }}>
-                    <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
-                        <Image style={{ width: 20, height:20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        {imageUri !="undefined"?(
-                            <Image style={{ width: 30, height: 30, }} source={{uri : imageUri}} />
-                        ):(
-                            <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
-                        ) }
-                    </TouchableOpacity>
-                </View> */}
             </View>
             <View style={styles.body}>
                 <Text style={{
@@ -86,12 +65,12 @@ const InfoGame_dont_Install = ({ navigation }) => {
                         borderRadius: 5,
                         marginTop: 10,
                         marginLeft: 20
-                    }} source={require("../../assets/Icon/1.png")} />
+                    }} source={{ uri: imageGameUri }} />
                     <View style={{
                         justifyContent: 'center',
                         width: "50%",
                         marginRight: 50,
-                        marginLeft:10
+                        marginLeft: 10
                     }}>
                         <Text style={{ fontSize: 15 }}>{game?.tenTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>{game?.moTaTroChoi}</Text>
@@ -100,8 +79,8 @@ const InfoGame_dont_Install = ({ navigation }) => {
                     <View style={{
 
                         width: "30%",
-                        justifyContent:'center',
-                        alignItems:'center'
+                        justifyContent: 'center',
+                        alignItems: 'center'
 
                     }}>
                         <TouchableOpacity style={{
@@ -110,11 +89,11 @@ const InfoGame_dont_Install = ({ navigation }) => {
                             backgroundColor: "#6C9EFF",
                             justifyContent: 'center',
                             borderRadius: 5
-                        }} onPress={()=>{navigation.navigate('Buy_Game_to_Id',{gameId,user})}}>
+                        }} onPress={() => { navigation.navigate('Buy_Game_to_Id', { gameId, user }) }}>
                             <Text style={{ textAlign: 'center' }}>Mua game</Text>
                         </TouchableOpacity>
 
-                        
+
                     </View>
                 </View>
                 <View style={{
@@ -211,7 +190,7 @@ const styles = StyleSheet.create({
     end: {
         width: "95%",
         height: 260,
-        marginHorizontal:15,
+        marginHorizontal: 15,
 
     }
 

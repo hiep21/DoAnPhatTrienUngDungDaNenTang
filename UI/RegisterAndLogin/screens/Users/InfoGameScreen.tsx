@@ -13,6 +13,7 @@ const InfoGameScreen = ({ navigation }) => {
     const gameId = navigation.getParam("gameId")
     const installGame = navigation.getParam("installGame")
     const gameManager = navigation.getParam("gameManager")
+    const imageGameUri = navigation.getParam("imageGameUri")
     const [game, setGame] = useState<InfoGame>()
     const [itemGameManager, setitemGameManager] = useState<GameManager>(gameManager)
     const getGameById = async () => {
@@ -38,7 +39,7 @@ const InfoGameScreen = ({ navigation }) => {
             ...itemGameManager,
             isInstall: true
         })
-       
+
         if (itemGameManager.isInstall) {
             try {
                 await console.log(itemGameManager)
@@ -92,9 +93,9 @@ const InfoGameScreen = ({ navigation }) => {
         );
     }
     useEffect(() => {
-        
+
         getGameById()
-    }, [gameId, gameManager, installGame])
+    }, [gameId, gameManager, installGame, imageGameUri])
     const [imageUri, setImageUri] = useState<string>();
     const fetchImage = async (imageName: string) => {
 
@@ -113,29 +114,6 @@ const InfoGameScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.head}>
-                {/* <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity style={{
-                        paddingTop: 5
-                    }} onPress={() => {  }}>
-                    <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
-                        <Image style={{ width: 20, height:20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        {imageUri !="undefined"?(
-                            <Image style={{ width: 30, height: 30, }} source={{uri : imageUri}} />
-                        ):(
-                            <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
-                        ) }
-                        
-                    </TouchableOpacity>
-                </View> */}
             </View>
             <View style={styles.body}>
                 <Text style={{
@@ -153,7 +131,7 @@ const InfoGameScreen = ({ navigation }) => {
                         borderRadius: 5,
                         marginTop: 10,
                         marginLeft: 20
-                    }} source={require("../../assets/Icon/1.png")} />
+                    }} source={{ uri: imageGameUri }} />
                     <View style={{
                         justifyContent: 'center',
                         width: "50%",
@@ -168,19 +146,10 @@ const InfoGameScreen = ({ navigation }) => {
                         <View style={{
 
                             width: "30%",
-                            justifyContent:'center',
-                            alignItems:'center'
+                            justifyContent: 'center',
+                            alignItems: 'center'
 
                         }}>
-                            {/* <TouchableOpacity style={{
-                                height: "45%",
-                                width: "100%",
-                                backgroundColor: "#6C9EFF",
-                                justifyContent: 'center',
-                                borderRadius: 5
-                            }}>
-                                <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
-                            </TouchableOpacity> */}
 
                             <TouchableOpacity style={{
                                 height: "45%",

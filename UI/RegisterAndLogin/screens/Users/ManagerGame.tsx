@@ -1,33 +1,35 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { getByName } from '../../services/Game';
+import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
 import { getGameManager } from '../../services/todo';
-import { GameManager } from '../../services/interfaces/User.interface';
-
+import { GameManager, ImageUri } from '../../services/interfaces/User.interface';
+import * as FileSystem from 'expo-file-system';
 
 const ManagerGameUser = ({ navigation }) => {
     const users = navigation.getParam("user")
-    const [check, setCheck] = useState<boolean>(false)
+
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [listGameIsInstall, setListGameIsInstall] = useState<GameManager[]>([])
     const [listGameHaveBuy, setListGameHaveBuy] = useState<GameManager[]>([])
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [isBuy, setIsBuy] = useState<boolean>()
     const [isInstall, setIsInstall] = useState<boolean>()
-   
+
+    const [check, setCheck] = useState<boolean>(false)
+    let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
         try {
             const { data } = await getByName()
             // console.log(data)
             const response = await getGameManager(users)
-            
+
             if (!check) {
                 const listGameInstall = []
                 const listGameInfo = []
                 for (let index = 0; index < response.data.length; index++) {
-                    
+
                     if (response.data[index].isInstall) {
                         listGameInstall.push(response.data[index])
                         for (let index2 = 0; index2 < data.length; index2++) {
@@ -39,13 +41,13 @@ const ManagerGameUser = ({ navigation }) => {
                 }
                 await setListGame(listGameInfo)
                 await setListGameIsInstall(listGameInstall)
-                
+
             }
-            else{
+            else {
                 const listGameBuy = []
                 const listGameInfo = []
                 for (let index = 0; index < response.data.length; index++) {
-                    
+
                     if (response.data[index].isBuy) {
                         listGameBuy.push(response.data[index])
                         for (let index2 = 0; index2 < data.length; index2++) {
@@ -57,38 +59,70 @@ const ManagerGameUser = ({ navigation }) => {
                 }
                 await setListGame(listGameInfo)
                 await setListGameHaveBuy(listGameBuy)
-        
+
             }
-          
-          
+
+            ListGame = data
+            for (let i = 0; i < ListGame.length; i++) {
+                const response = await getImageIconGame(ListGame[i].tenTroChoi)
+                const ImageName = response.data[0].imageName
+                // console.log(ImageName)
+                await fetchImageGame(ListGame[i].tenTroChoi, ImageName)
+
+            }
+
+            setListImageUri(checklist)
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
         }
         setRefreshing(false)
     }
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+
+    let checklist: ImageUri[] = [];
+    const fetchImageGame = async (username: string, imageName: string) => {
+
+        let check: ImageUri = {
+            username: "",
+            imageUri: ""
+        };
+
+
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
+            check.username = username
+            check.imageUri = response.uri
+            checklist.push(check)
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+        }
+    };
     const daCaiDat = async () => {
-        
+
         await setCheck(false)
-        
-       
+
+
     }
     const daMua = async () => {
-        
+
         await setCheck(true)
-     
-        
+
+
     }
     const renderListGameInstall = ({ item }: { item: InfoGame }) => {
         return (
             <TouchableOpacity onPress={() => { }}>
-             
+
                 <View style={{
                     flexDirection: 'row',
                     marginLeft: "5%",
                     marginTop: 20,
                 }}>
-                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/games/cod/cod_1.jpg")} />
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }} />
                     <View style={{
                         marginLeft: 15,
                         width: "70%"
@@ -107,10 +141,10 @@ const ManagerGameUser = ({ navigation }) => {
                     </View>
 
                 </View>
-                
-                
+
+
             </TouchableOpacity >
-            
+
         )
     }
     useEffect(() => {
@@ -184,27 +218,27 @@ const ManagerGameUser = ({ navigation }) => {
                     marginTop: 20,
                     marginHorizontal: 5
                 }}>
-                    {listGameIsInstall ?(
+                    {listGameIsInstall ? (
                         <FlatList
-                        data={listGame}
-                        renderItem={(list) => renderListGameInstall(list)}
-                        onRefresh={loadTasks}
-                        refreshing={refreshing}
-                        style={{
-                            marginTop: "5%",
-                            borderWidth: 1,
-                            width: "95%",
-                            alignSelf: 'center',
-                            borderRadius: 5,
-                            borderColor: "#bbb",
-                            height: "100%"
-                        }}
-                    />
-                    ):(
+                            data={listGame}
+                            renderItem={(list) => renderListGameInstall(list)}
+                            onRefresh={loadTasks}
+                            refreshing={refreshing}
+                            style={{
+                                marginTop: "5%",
+                                borderWidth: 1,
+                                width: "95%",
+                                alignSelf: 'center',
+                                borderRadius: 5,
+                                borderColor: "#bbb",
+                                height: "100%"
+                            }}
+                        />
+                    ) : (
                         <View>
                             <Text>
                                 Bạn chưa cài đặt game nào cả
-                            </Text>    
+                            </Text>
                         </View>
                     )}
                 </View>
@@ -215,27 +249,27 @@ const ManagerGameUser = ({ navigation }) => {
                     marginTop: 20,
                     marginHorizontal: 5
                 }}>
-                    {listGameHaveBuy ?(
+                    {listGameHaveBuy ? (
                         <FlatList
-                        data={listGame}
-                        renderItem={(list) => renderListGameInstall(list)}
-                        onRefresh={loadTasks}
-                        refreshing={refreshing}
-                        style={{
-                            marginTop: "5%",
-                            borderWidth: 1,
-                            width: "95%",
-                            alignSelf: 'center',
-                            borderRadius: 5,
-                            borderColor: "#bbb",
-                            height: "100%"
-                        }}
-                    />
-                    ):(
+                            data={listGame}
+                            renderItem={(list) => renderListGameInstall(list)}
+                            onRefresh={loadTasks}
+                            refreshing={refreshing}
+                            style={{
+                                marginTop: "5%",
+                                borderWidth: 1,
+                                width: "95%",
+                                alignSelf: 'center',
+                                borderRadius: 5,
+                                borderColor: "#bbb",
+                                height: "100%"
+                            }}
+                        />
+                    ) : (
                         <View>
                             <Text>
                                 Bạn chưa mua game nào cả
-                            </Text>    
+                            </Text>
                         </View>
                     )}
                 </View>

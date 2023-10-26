@@ -87,33 +87,65 @@ const InfoGameNCC = ({ navigation }) => {
                         <Text style={{ fontSize: 10 }}>{game?.moTaTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>Trạng thái: {game?.trangThai}</Text>
                     </View>
-                    <View style={{
 
-                        width: "30%",
+                    {users?.note != "Admin" ? (
+                        <View style={{
 
-                    }}>
+                            width: "30%",
 
-                        <TouchableOpacity style={{
-                            height: "45%",
-                            width: "100%",
-                            backgroundColor: "#6C9EFF",
-                            justifyContent: 'center',
-                            borderRadius: 5
-                        }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri }) }}>
-                            <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
-                        </TouchableOpacity>
+                        }}>
 
-                        <TouchableOpacity style={{
-                            height: "45%",
-                            width: "100%",
-                            backgroundColor: "#FF6C6C",
-                            marginTop: "5%",
-                            justifyContent: 'center',
-                            borderRadius: 5
-                        }} onPress={() => { deleteGame() }}>
-                            <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity style={{
+                                height: "45%",
+                                width: "100%",
+                                backgroundColor: "#6C9EFF",
+                                justifyContent: 'center',
+                                borderRadius: 5
+                            }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri }) }}>
+                                <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={{
+                                height: "45%",
+                                width: "100%",
+                                backgroundColor: "#FF6C6C",
+                                marginTop: "5%",
+                                justifyContent: 'center',
+                                borderRadius: 5
+                            }} onPress={() => { deleteGame() }}>
+                                <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) : (
+                        <View style={{
+
+                            width: "30%",
+
+                        }}>
+
+                            <TouchableOpacity style={{
+                                height: "45%",
+                                width: "100%",
+                                backgroundColor: "#6C9EFF",
+                                justifyContent: 'center',
+                                borderRadius: 5
+                            }} onPress={() => { }}>
+                                <Text style={{ textAlign: 'center' }}>Chấp nhận</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={{
+                                height: "45%",
+                                width: "100%",
+                                backgroundColor: "#FF6C6C",
+                                marginTop: "5%",
+                                justifyContent: 'center',
+                                borderRadius: 5
+                            }} onPress={() => { }}>
+                                <Text style={{ textAlign: 'center' }}>Từ chối</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+
                 </View>
                 <View style={{
                     width: "100%",
@@ -155,7 +187,7 @@ const InfoGameNCC = ({ navigation }) => {
                     {game?.gioiThieuTroChoi}
                 </Text>
             </View>
-        </View>
+        </View >
 
 
     );

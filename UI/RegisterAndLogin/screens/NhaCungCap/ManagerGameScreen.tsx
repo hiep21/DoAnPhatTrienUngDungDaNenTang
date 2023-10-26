@@ -30,17 +30,17 @@ const ManagerGameNCC = ({ navigation }) => {
             setListGameAdmin(responseAdmin.data)
             const response = await getByUser(user)
             setUserNCC(response.data[0])
-            ListGame = data
+
             if (response.data[0].note == "Admin") {
                 ListGame = responseAdmin.data;
                 for (let i = 0; i < ListGame.length; i++) {
                     const response = await getImageIconGame(ListGame[i].tenTroChoi)
                     const ImageName = response.data[0].imageName
-                    console.log(ImageName)
                     await fetchImage(ListGame[i].tenTroChoi, ImageName)
                 }
             }
             else {
+                ListGame = data
                 for (let i = 0; i < ListGame.length; i++) {
                     const response = await getImageIconGame(ListGame[i].tenTroChoi)
                     const ImageName = response.data[0].imageName
@@ -147,7 +147,7 @@ const ManagerGameNCC = ({ navigation }) => {
                             width: "70%"
                         }}>
                             <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
-                            <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
+                            <Text style={{ fontSize: 10, marginTop: 5 }}>Thể Loại: {item.theLoai}</Text>
                             <View style={{
                                 flexDirection: 'row',
                                 width: "100%",
@@ -177,18 +177,17 @@ const ManagerGameNCC = ({ navigation }) => {
                             width: "70%"
                         }}>
                             <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
-                            <View style={{ flexDirection: "row", width: 250 }}>
+                            <View style={{ flexDirection: "row", width: 250, paddingTop: 5 }}>
                                 <Text style={{ fontSize: 10, width: 115 }}>Thể Loại: {item.theLoai}</Text>
                                 <Text style={{ fontSize: 10 }}>Nhà cung cấp: {item.nhaCungCap}</Text>
                             </View>
                             <View style={{
                                 flexDirection: 'row',
                                 width: "100%",
-                                justifyContent: 'space-between'
                             }}>
-                                <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
-                                {item.trangThai == "trên kệ" ? (
-                                    <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
+                                <Text style={{ fontSize: 10, width: 115 }}>Giá: {item.gia}</Text>
+                                {item.trangThai == "Trên kệ" ? (
+                                    <Text style={{ fontSize: 10, }}>Trạng thái:{item.trangThai}</Text>
                                 ) : (
                                     <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:<Text style={{ color: 'red' }}>{item.trangThai}</Text></Text>
                                 )}
