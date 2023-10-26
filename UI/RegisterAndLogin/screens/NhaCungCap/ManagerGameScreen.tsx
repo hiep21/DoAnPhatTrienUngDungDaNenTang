@@ -37,7 +37,7 @@ const ManagerGameNCC = ({ navigation }) => {
                     const response = await getImageIconGame(ListGame[i].tenTroChoi)
                     const ImageName = response.data[0].imageName
                     await fetchImage(ListGame[i].tenTroChoi, ImageName)
-                }
+                } 
             }
             else {
                 ListGame = data

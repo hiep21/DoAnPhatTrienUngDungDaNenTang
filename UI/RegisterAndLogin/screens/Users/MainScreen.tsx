@@ -2,12 +2,12 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
 import Carousel from './Carousel';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { getByName } from '../../services/Game';
+import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
 import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
 import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
-import { GameManager } from '../../services/interfaces/User.interface';
+import { GameManager, ImageUri } from '../../services/interfaces/User.interface';
 
 
 const MainScreen = ({ navigation }) => {
@@ -17,7 +17,7 @@ const MainScreen = ({ navigation }) => {
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
     const [image, setImage] = useState<string>()
     const [imageUri, setImageUri] = useState<string>();
-
+    let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
 
@@ -28,15 +28,17 @@ const MainScreen = ({ navigation }) => {
             setReListGame(data)
             const response = await getImageIcon(user)
             const name = response.data[0].imageName
-
-            // for (let i = 0; i < listGame.length; i++) {
-            //     const response = await getImageIcon(listGame[i].tenTroChoi)
-            //     const ImageName = response.data[0].imageName
-            //     await fetchImage(listGame[i].tenTroChoi, ImageName)
-
-            // }
             console.log(response.data)
             fetchImage(name)
+            ListGame = data
+            for (let i = 0; i < ListGame.length; i++) {
+                const response = await getImageIconGame(ListGame[i].tenTroChoi)
+                const ImageName = response.data[0].imageName
+                // console.log(ImageName)
+                await fetchImageGame(ListGame[i].tenTroChoi, ImageName)
+            }
+
+            setListImageUri(checklist)
 
         } catch (err) {
             const errorMessage = err.response
@@ -56,6 +58,28 @@ const MainScreen = ({ navigation }) => {
 
         }
 
+    };
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+    let checklist: ImageUri[] = [];
+    const fetchImageGame = async (username: string, imageName: string) => {
+
+        let check: ImageUri = {
+            username: "",
+            imageUri: ""
+        };
+
+
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
+            check.username = username
+            check.imageUri = response.uri
+            checklist.push(check)
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+        }
     };
     const loadimage = async () => {
         const getUser = await getItemAsync('accessToken');
@@ -85,30 +109,30 @@ const MainScreen = ({ navigation }) => {
     const [checks, setChecks] = useState<boolean>(false)
     const [searchResults, setSearchResults] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('');
-    let relist :InfoGame[] = reListGame
+    let relist: InfoGame[] = reListGame
     const handleSearch = () => {
         const filteredTasks = reListGame.filter((item) =>
             item.theLoai.toLowerCase().includes(searchKeyword.toLowerCase()) ||
             item.tenTroChoi.toLowerCase().includes(searchKeyword.toLowerCase()) ||
             item.nhaCungCap.toLowerCase().includes(searchKeyword.toLowerCase())
         );
-        if (filteredTasks != null&& filteredTasks.length !=0) {
+        if (filteredTasks != null && filteredTasks.length != 0) {
             setListGame(filteredTasks);
         }
-        else{ 
+        else {
 
             setListGame(relist);
-         
+
         }
-        
-        console.log(filteredTasks.length )
+
+        console.log(filteredTasks.length)
         // Đây là nơi bạn triển khai logic tìm kiếm, ví dụ:
-       
+
         setChecks(true); // Hiển thị FlatList khi có kết quả tìm kiếm
     };
 
 
-    const CheckBuyAndInstall = async (name: string, item: InfoGame) => {
+    const CheckBuyAndInstall = async (name: string, item: InfoGame, imageGameUri: string) => {
         try {
 
             const { data } = await getGameManager(user);
@@ -120,23 +144,23 @@ const MainScreen = ({ navigation }) => {
                 }
             }
             if (GameCheck.length == 0) {
-                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user })
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user, imageGameUri })
             }
             else {
-                navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager :GameCheck[0] , installGame: GameCheck[0].isInstall })
+                navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri })
             }
-        
+
 
         } catch (error) {
-            if (error.response.data =="Tài khoản "+user+" chưa mua với tải game") {
-              
+            if (error.response.data == "Tài khoản " + user + " chưa mua với tải game") {
+
                 navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user })
-                
+
             }
-            else{
+            else {
                 console.log(error.response.data)
             }
-            
+
 
 
         }
@@ -144,14 +168,14 @@ const MainScreen = ({ navigation }) => {
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <TouchableOpacity onPress={() => { CheckBuyAndInstall(item.tenTroChoi, item) }}>
+            <TouchableOpacity onPress={() => { CheckBuyAndInstall(item.tenTroChoi, item, listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri) }}>
                 <View style={{
                     flexDirection: 'row',
                     marginLeft: "5%",
                     marginVertical: 10,
 
                 }}>
-                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/games/cod/cod_1.jpg")
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }
 
                     } />
                     <View style={{
@@ -185,11 +209,11 @@ const MainScreen = ({ navigation }) => {
             <View style={styles.head}>
                 <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' 
+                    <TextInput placeholder='Tìm kiếm trò chơi'
                         value={searchKeyword}
                         onChangeText={(text) => setSearchKeyword(text)}
                         onFocus={() => setChecks(true)}
-                        />
+                    />
                     <TouchableOpacity style={{
 
                         paddingTop: 5
@@ -197,17 +221,17 @@ const MainScreen = ({ navigation }) => {
                         <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
                     </TouchableOpacity>
                 </View>
-                {checks ?(
-                    <TouchableOpacity style={{justifyContent:'center'}} onPress={()=>{setChecks(false)}}>
+                {checks ? (
+                    <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => { setChecks(false) }}>
                         <Text>Back</Text>
                     </TouchableOpacity>
-                ):(
+                ) : (
                     <View></View>
                 )}
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
 
-                        <Image style={{ width: 20, height:20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
+                        <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         {imageUri ? (
@@ -258,7 +282,7 @@ const MainScreen = ({ navigation }) => {
                         <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
 
                     </View>
-                ):(
+                ) : (
                     <View>
                         <FlatList
                             data={listGame}
@@ -278,7 +302,7 @@ const MainScreen = ({ navigation }) => {
                     </View>
                 )}
             </View>
-            
+
         </View>
 
 
