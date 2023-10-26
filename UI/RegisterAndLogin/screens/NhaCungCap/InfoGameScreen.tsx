@@ -53,24 +53,6 @@ const InfoGameNCC = ({ navigation }) => {
     }, [gameId, tenTroChoi, imageUri, user])
     return (
         <View style={styles.container}>
-            {/* <View style={styles.head}>
-                <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' />
-                    <TouchableOpacity>
-                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/1.png")} />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/1.png")} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
-                    </TouchableOpacity>
-                </View>
-            </View> */}
             <View style={styles.body}>
                 <Text style={{
                     textAlign: 'left',
@@ -108,7 +90,7 @@ const InfoGameNCC = ({ navigation }) => {
                             backgroundColor: "#6C9EFF",
                             justifyContent: 'center',
                             borderRadius: 5
-                        }}>
+                        }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri }) }}>
                             <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
                         </TouchableOpacity>
 

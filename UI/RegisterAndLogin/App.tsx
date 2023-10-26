@@ -20,12 +20,15 @@ import MainScreenNCC from './screens/NhaCungCap/MainScreen';
 import ManagerGameNCC from './screens/NhaCungCap/ManagerGameScreen';
 import InfoGameNCC from './screens/NhaCungCap/InfoGameScreen';
 import AddGameNCC from './screens/NhaCungCap/AddGame';
+import ChoseUpdateGameScreen from './screens/NhaCungCap/ChoseUpdateGameScreen';
 import UpdateGameNCC from './screens/NhaCungCap/UpdateGameScreen';
 import MainScreenAdmin from "./screens/Admin/MainScreen";
 import ListAccountScreen from "./screens/Admin/ListAccount";
 import InfoAccount from "./screens/Admin/InfoAccount";
 import CreateAccountNCC from "./screens/Admin/CreateAccountNCC";
 import ChartComponent from './screens/Admin/ChartComponent';
+
+
 const StackNAvigator = createStackNavigator({
   RegisterScreen: {
     screen: RegisterScreen,
@@ -124,10 +127,16 @@ const StackNAvigator = createStackNavigator({
       title: 'Thêm trò chơi',
     },
   },
+  ChoseUpdateGameScreen: {
+    screen: ChoseUpdateGameScreen,
+    navigationOptions: {
+      title: 'lựa chọn cách cập nhật trò chơi',
+    },
+  },
   UpdateGameNCC: {
     screen: UpdateGameNCC,
     navigationOptions: {
-      title: 'Cập nhật trò chơi',
+      title: 'cập nhật trò chơi',
     },
   },
   MainScreenAdmin: {
@@ -148,22 +157,22 @@ const StackNAvigator = createStackNavigator({
       title: 'Thông tin tài khoản',
     },
   },
-  CreateAccountNCC:{
+  CreateAccountNCC: {
     screen: CreateAccountNCC,
     navigationOptions: {
       title: 'Tạo tài khoản cho nhà cung cấp',
     },
   },
-  ChartComponent:{
+  ChartComponent: {
     screen: ChartComponent,
     navigationOptions: {
       title: 'Doanh thu',
     },
   }
-  
+
 
 }, {
   initialRouteName: 'HomeScreen',
-  
+
 })
 export default createAppContainer(StackNAvigator)
