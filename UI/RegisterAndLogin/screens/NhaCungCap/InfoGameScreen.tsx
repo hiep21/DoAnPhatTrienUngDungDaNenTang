@@ -3,6 +3,8 @@ import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInp
 
 import { deleteApi, deleteFolder, getById, getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
+import { getByUser } from '../../services/todo';
+import { RegisterData } from '../../services/interfaces/User.interface';
 const InfoGameNCC = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
@@ -10,12 +12,18 @@ const InfoGameNCC = ({ navigation }) => {
     const imageUri = navigation.getParam("imageUri")
     const user = navigation.getParam("user")
     const [game, setGame] = useState<InfoGame>()
+    const [users, setUsers] = useState<RegisterData>()
     const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
+    let getUser: RegisterData;
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
+            const response = await getByUser(user)
+            getUser = response.data[0]
+            setUsers(response.data[0])
+
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -84,6 +92,7 @@ const InfoGameNCC = ({ navigation }) => {
                         width: "30%",
 
                     }}>
+
                         <TouchableOpacity style={{
                             height: "45%",
                             width: "100%",

@@ -25,8 +25,8 @@ const AddGameNCC = ({ navigation }) => {
             Alert.alert("Lỗi", "tên phải tối thiểu 5 ký tự");
             return false;
         }
-        if (game.moTaTroChoi.length < 10) {
-            Alert.alert("Lỗi", "mô tả trò chơi phải tối thiểu 10 ký tự");
+        if (game.moTaTroChoi.length < 5) {
+            Alert.alert("Lỗi", "mô tả trò chơi phải tối thiểu 5 ký tự");
             return false;
         }
         if (game.gioiThieuTroChoi.length < 50) {

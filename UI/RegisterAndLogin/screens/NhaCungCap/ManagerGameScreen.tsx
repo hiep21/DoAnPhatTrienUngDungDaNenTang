@@ -31,18 +31,29 @@ const ManagerGameNCC = ({ navigation }) => {
             const response = await getByUser(user)
             setUserNCC(response.data[0])
             ListGame = data
-
-            for (let i = 0; i < ListGame.length; i++) {
-                const response = await getImageIconGame(ListGame[i].tenTroChoi)
-                const ImageName = response.data[0].imageName
-                // console.log(ImageName)
-                await fetchImage(ListGame[i].tenTroChoi, ImageName)
+            if (response.data[0].note == "Admin") {
+                ListGame = responseAdmin.data;
+                for (let i = 0; i < ListGame.length; i++) {
+                    const response = await getImageIconGame(ListGame[i].tenTroChoi)
+                    const ImageName = response.data[0].imageName
+                    console.log(ImageName)
+                    await fetchImage(ListGame[i].tenTroChoi, ImageName)
+                }
+            }
+            else {
+                for (let i = 0; i < ListGame.length; i++) {
+                    const response = await getImageIconGame(ListGame[i].tenTroChoi)
+                    const ImageName = response.data[0].imageName
+                    // console.log(ImageName)
+                    await fetchImage(ListGame[i].tenTroChoi, ImageName)
+                }
 
             }
+
             setListImageUri(checklist)
+
             const response2 = await getImageIcon(user)
             const name = response2.data[0].imageName
-
             fetchImageUser(name)
 
         } catch (err) {
@@ -160,13 +171,16 @@ const ManagerGameNCC = ({ navigation }) => {
                         marginLeft: "5%",
                         marginTop: 20
                     }}>
-                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/Icon/1.png")} />
+                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }} />
                         <View style={{
                             marginLeft: 15,
                             width: "70%"
                         }}>
                             <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
-                            <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
+                            <View style={{ flexDirection: "row", width: 250 }}>
+                                <Text style={{ fontSize: 10, width: 115 }}>Thể Loại: {item.theLoai}</Text>
+                                <Text style={{ fontSize: 10 }}>Nhà cung cấp: {item.nhaCungCap}</Text>
+                            </View>
                             <View style={{
                                 flexDirection: 'row',
                                 width: "100%",

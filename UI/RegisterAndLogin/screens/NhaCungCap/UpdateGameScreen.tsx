@@ -203,6 +203,40 @@ const UpdateGameNCC = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 );
+                case '1':
+                return (
+                    <View>
+                        <Text style={styles.textInput}>Sửa tên của bạn</Text>
+                        <TextInput
+                            value={usersUpdate.name}
+                            onChangeText={(value) => {
+                                setUsersUpdate({
+                                    ...usersUpdate,
+                                    name: value
+                                })
+                            }}
+                            style={styles.input}
+                            placeholder='Nguyễn văn A'
+                        />
+                        <TouchableOpacity style={{
+                            backgroundColor: "#7FFF00",
+                            width: 200,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            alignSelf: 'center',
+                            marginTop: 10,
+                            borderWidth: 1
+                        }} onPress={() => { uploadTextChange(usersUpdate.name); }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>cập nhật</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                );
         }
     };
     return (
