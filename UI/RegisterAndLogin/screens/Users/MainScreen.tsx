@@ -82,6 +82,32 @@ const MainScreen = ({ navigation }) => {
     }, [])
 
 
+    const [checks, setChecks] = useState<boolean>(false)
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState('');
+    let relist :InfoGame[] = reListGame
+    const handleSearch = () => {
+        const filteredTasks = reListGame.filter((item) =>
+            item.theLoai.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.tenTroChoi.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.nhaCungCap.toLowerCase().includes(searchKeyword.toLowerCase())
+        );
+        if (filteredTasks != null&& filteredTasks.length !=0) {
+            setListGame(filteredTasks);
+        }
+        else{ 
+
+            setListGame(relist);
+         
+        }
+        
+        console.log(filteredTasks.length )
+        // Đây là nơi bạn triển khai logic tìm kiếm, ví dụ:
+       
+        setChecks(true); // Hiển thị FlatList khi có kết quả tìm kiếm
+    };
+
+
     const CheckBuyAndInstall = async (name: string, item: InfoGame) => {
         try {
 
@@ -159,14 +185,25 @@ const MainScreen = ({ navigation }) => {
             <View style={styles.head}>
                 <View style={styles.search}>
                     <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi' />
+                    <TextInput placeholder='Tìm kiếm trò chơi' 
+                        value={searchKeyword}
+                        onChangeText={(text) => setSearchKeyword(text)}
+                        onFocus={() => setChecks(true)}
+                        />
                     <TouchableOpacity style={{
 
                         paddingTop: 5
-                    }} onPress={() => {  }}>
+                    }} onPress={() => { handleSearch() }}>
                         <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
                     </TouchableOpacity>
                 </View>
+                {checks ?(
+                    <TouchableOpacity style={{justifyContent:'center'}} onPress={()=>{setChecks(false)}}>
+                        <Text>Back</Text>
+                    </TouchableOpacity>
+                ):(
+                    <View></View>
+                )}
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
 
@@ -184,41 +221,64 @@ const MainScreen = ({ navigation }) => {
                     </TouchableOpacity>
 
                 </View>
+
             </View>
             <View>
+                {!checks ? (
+                    <View>
+                        <Carousel />
+
+                        <View style={styles.body}>
+                            <Text style={{
+                                textAlign: 'left',
+                                paddingLeft: 30,
+                                borderBottomWidth: 1.5,
+                                fontSize: 17,
+                                fontWeight: '600',
+
+                            }}>Được đề xuất cho bạn</Text>
+                            <FlatList
+                                data={listGame}
+                                renderItem={(list) => renderTask(list)}
+                                onRefresh={loadTasks}
+                                refreshing={refreshing}
+                                style={{
+                                    marginTop: "5%",
+                                    borderWidth: 1,
+                                    width: "95%",
+                                    alignSelf: 'center',
+                                    borderRadius: 5,
+                                    borderColor: "#bbb",
+                                    height: 100
+                                }}
+                            />
+
+                        </View>
+
+                        <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+
+                    </View>
+                ):(
+                    <View>
+                        <FlatList
+                            data={listGame}
+                            renderItem={(list) => renderTask(list)}
+                            onRefresh={loadTasks}
+                            refreshing={refreshing}
+                            style={{
+                                marginTop: "5%",
+                                borderWidth: 1,
+                                width: "95%",
+                                alignSelf: 'center',
+                                borderRadius: 5,
+                                borderColor: "#bbb",
+                                height: 100
+                            }}
+                        />
+                    </View>
+                )}
             </View>
-            <Carousel />
-
-
-            <View style={styles.body}>
-                <Text style={{
-                    textAlign: 'left',
-                    paddingLeft: 30,
-                    borderBottomWidth: 1.5,
-                    fontSize: 17,
-                    fontWeight: '600',
-
-                }}>Được đề xuất cho bạn</Text>
-                <FlatList
-                    data={listGame}
-                    renderItem={(list) => renderTask(list)}
-                    onRefresh={loadTasks}
-                    refreshing={refreshing}
-                    style={{
-                        marginTop: "5%",
-                        borderWidth: 1,
-                        width: "95%",
-                        alignSelf: 'center',
-                        borderRadius: 5,
-                        borderColor: "#bbb",
-                        height: 100
-                    }}
-                />
-
-            </View>
-
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
-
+            
         </View>
 
 

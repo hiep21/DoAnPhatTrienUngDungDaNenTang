@@ -89,7 +89,8 @@ const ListAccountScreen = ({ navigation }) => {
     const handleSearch = () => {
         const filteredTasks = listAccount.filter((item) =>
             item.user.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-            item.name.toLowerCase().includes(searchKeyword.toLowerCase())
+            item.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.note.toLowerCase().includes(searchKeyword.toLowerCase())
         );
 
         if (filteredTasks != null) {
