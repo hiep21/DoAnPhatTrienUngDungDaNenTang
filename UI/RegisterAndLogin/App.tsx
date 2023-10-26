@@ -27,6 +27,8 @@ import ListAccountScreen from "./screens/Admin/ListAccount";
 import InfoAccount from "./screens/Admin/InfoAccount";
 import CreateAccountNCC from "./screens/Admin/CreateAccountNCC";
 import ChartComponent from './screens/Admin/ChartComponent';
+import Notification from './screens/NhaCungCap/Notification';
+import List_Notification from './screens/NhaCungCap/List_Notification';
 
 
 const StackNAvigator = createStackNavigator({
@@ -52,6 +54,7 @@ const StackNAvigator = createStackNavigator({
     screen: MainScreenUser,
     navigationOptions: {
       title: 'Màn hình chính',
+      //headerLeft: null, 
     },
   },
   UserScreen: {
@@ -168,11 +171,23 @@ const StackNAvigator = createStackNavigator({
     navigationOptions: {
       title: 'Doanh thu',
     },
+  },
+  Notification: {
+    screen: Notification,
+    navigationOptions: {
+      title: 'Thông báo',
+    },
+  },
+  List_Notification: {
+    screen: List_Notification,
+    navigationOptions: {
+      title: 'Thông báo',
+    },
   }
 
 
 }, {
-  initialRouteName: 'HomeScreen',
+  initialRouteName: 'Notification',
 
 })
 export default createAppContainer(StackNAvigator)
