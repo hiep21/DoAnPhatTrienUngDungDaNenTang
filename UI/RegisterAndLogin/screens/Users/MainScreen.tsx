@@ -28,7 +28,7 @@ const MainScreen = ({ navigation }) => {
             setReListGame(data)
             const response = await getImageIcon(user)
             const name = response.data[0].imageName
-            console.log(response.data)
+            // console.log(response.data)
             fetchImage(name)
             ListGame = data
             for (let i = 0; i < ListGame.length; i++) {
@@ -125,7 +125,7 @@ const MainScreen = ({ navigation }) => {
 
         }
 
-        console.log(filteredTasks.length)
+        // console.log(filteredTasks.length)
         // Đây là nơi bạn triển khai logic tìm kiếm, ví dụ:
 
         setChecks(true); // Hiển thị FlatList khi có kết quả tìm kiếm
@@ -249,57 +249,61 @@ const MainScreen = ({ navigation }) => {
             </View>
             <View>
                 {!checks ? (
-                    <View>
+                    <View style={{
+                        justifyContent: 'space-around'
+                    }}>
                         <Carousel />
-
                         <View style={styles.body}>
-                            <Text style={{
-                                textAlign: 'left',
-                                paddingLeft: 30,
-                                borderBottomWidth: 1.5,
-                                fontSize: 17,
-                                fontWeight: '600',
+                            <View style={{
+                                height: 220
+                            }}>
 
-                            }}>Được đề xuất cho bạn</Text>
-                            <FlatList
-                                data={listGame}
-                                renderItem={(list) => renderTask(list)}
-                                onRefresh={loadTasks}
-                                refreshing={refreshing}
-                                style={{
-                                    marginTop: "5%",
-                                    borderWidth: 1,
-                                    width: "95%",
-                                    alignSelf: 'center',
-                                    borderRadius: 5,
-                                    borderColor: "#bbb",
-                                    height: 100
-                                }}
-                            />
+                                <Text style={{
+                                    textAlign: 'left',
+                                    paddingLeft: 30,
+                                    borderBottomWidth: 1.5,
+                                    fontSize: 17,
+                                    fontWeight: '600',
+
+                                }}>Được đề xuất cho bạn</Text>
+                                <FlatList
+                                    data={listGame}
+                                    renderItem={(list) => renderTask(list)}
+                                    onRefresh={loadTasks}
+                                    refreshing={refreshing}
+                                    style={{
+                                        marginTop: "5%",
+                                        borderWidth: 1,
+                                        width: "95%",
+                                        alignSelf: 'center',
+                                        borderRadius: 5,
+                                        borderColor: "#bbb",
+                                        height: 100
+                                    }}
+                                />
+
+                            </View>
+
+                            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
 
                         </View>
-
-                        <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
-
                     </View>
                 ) : (
-                    <View>
-                        <FlatList
-                            data={listGame}
-                            renderItem={(list) => renderTask(list)}
-                            onRefresh={loadTasks}
-                            refreshing={refreshing}
-                            style={{
-                                marginTop: "5%",
-                                borderWidth: 1,
-                                width: "95%",
-                                alignSelf: 'center',
-                                borderRadius: 5,
-                                borderColor: "#bbb",
-                                height: 100
-                            }}
-                        />
-                    </View>
+                    <FlatList
+                        data={listGame}
+                        renderItem={(list) => renderTask(list)}
+                        onRefresh={loadTasks}
+                        refreshing={refreshing}
+                        style={{
+                            marginTop: "5%",
+                            borderWidth: 1,
+                            width: "95%",
+                            alignSelf: 'center',
+                            borderRadius: 5,
+                            borderColor: "#bbb",
+                            height: 100
+                        }}
+                    />
                 )}
             </View>
 
@@ -371,7 +375,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         width: 340,
         height: 265,
-        marginTop: 20,
         marginHorizontal: 5,
 
     },

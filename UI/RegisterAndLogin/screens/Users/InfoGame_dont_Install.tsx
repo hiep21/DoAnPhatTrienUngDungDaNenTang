@@ -47,8 +47,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
     }, [gameId, user, imageGameUri])
     return (
         <View style={styles.container}>
-            <View style={styles.head}>
-            </View>
+            
             <View style={styles.body}>
                 <Text style={{
                     textAlign: 'left',
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'space-between',
         flexDirection: 'row',
-        paddingTop: 10
+
     },
     search: {
         width: 200,

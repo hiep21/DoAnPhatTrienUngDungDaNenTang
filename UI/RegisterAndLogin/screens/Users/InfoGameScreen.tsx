@@ -24,9 +24,9 @@ const InfoGameScreen = ({ navigation }) => {
 
             const response = await getImageIcon(itemGameManager.username)
             const name = response.data[0].imageName
-            console.log(response.data)
+            // console.log(response.data)
             fetchImage(name)
-            console.log(gameManager)
+            // console.log(gameManager)
         } catch (err) {
             const errorMessage = err.response
             alert(errorMessage)
@@ -42,7 +42,7 @@ const InfoGameScreen = ({ navigation }) => {
 
         if (itemGameManager.isInstall) {
             try {
-                await console.log(itemGameManager)
+                // await console.log(itemGameManager)
                 const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
 
                 if (status === 'granted') {
@@ -113,8 +113,6 @@ const InfoGameScreen = ({ navigation }) => {
     };
     return (
         <View style={styles.container}>
-            <View style={styles.head}>
-            </View>
             <View style={styles.body}>
                 <Text style={{
                     textAlign: 'left',
@@ -239,7 +237,7 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'space-between',
         flexDirection: 'row',
-        paddingTop: 10
+
     },
     search: {
         width: 200,

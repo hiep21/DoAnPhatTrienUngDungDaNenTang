@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../../services/Game';
-import { InfoGame } from '../../services/interfaces/GameService';
-import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
-import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
-import BottomSheet from '../Users/BottomSheet';
+import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../services/Game';
+import { InfoGame } from '../services/interfaces/GameService';
+import { BASE_URL_Image, getByUser, getImageIcon } from '../services/todo';
+import { ImageUri, RegisterData } from '../services/interfaces/User.interface';
+import BottomSheet from './Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
 const List_Notification = ({ navigation }) => {
@@ -37,7 +37,7 @@ const List_Notification = ({ navigation }) => {
                     const response = await getImageIconGame(ListGame[i].tenTroChoi)
                     const ImageName = response.data[0].imageName
                     await fetchImage(ListGame[i].tenTroChoi, ImageName)
-                } 
+                }
             }
             else {
                 ListGame = data
@@ -104,7 +104,7 @@ const List_Notification = ({ navigation }) => {
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const handleSearch = () => {
         // const filteredTasks = listNotification.filter((item) =>
-            
+
         // );
 
         // if (filteredTasks != "" && filteredTasks != null) {
@@ -121,24 +121,24 @@ const List_Notification = ({ navigation }) => {
 
         loadTasks()
     }, [user])
-    
 
-    
+
+
     return (
         <View style={styles.container}>
             <View style={styles.head}>
                 <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
+                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/Icon/search.png")} />
                     <TextInput placeholder='Tìm kiếm trò chơi' value={searchKeyword}
                         onChangeText={(text) => setSearchKeyword(text)} />
                     <TouchableOpacity onPress={() => { handleSearch() }} style={{ marginTop: 7 }}>
-                        <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
+                        <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../assets/Icon/paper-1349664_1280.png")} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
-                        <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
+                        <Image style={{ width: 20, height: 20, }} source={require("../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={{ uri: imageUri }} />
@@ -186,7 +186,7 @@ const List_Notification = ({ navigation }) => {
                     />
                 )}
             </View>
-            
+
             <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
         </View>
 

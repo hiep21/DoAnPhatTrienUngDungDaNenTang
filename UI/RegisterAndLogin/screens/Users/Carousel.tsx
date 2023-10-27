@@ -7,11 +7,11 @@ const images = [
   require('../../assets/games/spider_man/spider_man_1.jpg'),
   require('../../assets/games/spider_man/spider_man_2.jpg'),
   require('../../assets/games/spider_man/spider_man_3.jpg'),
-  
+
   require('../../assets/games/assassins_creed/assassins_creed_1.jpg'),
   require('../../assets/games/assassins_creed/assassins_creed_2.jpg'),
   require('../../assets/games/assassins_creed/assassins_creed_4.jpg'),
-  
+
   require('../../assets/games/cod/cod_1.jpg'),
   require('../../assets/games/cod/cod_2.jpg'),
   require('../../assets/games/cod/cod_3.jpg'),
@@ -19,7 +19,7 @@ const images = [
 ];
 
 
-const imageAspectRatio = 1920 / 1080; 
+const imageAspectRatio = 1920 / 1080;
 
 export default function Carousel() {
   const containerHeight = width / imageAspectRatio;
@@ -54,7 +54,7 @@ export default function Carousel() {
             return (
               <View key={i} style={{ width, height: containerHeight }}>
                 <Image
-                  style={{ flex: 1, width: undefined, height: undefined,borderRadius:15,marginHorizontal:10 }}
+                  style={{ flex: 1, width: undefined, height: undefined, borderRadius: 15, marginHorizontal: 10 }}
                   source={source}
                   resizeMode="contain" // Để không cắt ảnh
                 />
@@ -73,7 +73,7 @@ export default function Carousel() {
           return (
             <Animated.View
               key={i}
-              style={{ opacity, height: 10, width: 10, backgroundColor: '#595959', margin: 8, borderRadius: 5 }}
+              style={{ marginTop: 10, opacity, height: 10, width: 10, backgroundColor: '#595959', marginHorizontal: 8, borderRadius: 5 }}
             />
           );
         })}

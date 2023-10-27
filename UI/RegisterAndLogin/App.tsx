@@ -27,8 +27,8 @@ import ListAccountScreen from "./screens/Admin/ListAccount";
 import InfoAccount from "./screens/Admin/InfoAccount";
 import CreateAccountNCC from "./screens/Admin/CreateAccountNCC";
 import ChartComponent from './screens/Admin/ChartComponent';
-import Notification from './screens/NhaCungCap/Notification';
-import List_Notification from './screens/NhaCungCap/List_Notification';
+import Notification from './screens/Notification';
+import List_Notification from './screens/List_Notification';
 
 
 const StackNAvigator = createStackNavigator({
@@ -187,7 +187,7 @@ const StackNAvigator = createStackNavigator({
 
 
 }, {
-  initialRouteName: 'Notification',
+  initialRouteName: 'HomeScreen',
 
 })
 export default createAppContainer(StackNAvigator)

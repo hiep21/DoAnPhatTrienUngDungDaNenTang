@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 
-import { deleteApi, deleteFolder, getById, getByName } from '../../services/Game';
+import { UpdateGame, deleteApi, deleteFolder, getById, getByName } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
@@ -12,17 +12,31 @@ const InfoGameNCC = ({ navigation }) => {
     const imageUri = navigation.getParam("imageUri")
     const user = navigation.getParam("user")
     const [game, setGame] = useState<InfoGame>()
+    const [acceptGame, setAcceptGame] = useState<InfoGame>({
+        tenTroChoi: "",
+        moTaTroChoi: "",
+        doTuoi: "",
+        theLoai: "",
+        gia: "",
+        nhaCungCap: "",
+        gioiThieuTroChoi: "",
+        kichCoFile: "",
+        trangThai: ""
+    })
     const [users, setUsers] = useState<RegisterData>()
-    const [deleteName, setDeleteName] = useState<string>(tenTroChoi)
-    let getUser: RegisterData;
+
+
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
             const response = await getByUser(user)
-            getUser = response.data[0]
+
             setUsers(response.data[0])
+            console.log(data[0])
+
+            setAcceptGame(data[0])
 
         } catch (err) {
             const errorMessage = err.response
@@ -44,7 +58,7 @@ const InfoGameNCC = ({ navigation }) => {
                     text: "Đồng ý",
                     onPress: async () => {
                         try {
-                            await deleteFolder(deleteName);
+                            await deleteFolder(tenTroChoi);
                             navigation.navigate("ManagerGameNCC", { user });
                             alert('Xóa game thành công');
                         } catch (error) {
@@ -55,7 +69,18 @@ const InfoGameNCC = ({ navigation }) => {
             ]
         );
     }
-
+    let getAcceptGame: InfoGame
+    const AcceptGameNCC = async () => {
+        getAcceptGame = acceptGame
+        getAcceptGame.trangThai = "Trên kệ"
+        try {
+            // console.log(getAcceptGame)
+            const { data } = await UpdateGame(getAcceptGame);
+            alert("Cập nhật thành công")
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
     useEffect(() => {
         getGameById()
     }, [gameId, tenTroChoi, imageUri, user])
@@ -123,26 +148,32 @@ const InfoGameNCC = ({ navigation }) => {
 
                         }}>
 
-                            <TouchableOpacity style={{
-                                height: "45%",
-                                width: "100%",
-                                backgroundColor: "#6C9EFF",
-                                justifyContent: 'center',
-                                borderRadius: 5
-                            }} onPress={() => { }}>
-                                <Text style={{ textAlign: 'center' }}>Chấp nhận</Text>
-                            </TouchableOpacity>
+                            {game?.trangThai == "Chờ xét duyệt" ? (
+                                <View>
+                                    <TouchableOpacity style={{
+                                        height: "45%",
+                                        width: "100%",
+                                        backgroundColor: "#6C9EFF",
+                                        justifyContent: 'center',
+                                        borderRadius: 5
+                                    }} onPress={() => { AcceptGameNCC(); }}>
+                                        <Text style={{ textAlign: 'center' }}>Chấp nhận</Text>
+                                    </TouchableOpacity>
 
-                            <TouchableOpacity style={{
-                                height: "45%",
-                                width: "100%",
-                                backgroundColor: "#FF6C6C",
-                                marginTop: "5%",
-                                justifyContent: 'center',
-                                borderRadius: 5
-                            }} onPress={() => { }}>
-                                <Text style={{ textAlign: 'center' }}>Từ chối</Text>
-                            </TouchableOpacity>
+                                    <TouchableOpacity style={{
+                                        height: "45%",
+                                        width: "100%",
+                                        backgroundColor: "#FF6C6C",
+                                        marginTop: "5%",
+                                        justifyContent: 'center',
+                                        borderRadius: 5
+                                    }} onPress={() => { }}>
+                                        <Text style={{ textAlign: 'center' }}>Từ chối</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : (
+                                <View></View>
+                            )}
                         </View>
                     )}
 

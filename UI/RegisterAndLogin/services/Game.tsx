@@ -26,6 +26,23 @@ export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaC
         }
     })
 }
+export const UpdateGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi, kichCoFile, trangThai }: CreateGame) => {
+    return axios({
+        method: "put",
+        url: BASE_URL.concat("updateInfoFile"),
+        data: {
+            tenTroChoi,
+            moTaTroChoi,
+            doTuoi,
+            theLoai,
+            gia,
+            nhaCungCap,
+            gioiThieuTroChoi,
+            kichCoFile,
+            trangThai
+        }
+    })
+}
 
 
 export const getByName = () => {
