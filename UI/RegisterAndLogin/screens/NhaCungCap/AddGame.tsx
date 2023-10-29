@@ -47,10 +47,15 @@ const AddGameNCC = ({ navigation }) => {
             console.log('Upload success:', response.data);
             await navigation.navigate("MainScreenNCC")
         } catch (err) {
-           
+
             const message = err.response.data
-            await deleteFolder(nameDocumentUri)
             console.log(message)
+            try {
+                await deleteFolder(nameDocumentUri)
+            } catch (error) {
+                const message = err.response.data
+                console.log(message)
+            }
         }
     }
     const onCancel = () => {

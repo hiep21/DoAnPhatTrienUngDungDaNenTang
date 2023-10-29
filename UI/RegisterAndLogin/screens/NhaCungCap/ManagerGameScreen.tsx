@@ -37,7 +37,7 @@ const ManagerGameNCC = ({ navigation }) => {
                     const response = await getImageIconGame(ListGame[i].tenTroChoi)
                     const ImageName = response.data[0].imageName
                     await fetchImage(ListGame[i].tenTroChoi, ImageName)
-                } 
+                }
             }
             else {
                 ListGame = data
@@ -154,7 +154,7 @@ const ManagerGameNCC = ({ navigation }) => {
                                 justifyContent: 'space-between'
                             }}>
                                 <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
-                                {item.trangThai == "trên kệ" ? (
+                                {item.trangThai == "Trên kệ" ? (
                                     <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text>
                                 ) : (
                                     <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:<Text style={{ color: 'red' }}>{item.trangThai}</Text></Text>
