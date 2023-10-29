@@ -16,6 +16,7 @@ const List_Notification = ({ navigation }) => {
     const [listNotification, setListNotification] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
     const [listNotificationAdmin, setListNotificationAdmin] = useState<InfoGame[]>([])
+    const [listNotificationNCC, setListNotificationNCC] = useState<InfoGame[]>([])
     const [userNCC, setUserNCC] = useState<RegisterData>()
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {
@@ -154,9 +155,24 @@ const List_Notification = ({ navigation }) => {
                     fontWeight: '600',
 
                 }}>Danh sách thông báo</Text>
-                {userNCC?.note != "Admin" ? (
+                {userNCC?.note === "Admin" ? (
+                <FlatList
+                    data={listNotificationAdmin}
+                    renderItem={(list) => renderTask(list)}
+                    onRefresh={loadTasks}
+                    refreshing={refreshing}
+                    style={{
+                        marginTop: "5%",
+                        borderWidth: 1,
+                        width: "95%",
+                        alignSelf: 'center',
+                        borderRadius: 5,
+                        borderColor: "#bbb"
+                    }}
+                />
+                ) : userNCC?.note === "Khách hàng" ? (
                     <FlatList
-                        data={listNotification}
+                        data={listNotificationNCC}
                         renderItem={(list) => renderTask(list)}
                         onRefresh={loadTasks}
                         refreshing={refreshing}
@@ -171,7 +187,7 @@ const List_Notification = ({ navigation }) => {
                     />
                 ) : (
                     <FlatList
-                        data={listNotificationAdmin}
+                        data={listNotification}
                         renderItem={(list) => renderTask(list)}
                         onRefresh={loadTasks}
                         refreshing={refreshing}

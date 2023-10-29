@@ -265,16 +265,34 @@ const ManagerGameNCC = ({ navigation }) => {
             </View>
             <View style={styles.end}>
                 {userNCC?.note != "Admin" ? (
-                    <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.user }) }} style={{
+                    <View style={styles.addAndUpdate}>
+                        <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.user }) }} style={{
                         backgroundColor: "#DFEEF6",
-                        width: "90%",
+                        width: 100,
                         height: 30,
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderRadius: 5,
-                    }}>
-                        <Text style={{ fontWeight: '700', fontSize: 20 }}>+</Text>
-                    </TouchableOpacity>
+                        marginHorizontal: 20
+
+                        }}>
+                            <Text style={{ fontWeight: '700', fontSize: 15 }}>Up Game</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount", { nameNCC: userNCC?.user }) }} style={{
+                        backgroundColor: "#DFEEF6",
+                        width: 100,
+                        height: 30,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                        marginHorizontal: 20
+                        }}>
+                            <Text style={{ fontWeight: '700', fontSize: 15 }}>Update Bank</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                    
+                    
                 ) : (
                     <View></View>
                 )}
@@ -324,6 +342,10 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    addAndUpdate:{
+        flexDirection: 'row',
+        marginHorizontal: 20
     }
 });
 

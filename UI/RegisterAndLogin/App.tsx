@@ -29,6 +29,7 @@ import CreateAccountNCC from "./screens/Admin/CreateAccountNCC";
 import ChartComponent from './screens/Admin/ChartComponent';
 import Notification from './screens/Notification';
 import List_Notification from './screens/List_Notification';
+import BankAccount from './screens/NhaCungCap/BankAccount';
 
 
 const StackNAvigator = createStackNavigator({
@@ -182,6 +183,12 @@ const StackNAvigator = createStackNavigator({
     screen: List_Notification,
     navigationOptions: {
       title: 'Thông báo',
+    },
+  },
+  BankAccount: {
+    screen: BankAccount,
+    navigationOptions: {
+      title: 'Điền tài khoản ngân hàng',
     },
   }
 

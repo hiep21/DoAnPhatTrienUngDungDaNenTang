@@ -44,3 +44,8 @@ export interface ImageUri {
     username: string,
     imageUri: string
 }
+export interface BankAccount {
+    account: string,
+    accountNumber: string,
+    nameBank: string
+}
