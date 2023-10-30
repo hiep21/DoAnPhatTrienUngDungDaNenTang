@@ -1,12 +1,13 @@
 
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
-import { GameManager, LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./interfaces/User.interface";
+import { BankAccount, GameManager, LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./interfaces/User.interface";
 
 const BASE_URL_REGISTER = 'http://26.115.177.223:5133/Register/'
 const BASE_URL_LOGIN = 'http://26.115.177.223:5133/Login/'
 export const BASE_URL_Image = 'http://26.115.177.223:5133/ImageIcon/'
 const BASE_URL_GameManager = "http://26.115.177.223:5133/GameManager/"
+const BASE_URL_BankAccount = "http://26.115.177.223:5133/BankAccount/"
 export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone, image }: RegisterData) => {
     return axios({
         method: "POST",
@@ -190,5 +191,54 @@ export const deleteImage = (user: string, imageName: string) => {
     return axios({
         method: "delete",
         url: BASE_URL_Image.concat("deleteImage/").concat(user).concat("/").concat(imageName.replace(".png", "")),
+    })
+}
+// đăng lý stk
+export const CreateBankAccount = ({ account, accountNumber, nameBank }: BankAccount) => {
+    return axios({
+        method: "POST",
+        url: BASE_URL_BankAccount.concat('createBankAccount'),
+        data: {
+            account,
+            accountNumber,
+            nameBank
+
+        }
+    })
+}
+export const UpdateBankAccount = ({ account, accountNumber, nameBank }: BankAccount) => {
+    return axios({
+        method: "put",
+        url: BASE_URL_BankAccount.concat('updateBankAccount'),
+        data: {
+            account,
+            accountNumber,
+            nameBank
+
+        }
+    })
+}
+export const GetAccountByUser = (username: string) => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_BankAccount.concat("getAccountByUser/").concat(username)
+
+    })
+
+}
+export const GetAllBankAccount = () => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_BankAccount.concat("getAll/")
+
+    })
+
+}
+export const DeleteBankAccount = (username: string) => {
+    return axios({
+        method: "delete",
+        url: BASE_URL_BankAccount.concat("deleteBankAccount/").concat(username),
     })
 }

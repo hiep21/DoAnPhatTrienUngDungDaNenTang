@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateGame } from "./interfaces/GameService";
+import { CreateGame, Notification } from "./interfaces/GameService";
 
 const BASE_URL = 'http://26.115.177.223:5221/InfoFile/'
 
@@ -8,6 +8,8 @@ export const BASE_URL_APK_FILE = 'http://26.115.177.223:5221/ApkFiles/'
 export const BASE_URL_Image = 'http://26.115.177.223:5221/ImageFile/'
 
 export const BASE_URL_Image_Icon = "http://26.115.177.223:5221/ImageIcon/"
+
+const BASE_URL_Notification = "http://26.115.177.223:5221/Notification/"
 
 export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi, kichCoFile, trangThai }: CreateGame) => {
     return axios({
@@ -170,5 +172,34 @@ export const deleteFolder = (tenTroChoi: string) => {
     return axios({
         method: "DELETE",
         url: BASE_URL_APK_FILE.concat("deleteFolderFile/").concat(tenTroChoi)
+    })
+}
+// thông báo chấp nhận hoặc từ chối trò chơi
+export const CreateNotification = ({ nameGame, result, reason }: Notification) => {
+    return axios({
+        method: "POST",
+        url: BASE_URL_Notification.concat('createNotification'),
+        data: {
+            nameGame,
+            result,
+            reason
+        }
+    })
+}
+
+export const GetNotification = (nameGame: string) => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_Notification.concat("getNotification/").concat(nameGame)
+
+    })
+
+}
+
+export const DeleteNotification = (nameGame: string) => {
+    return axios({
+        method: "delete",
+        url: BASE_URL_Notification.concat("deleteNotification/").concat(nameGame),
     })
 }
