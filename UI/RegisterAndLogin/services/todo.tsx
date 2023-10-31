@@ -3,11 +3,11 @@ import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 import { BankAccount, GameManager, LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./interfaces/User.interface";
 
-const BASE_URL_REGISTER = 'http://26.115.177.223:5133/Register/'
-const BASE_URL_LOGIN = 'http://26.115.177.223:5133/Login/'
-export const BASE_URL_Image = 'http://26.115.177.223:5133/ImageIcon/'
-const BASE_URL_GameManager = "http://26.115.177.223:5133/GameManager/"
-const BASE_URL_BankAccount = "http://26.115.177.223:5133/BankAccount/"
+const BASE_URL_REGISTER = 'http://10.147.17.52:5133/Register/'
+const BASE_URL_LOGIN = 'http://10.147.17.52:5133/Login/'
+export const BASE_URL_Image = 'http://10.147.17.52:5133/ImageIcon/'
+const BASE_URL_GameManager = "http://10.147.17.52:5133/GameManager/"
+const BASE_URL_BankAccount = "http://10.147.17.52:5133/BankAccount/"
 export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone, image }: RegisterData) => {
     return axios({
         method: "POST",
@@ -121,7 +121,7 @@ export const DeleteAccount = (user: string) => {
 //         url: BASE_URL_REGISTER.concat("delete/").concat(user),
 //     })
 // }
-// http://26.115.177.223:5133/ImageIcon/deleteImage/
+// http://10.147.17.52:5133/ImageIcon/deleteImage/
 
 export const saveTokenToDevice = async (tokenToSave: LoginDataToken) => {
     try {

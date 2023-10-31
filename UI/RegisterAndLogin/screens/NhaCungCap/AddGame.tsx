@@ -158,8 +158,13 @@ const AddGameNCC = ({ navigation }) => {
                 await uploadImage();
             } catch (error) {
                 // const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
+                try {
+                    const response = await deleteApkFile(nameDocumentUri)
+                } catch (error) {
+                    console.log(error.response.data);
+                }
                 const response2 = await deleteImageIcon(nameDocumentUri, image.assets[0].name)
-                const response = await deleteApkFile(nameDocumentUri)
+
                 console.log(error.response.data);
             }
 

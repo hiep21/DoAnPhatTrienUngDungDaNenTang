@@ -1,15 +1,15 @@
 import axios from 'axios'
 import { CreateGame, Notification } from "./interfaces/GameService";
 
-const BASE_URL = 'http://26.115.177.223:5221/InfoFile/'
+export const BASE_URL = 'http://10.147.17.52:5221/InfoFile/'
 
-export const BASE_URL_APK_FILE = 'http://26.115.177.223:5221/ApkFiles/'
+export const BASE_URL_APK_FILE = 'http://10.147.17.52:5221/ApkFiles/'
 
-export const BASE_URL_Image = 'http://26.115.177.223:5221/ImageFile/'
+export const BASE_URL_Image = 'http://10.147.17.52:5221/ImageFile/'
 
-export const BASE_URL_Image_Icon = "http://26.115.177.223:5221/ImageIcon/"
+export const BASE_URL_Image_Icon = "http://10.147.17.52:5221/ImageIcon/"
 
-const BASE_URL_Notification = "http://26.115.177.223:5221/Notification/"
+export const BASE_URL_Notification = "http://10.147.17.52:5221/Notification/"
 
 export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi, kichCoFile, trangThai }: CreateGame) => {
     return axios({
@@ -78,7 +78,7 @@ export const getImageGame = (filename: string, imageName: string) => {
 
     return axios({
         method: "GET",
-        url: "http://26.115.177.223:5221/ImageFile/getImage/".concat(filename).concat("/").concat(imageName)
+        url: BASE_URL_Image.concat("getImage/").concat(filename).concat("/").concat(imageName)
 
     })
 
