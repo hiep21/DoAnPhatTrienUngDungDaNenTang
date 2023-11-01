@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../services/Game';
-import { InfoGame } from '../services/interfaces/GameService';
+import { InfoGame,Notification } from '../services/interfaces/GameService';
 import { BASE_URL_Image, getByUser, getImageIcon } from '../services/todo';
 import { ImageUri, RegisterData } from '../services/interfaces/User.interface';
 import BottomSheet from './Users/BottomSheet';
@@ -13,10 +13,10 @@ const List_Notification = ({ navigation }) => {
     const user = navigation.getParam("user")
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const [listNotification, setListNotification] = useState<InfoGame[]>([])
-    const [reListGame, setReListGame] = useState<InfoGame[]>([])
-    const [listNotificationAdmin, setListNotificationAdmin] = useState<InfoGame[]>([])
-    const [listNotificationNCC, setListNotificationNCC] = useState<InfoGame[]>([])
+    const [listNotification, setListNotification] = useState<Notification[]>([])
+    const [reListGame, setReListGame] = useState<Notification[]>([])
+    const [listNotificationAdmin, setListNotificationAdmin] = useState<Notification[]>([])
+    const [listNotificationNCC, setListNotificationNCC] = useState<Notification[]>([])
     const [userNCC, setUserNCC] = useState<RegisterData>()
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {

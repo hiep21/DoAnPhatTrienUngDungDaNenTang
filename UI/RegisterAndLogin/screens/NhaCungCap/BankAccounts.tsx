@@ -4,20 +4,22 @@ import { useState, useEffect, useCallback } from 'react';
 
 import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../../services/todo";
 import Background from '../Users/Background';
-import { LoginData, LoginDataToken } from '../../services/interfaces/User.interface';
+import { LoginData, BankAccount } from '../../services/interfaces/User.interface';
+import { CreateBankAccount,GetAccountByUser } from '../../services/todo';
 
 
 
-
-const BankAccount = ({ navigation }) => {
-    const [users, setUsers] = useState<LoginData>({
-        user: "",
-        password: ""
+const BankAccounts = ({ navigation }) => {
+    const [banks, setBanks] = useState<BankAccount>()
+    const [bank, setBank] = useState<BankAccount>({
+        account: "",
+        accountNumber: "",
+        nameBank:""
     })
 
-    const [user, setUser] = useState<string>("")
-    const [email, setEmail] = useState<string>("")
-    const [password, setPassword] = useState<string>("")
+    const [account, setAccount] = useState<string>("")
+    const [accountNumber, setAccountNumber] = useState<string>("")
+    const [nameBank, setNameBank] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
     const [userVal, setUserVal] = useState(null);
 
@@ -34,12 +36,13 @@ const BankAccount = ({ navigation }) => {
             setIsLoading(true)
             try {
 
-                const loginResponse = await loginApi({
-                    user,
-                    password
+                const bankResponse = await CreateBankAccount({
+                    account,
+                    accountNumber,
+                    nameBank
                 })
-                const message = loginResponse.data
-                console.log(loginResponse.data.note);
+                const message = bankResponse.data
+                console.log(bankResponse.data.note);
                 
 
                 
@@ -56,7 +59,23 @@ const BankAccount = ({ navigation }) => {
         }
 
     }
+    const user = navigation.getParam("user")
+    const loadTasks = async () => {
+        try {
 
+            const { data } = await GetAccountByUser(user)
+            setBank(data[0])
+           
+
+        } catch (err) {
+            const errorMessage = err.response
+            alert(errorMessage)
+        }
+
+    }
+    useEffect(() => {
+        loadTasks()
+    }, [user])
     return (
         <Background>
             <View style={styles.container}>
@@ -65,45 +84,45 @@ const BankAccount = ({ navigation }) => {
                     <View style={styles.content}>
 
                         <Text style={styles.label}>Account</Text>
-                        <TextInput value={users.user} onChangeText={(value) => {
-                            setUsers({
-                                ...users,
-                                user: value
+                        <TextInput value={bank.account} onChangeText={(value) => {
+                            setBank({
+                                ...bank,
+                                account: value
                             }),
 
-                                setUser(value)
-                        }} style={styles.input} placeholder="" />
-                        {userVal != null && !users.user ? (
+                                setAccount(value)
+                        }} style={styles.input} placeholder={banks?.account} />
+                        {userVal != null && !bank.account ? (
                             <View>
-                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
+                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
                             </View>
                         ) : null}
                         <Text style={styles.label}>AccountNumber</Text>
-                        <TextInput value={users.password} onChangeText={(value) => {
-                            setUsers({
-                                ...users,
-                                password: value
+                        <TextInput value={bank.accountNumber} onChangeText={(value) => {
+                            setBank({
+                                ...bank,
+                                accountNumber: value
                             }),
 
-                                setPassword(value)
-                        }} style={styles.input} secureTextEntry />
-                        {userVal != null && !users.password ? (
+                                setAccountNumber(value)
+                        }} style={styles.input}  />
+                        {userVal != null && !bank.accountNumber ? (
                             <View>
-                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
+                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
                             </View>
                         ) : null}
                         <Text style={styles.label}>Name Bank</Text>
-                        <TextInput value={users.password} onChangeText={(value) => {
-                            setUsers({
-                                ...users,
-                                password: value
+                        <TextInput value={bank.nameBank} onChangeText={(value) => {
+                            setBank({
+                                ...bank,
+                                nameBank: value
                             }),
 
-                                setPassword(value)
-                        }} style={styles.input} secureTextEntry />
-                        {userVal != null && !users.password ? (
+                                setNameBank(value)
+                        }} style={styles.input}  />
+                        {userVal != null && !bank.nameBank ? (
                             <View>
-                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
+                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
                             </View>
                         ) : null}
 
@@ -113,14 +132,14 @@ const BankAccount = ({ navigation }) => {
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
-                                <Text style={styles.textbtn}>Confirm</Text>
+                                <Text style={styles.textbtn}>Update</Text>
                             )}
                         </TouchableOpacity>
                         
 
                     </View>
                     <View>
-                        <Image source={require("../../assets/Icon/kisspng-joystick-game-controllers-xbox-accessory-computer-gamepad-5b3bee0604bfc9.5411179315306542140195.png")} style={styles.image} />
+                        <Image source={require("../../assets/Icon/hinh-anh-ngan-hang-thuong-mai-la-gi-2.jpg")} style={styles.image} />
                     </View>
                 </View>
 
@@ -208,12 +227,12 @@ const styles = StyleSheet.create({
     },
     image: {
         marginTop: 10,
-        width: 200,
-        height: 200
+        width: 300,
+        height: 160
     },
     textError: {
         color: "red"
     }
 
 })
-export default BankAccount
+export default BankAccounts

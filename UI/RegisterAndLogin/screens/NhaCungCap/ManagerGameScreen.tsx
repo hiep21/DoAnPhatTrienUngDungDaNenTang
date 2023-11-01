@@ -278,14 +278,14 @@ const ManagerGameNCC = ({ navigation }) => {
                         }}>
                             <Text style={{ fontWeight: '700', fontSize: 15 }}>Up Game</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount", { nameNCC: userNCC?.user }) }} style={{
-                        backgroundColor: "#DFEEF6",
-                        width: 100,
-                        height: 30,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: 5,
-                        marginHorizontal: 20
+                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount",{user}) }} style={{
+                            backgroundColor: "#DFEEF6",
+                            width: 100,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            marginHorizontal: 20
                         }}>
                             <Text style={{ fontWeight: '700', fontSize: 15 }}>Update Bank</Text>
                         </TouchableOpacity>
