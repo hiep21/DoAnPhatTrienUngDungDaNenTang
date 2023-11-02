@@ -11,7 +11,12 @@ import * as FileSystem from 'expo-file-system';
 
 const Notification = ({ navigation }) => {
     const user = navigation.getParam("user")
+    const imageUri = navigation.getParam("imageUri")
+    const loadScreen = async () => {
+
+    }
     let checklist: ImageUri[] = [];
+
     const fetchImage = async (username: string, imageName: string) => {
 
         let check: ImageUri = {
@@ -32,23 +37,13 @@ const Notification = ({ navigation }) => {
             console.error('Error fetching image:', error.response.data);
         }
     };
-    const [imageUri, setImageUri] = useState<string>();
-    const fetchImageUser = async (imageName: string) => {
+    useEffect(() => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName.replace(".png", ""));
-
-        try {
-            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
-            setImageUri(response.uri);
-
-        } catch (error) {
-            console.error('Error fetching image:', error.response.data);
-
-        }
-
-
-    };
-
+        loadScreen()
+        return () => {
+            loadTasks()
+        };
+    }, [user])
 
 
     return (

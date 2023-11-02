@@ -121,6 +121,9 @@ const ManagerGameNCC = ({ navigation }) => {
     useEffect(() => {
 
         loadTasks()
+        return () => {
+            loadTasks()
+        };
     }, [user])
     const goToDetail = (item: InfoGame, imageUri: string) => {
         navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri, user })
@@ -214,7 +217,11 @@ const ManagerGameNCC = ({ navigation }) => {
                 </View>
 
                 <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
+                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
+                        if (userNCC?.note == "NCC") {
+                            navigation.navigate("Notification", { user,imageUri })
+                        }
+                    }}>
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
@@ -267,18 +274,18 @@ const ManagerGameNCC = ({ navigation }) => {
                 {userNCC?.note != "Admin" ? (
                     <View style={styles.addAndUpdate}>
                         <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.user }) }} style={{
-                        backgroundColor: "#DFEEF6",
-                        width: 100,
-                        height: 30,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: 5,
-                        marginHorizontal: 20
+                            backgroundColor: "#DFEEF6",
+                            width: 100,
+                            height: 30,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 5,
+                            marginHorizontal: 20
 
                         }}>
                             <Text style={{ fontWeight: '700', fontSize: 15 }}>Up Game</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount",{user}) }} style={{
+                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount", { user }) }} style={{
                             backgroundColor: "#DFEEF6",
                             width: 100,
                             height: 30,
@@ -291,8 +298,8 @@ const ManagerGameNCC = ({ navigation }) => {
                         </TouchableOpacity>
 
                     </View>
-                    
-                    
+
+
                 ) : (
                     <View></View>
                 )}
@@ -343,7 +350,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    addAndUpdate:{
+    addAndUpdate: {
         flexDirection: 'row',
         marginHorizontal: 20
     }

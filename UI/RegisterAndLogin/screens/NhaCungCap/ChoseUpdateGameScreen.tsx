@@ -8,6 +8,7 @@ const ChoseUpdateGameScreen = ({ navigation }) => {
     const gameId = navigation.getParam("gameId")
     const imageUri = navigation.getParam("imageUri")
     const [game, setGame] = useState<InfoGame>()
+    
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)

@@ -1,67 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal } from 'react-native';
-import { UpdateRegisterApi, deleteImage, getByUser, getImageIcon, postImageAva } from '../../services/todo';
+import { UpdateRegisterApi, getByUser, getImageIcon, postImageAva } from '../../services/todo';
 import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
 import Background from '../Users/Background';
+import { InfoGame } from '../../services/interfaces/GameService';
+import { deleteImage, deleteImageIcon, getById, getImageIconGame, postImage, postImageIcon } from '../../services/Game';
 
 const UpdateGameNCC = ({ navigation }) => {
 
-    const users = navigation.getParam("user")
     const gameId = navigation.getParam("gameId")
     const textChange = navigation.getParam("textChange")
     const imageUri = navigation.getParam("imageUri")
-    const [Users, setUsers] = useState<RegisterData>();
-    const [usersUpdateImage, setUsersUpdateImage] = useState<UpdateRegister>();
-    const [usersUpdate, setUsersUpdate] = useState<UpdateRegister>(
-        {
-            user: "",
-            password: "",
-            newPassword: "",
-            name: "",
-            email: "",
-            note: "",
-            gender: "",
-            dateOfBirth: "",
-            address: "",
-            phone: "",
-            image: ""
-        }
-    );
+    const [game, setGame] = useState<InfoGame>();
+
+    const [imageGameName, setImageGameName] = useState<string>();
     const [isLoading, setIsLoading] = useState(false);
 
 
 
     const loadTasks = async () => {
-        const getUser = await getItemAsync('accessToken');
-        const tokenObject = JSON.parse(getUser);
-        const password = tokenObject.password;
 
 
         try {
-            const { data } = await getByUser(users)
+            const response1 = await getById(gameId)
+            setGame(response1.data[0])
 
-            setUsers(data[0])
-            setUsersUpdate(
-                {
-                    user: users,
-                    password: password,
-                    newPassword: password,
-                    name: data[0].name,
-                    email: data[0].email,
-                    note: data[0].note,
-                    gender: data[0].gender,
-                    dateOfBirth: data[0].dateOfBirth,
-                    address: data[0].address,
-                    phone: data[0].phone,
-                    image: data[0].image
-                }
-            )
-
+            const response2 = await getImageIconGame(response1.data[0].tenTroChoi)
+            setImageGameName(response2.data[0].imageName)
         } catch (err) {
             const errorMessage = err.response
-            alert(errorMessage)
+            console.log(errorMessage.data)
         }
 
     }
@@ -69,16 +39,37 @@ const UpdateGameNCC = ({ navigation }) => {
 
     const [image, setImage] = useState(null);
     const pickImage = async () => {
+
         try {
             let result = await DocumentPicker.getDocumentAsync({
                 type: 'image/*',
                 copyToCacheDirectory: false, // Tránh sao chép tệp vào thư mục bộ nhớ cache của ứng dụng
             });
-            if (result.assets != null) {
-                setImage(result);
-            }
+            setImage(result);
         } catch (error) {
             console.error('Lỗi khi chọn hình ảnh:', error);
+        }
+    };
+
+    const uploadImageIcon = async () => {
+        if (!image) {
+            console.error('Chưa chọn hình ảnh.');
+            return;
+        }
+        try {
+            const response = await deleteImageIcon(game?.tenTroChoi.replace(".apk", ""), imageGameName?.replace(".png", ""))
+        } catch (error) {
+
+            console.log(error.response.data);
+            return;
+        }
+        try {
+
+            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi.replace(".apk", ""))
+
+            alert('Thêm ảnh thành công: ' + response.data.oldFileName);
+        } catch (error) {
+            alert(error.response.data);
         }
     };
 
@@ -89,18 +80,11 @@ const UpdateGameNCC = ({ navigation }) => {
         }
 
         try {
-            const images = await getImageIcon(users)
-            if (images) {
+            const response = await postImage(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi.replace(".apk", ""))
 
-                await deleteImage(users, images.data[0].imageName)
-            }
-            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, users)
-
-
-            console.log('Upload Image success:', response.data);
-            navigation.navigate("HomeScreen")
+            alert('Thêm ảnh thành công: ' + response.data.oldFileName);
         } catch (error) {
-            console.error('Upload failed:', error.response.data);
+            alert(error.response.data);
         }
     };
 
@@ -108,14 +92,11 @@ const UpdateGameNCC = ({ navigation }) => {
 
         if (!isLoading) {
             setIsLoading(true)
-            console.log(usersUpdate);
-            if (change == "") {
-                console.error('Chưa chọn hình ảnh.');
-                return;
-            }
+            console.log();
+
 
             try {
-                const { data } = await UpdateRegisterApi(users, usersUpdate)
+                const { data } = await UpdateRegisterApi(users)
 
                 console.log('Upload success:', data);
                 navigation.navigate("HomeScreen")
@@ -126,6 +107,20 @@ const UpdateGameNCC = ({ navigation }) => {
         }
         setIsLoading(false)
     }
+    const [usersUpdate, setUsersUpdate] = useState<UpdateRegister>({
+        user: "",
+        password: "",
+        newPassword: "",
+        name: "",
+        email: "",
+        note: "",
+        gender: "",
+        dateOfBirth: "",
+        address: "",
+        phone: "",
+        image: ""
+    }
+    );
     useEffect(() => {
 
         loadTasks();
@@ -133,6 +128,43 @@ const UpdateGameNCC = ({ navigation }) => {
     const renderInputField = (key: string) => {
         switch (key) {
             case '0':
+                return (
+                    <View style={{
+                        width: 300,
+                        height: 400,
+                        backgroundColor: "#fff",
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        borderWidth: 1
+                    }}>
+                        <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { pickImage(); }}>
+                            <Text style={{ fontWeight: '700' }}>Click chọn ảnh</Text>
+                        </TouchableOpacity>
+                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+                        <Text> </Text>
+                        {image != null ? (
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 30,
+                                backgroundColor: "#bbb",
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 10,
+                                borderWidth: 1.25
+                            }} onPress={() => { uploadImageIcon() }}>
+                                {isLoading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.textbtn}>UploadFile</Text>
+                                )}
+                            </TouchableOpacity>
+                        ) : (
+                            <Text></Text>
+                        )}
+                    </View>
+                );
+            case '1':
                 return (
                     <View style={{
                         width: 300,
@@ -169,20 +201,20 @@ const UpdateGameNCC = ({ navigation }) => {
                         )}
                     </View>
                 );
-            case '1':
+            case '2':
                 return (
                     <View>
-                        <Text style={styles.textInput}>Sửa tên của bạn</Text>
+                        <Text style={styles.textInput}>Sửa địa chỉ của bạn</Text>
                         <TextInput
-                            value={usersUpdate.name}
+                            value={usersUpdate.address}
                             onChangeText={(value) => {
                                 setUsersUpdate({
                                     ...usersUpdate,
-                                    name: value
+                                    address: value
                                 })
                             }}
                             style={styles.input}
-                            placeholder='Nguyễn văn A'
+                            placeholder='Address'
                         />
                         <TouchableOpacity style={{
                             backgroundColor: "#7FFF00",
@@ -194,45 +226,11 @@ const UpdateGameNCC = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 10,
                             borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.name); }}>
+                        }} onPress={() => { uploadTextChange(usersUpdate.address); }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
-                                <Text style={styles.textbtn}>cập nhật</Text>
-                            )}
-                        </TouchableOpacity>
-                    </View>
-                );
-                case '1':
-                return (
-                    <View>
-                        <Text style={styles.textInput}>Sửa tên của bạn</Text>
-                        <TextInput
-                            value={usersUpdate.name}
-                            onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
-                                    name: value
-                                })
-                            }}
-                            style={styles.input}
-                            placeholder='Nguyễn văn A'
-                        />
-                        <TouchableOpacity style={{
-                            backgroundColor: "#7FFF00",
-                            width: 200,
-                            height: 30,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 5,
-                            alignSelf: 'center',
-                            marginTop: 10,
-                            borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.name); }}>
-                            {isLoading ? (
-                                <ActivityIndicator color="#fff" />
-                            ) : (
-                                <Text style={styles.textbtn}>cập nhật</Text>
+                                <Text style={styles.textbtn}>Cập nhật</Text>
                             )}
                         </TouchableOpacity>
                     </View>

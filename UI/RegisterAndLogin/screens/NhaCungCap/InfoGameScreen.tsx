@@ -34,7 +34,7 @@ const InfoGameNCC = ({ navigation }) => {
             const response = await getByUser(user)
 
             setUsers(response.data[0])
-            console.log(data[0])
+            // console.log(data[0])
 
             setAcceptGame(data[0])
 
@@ -110,36 +110,49 @@ const InfoGameNCC = ({ navigation }) => {
                     }}>
                         <Text style={{ fontSize: 15 }}>{game?.tenTroChoi}</Text>
                         <Text style={{ fontSize: 10 }}>{game?.moTaTroChoi}</Text>
-                        <Text style={{ fontSize: 10 }}>Trạng thái: {game?.trangThai}</Text>
+                        <Text style={{ fontSize: 10 }}>Trạng thái:
+                            {game?.trangThai == "Chờ xét duyệt" ? (
+                                <Text style={{ color: "red" }}>{game?.trangThai}</Text>
+                            ) : (
+                                <Text>{game?.trangThai}</Text>
+                            )}
+                        </Text>
                     </View>
 
                     {users?.note != "Admin" ? (
-                        <View style={{
+                        <View>
+                            {game?.trangThai != "Chờ xét duyệt" ? (
+                                <View style={{
 
-                            width: "30%",
+                                    width: "30%",
 
-                        }}>
+                                }}>
 
-                            <TouchableOpacity style={{
-                                height: "45%",
-                                width: "100%",
-                                backgroundColor: "#6C9EFF",
-                                justifyContent: 'center',
-                                borderRadius: 5
-                            }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri }) }}>
-                                <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
-                            </TouchableOpacity>
+                                    <TouchableOpacity style={{
+                                        height: "45%",
+                                        width: "100%",
+                                        backgroundColor: "#6C9EFF",
+                                        justifyContent: 'center',
+                                        borderRadius: 5
+                                    }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri }) }}>
+                                        <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
+                                    </TouchableOpacity>
 
-                            <TouchableOpacity style={{
-                                height: "45%",
-                                width: "100%",
-                                backgroundColor: "#FF6C6C",
-                                marginTop: "5%",
-                                justifyContent: 'center',
-                                borderRadius: 5
-                            }} onPress={() => { deleteGame() }}>
-                                <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
-                            </TouchableOpacity>
+                                    <TouchableOpacity style={{
+                                        height: "45%",
+                                        width: "100%",
+                                        backgroundColor: "#FF6C6C",
+                                        marginTop: "5%",
+                                        justifyContent: 'center',
+                                        borderRadius: 5
+                                    }} onPress={() => { deleteGame() }}>
+                                        <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            ) : (<View>
+
+                            </View>)}
                         </View>
                     ) : (
                         <View style={{
@@ -188,25 +201,25 @@ const InfoGameNCC = ({ navigation }) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <View style={[styles.itemInfo, { width: 80 }]}>
+                    <View style={[styles.itemInfo, { width: "30%" }]}>
                         <Text>Giá cho thuê</Text>
                         <Text>{game?.gia}$</Text>
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Tuổi</Text>
-                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderLeftWidth: 1, borderColor: "#bbb" }}>{game?.doTuoi}</Text>
+                        <Text style={{ width: "100%", height: "50%", textAlign: 'center', borderRightWidth: 1, borderLeftWidth: 1, borderColor: "#bbb" }}>{game?.doTuoi}</Text>
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Thể loại</Text>
-                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderColor: "#bbb" }}>{game?.theLoai}</Text>
+                        <Text style={{ width: "100%", height: "50%", textAlign: 'center', borderRightWidth: 1, borderColor: "#bbb" }}>{game?.theLoai}</Text>
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Kích cỡ</Text>
                         <View style={{
                             flexDirection: "row"
                         }}>
-                            <Text numberOfLines={1} style={{ paddingLeft: 30 }}>{game?.kichCoFile}</Text>
-                            <Text style={{ paddingRight: 20 }}>Mb</Text>
+                            <Text numberOfLines={1} style={{ paddingLeft: "30%" }}>{game?.kichCoFile}</Text>
+                            <Text style={{ paddingRight: "25%" }}>Mb</Text>
                         </View>
 
                     </View>
@@ -214,7 +227,9 @@ const InfoGameNCC = ({ navigation }) => {
 
             </View>
             <View style={styles.end}>
-                <Text>
+                <Text style={{
+                    paddingLeft: "5%"
+                }}>
                     {game?.gioiThieuTroChoi}
                 </Text>
             </View>
@@ -229,54 +244,32 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
 
     },
-    head: {
-
-        width: "80%",
-        height: 40,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        paddingTop: 10
-    },
-    search: {
-        width: 200,
-        height: 35,
-        backgroundColor: "#bbb",
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        borderRadius: 20,
-        marginLeft: "5%"
-
-    },
-    user: {
-        flexDirection: 'row',
-        marginLeft: "20%"
-    },
     body: {
         backgroundColor: "white",
         width: "100%",
         height: "40%",
-        marginTop: 20,
+        marginTop: "1%",
 
     },
     describeGame: {
 
-        height: 70,
+        height: "30%",
         width: "85%",
         alignSelf: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10
+        marginTop: "2%"
     },
     itemInfo: {
 
-        width: 70,
-        height: 40,
+        width: "22%",
+        height: "40%",
         alignItems: 'center'
 
     },
     end: {
-        width: "100%",
-        height: 50,
+        width: "90%",
+        height: "10%",
         justifyContent: 'center',
         alignItems: 'center'
     }
