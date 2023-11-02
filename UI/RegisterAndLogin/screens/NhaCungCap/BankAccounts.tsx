@@ -15,12 +15,12 @@ const BankAccounts = ({ navigation }) => {
     const [bank, setBank] = useState<BankAccount>({
         account: "",
         accountNumber: "",
-        nameBank:""
+        nameBank: ""
     })
 
     const [account, setAccount] = useState<string>("")
     const [accountNumber, setAccountNumber] = useState<string>("")
-    const [nameBank, setNameBank] = useState<string>("")
+    const [nameBanks, setNameBank] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
     const [userVal, setUserVal] = useState(null);
 
@@ -32,29 +32,27 @@ const BankAccounts = ({ navigation }) => {
 
     const selectGender = (Name: string) => {
         setSelectedGender(Name);
-        setNameBank({
-            ...bank,
-            nameBank: Name
-        });
+        setNameBank(Name);
         toggleModal();
     };
     const bankImages = {
+        'Bank': require("../../assets/ImageBank/Bank.jpg"),
         'Agribank': require("../../assets/ImageBank/Agribank.png"),
-        'ACB Bank': require("../../assets/ImageBank/ACB Bank.png"),
+        'ACBBank': require("../../assets/ImageBank/ACBBank.png"),
         'BIDV': require("../../assets/ImageBank/BIDV.png"),
         'Co-opbank': require("../../assets/ImageBank/Co-opbank.png"),
         'Eximbank': require("../../assets/ImageBank/Eximbank.png"),
         'LienVietPostBank': require("../../assets/ImageBank/LienVietPostBank.png"),
         'MBBank': require("../../assets/ImageBank/MBBank.png"),
-        'NCB bank': require("../../assets/ImageBank/NCB bank.png"),
+        'NCBbank': require("../../assets/ImageBank/NCBbank.png"),
         'PVComBank': require("../../assets/ImageBank/PVComBank.png"),
         'SacomBank': require("../../assets/ImageBank/SacomBank.png"),
-        'SCB Bank': require("../../assets/ImageBank/SCB Bank.png"),
+        'SCBBank': require("../../assets/ImageBank/SCBBank.png"),
         'SeABank': require("../../assets/ImageBank/SeABank.png"),
         'SHBBank': require("../../assets/ImageBank/SHBBank.png"),
         'TechcomBank': require("../../assets/ImageBank/TechcomBank.png"),
         'TPBank': require("../../assets/ImageBank/TPBank.png"),
-        'VIB Bank': require("../../assets/ImageBank/VIB Bank.png"),
+        'VIBBank': require("../../assets/ImageBank/VIBBank.png"),
         'VietcomBank': require("../../assets/ImageBank/VietcomBank.png"),
         'VietinBank': require("../../assets/ImageBank/VietinBank.png"),
         'VPBank': require("../../assets/ImageBank/VPBank.png"),
@@ -69,26 +67,49 @@ const BankAccounts = ({ navigation }) => {
 
         if (!isLoading) {
             setIsLoading(true)
-            try {
+            if (check == true ) {
+                try {
 
-                const bankResponse = await CreateBankAccount({
-                    account,
-                    accountNumber,
-                    nameBank
-                })
-                const message = bankResponse.data
-                console.log(bankResponse.data.note);
-                
-
-                
-                navigation.navigate("ManagerGameNCC")
-                //Chuyển hướng sang màn home
-
-            } catch (err) {
-                alert(err.response.data)
-                setUserVal(err.response.data.errors)
-
+                    const bankResponse = await UpdateBankAccount({
+                        account :user,
+                        accountNumber,
+                        nameBank:nameBanks
+                    })
+                    const message = bankResponse.data
+                    alert("Update thành công");
+                    
+                    navigation.navigate("ManagerGameNCC")
+                    //Chuyển hướng sang màn home
+    
+                } catch (err) {
+                    // alert(err.response.data)
+                    // setUserVal(err.response.data.errors)
+                    // console.log(err.response.data)
+                    console.log(account+"/"+accountNumber+"/"+nameBanks)
+                }
             }
+            else{
+                try {
+
+                    const bankResponse = await CreateBankAccount({
+                        account :user,
+                        accountNumber,
+                        nameBank:nameBanks
+                    })
+                    const message = bankResponse.data
+                    alert("Tạo hành công");
+                    
+                    navigation.navigate("ManagerGameNCC")
+                    //Chuyển hướng sang màn home
+    
+                } catch (err) {
+                    // alert(err.response.data)
+                    // setUserVal(err.response.data.errors)
+                    // console.log(err.response.data)
+                    console.log(account+"/"+accountNumber+"/"+nameBanks)
+                }
+            }
+            
             setIsLoading(false)
 
         }
@@ -96,15 +117,27 @@ const BankAccounts = ({ navigation }) => {
     }
     const user = navigation.getParam("user")
     const loadTasks = async () => {
+        setBank({
+            ...bank,
+            account: user
+        }),
+        setAccount(user)
         try {
 
             const { data } = await GetAccountByUser(user)
-            setBank(data[0])
+            if (data.length > 0) {
+                // Tài khoản ngân hàng đã tồn tại, bạn có thể hiển thị thông tin và chọn cập nhật hoặc không.
+                setBank(data[0]);
+                setCheck(true);
+            } else {
+                // Tài khoản ngân hàng chưa tồn tại, bạn có thể hiển thị giao diện để tạo tài khoản ngân hàng.
+                setCheck(false);
+            }
            
 
         } catch (err) {
             const errorMessage = err.response
-            alert(errorMessage)
+          
         }
 
     }
@@ -119,14 +152,7 @@ const BankAccounts = ({ navigation }) => {
                     <View style={styles.content}>
 
                         <Text style={styles.label}>Account</Text>
-                        <TextInput value={bank.account} onChangeText={(value) => {
-                            setBank({
-                                ...bank,
-                                account: value
-                            }),
-
-                                setAccount(value)
-                        }} style={styles.input} placeholder={banks?.account} />
+                        <TextInput value={bank.account} style={styles.input} placeholder={user} />
                         {userVal != null && !bank.account ? (
                             <View>
                                 <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
@@ -149,7 +175,7 @@ const BankAccounts = ({ navigation }) => {
                         <Text style={styles.label}>Name Bank</Text>
                         <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
                             <Text style={styles.selectedGenderText}>
-                                {selectedGender ? selectedGender : 'Agribank'}
+                                {selectedGender ? selectedGender : 'Bank'}
                             </Text>
                         </TouchableOpacity>
 
@@ -165,8 +191,8 @@ const BankAccounts = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => selectGender('Agribank')} style={styles.modalItem}>
                                             <Text>Agribank</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('ACB Bank')} style={styles.modalItem}>
-                                            <Text>ACB Bank</Text>
+                                        <TouchableOpacity onPress={() => selectGender('ACBBank')} style={styles.modalItem}>
+                                            <Text>ACBBank</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => selectGender('BIDV')} style={styles.modalItem}>
                                             <Text>BIDV</Text>
@@ -183,8 +209,8 @@ const BankAccounts = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => selectGender('MBBank')} style={styles.modalItem}>
                                             <Text>MBBank</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('NCB Bank')} style={styles.modalItem}>
-                                            <Text>NCB Bank</Text>
+                                        <TouchableOpacity onPress={() => selectGender('NCBBank')} style={styles.modalItem}>
+                                            <Text>NCBBank</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => selectGender('PVComBank')} style={styles.modalItem}>
                                             <Text>PVComBank</Text>
@@ -192,8 +218,8 @@ const BankAccounts = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => selectGender('SacomBank')} style={styles.modalItem}>
                                             <Text>SacomBank</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('SCB Bank')} style={styles.modalItem}>
-                                            <Text>SCB Bank</Text>
+                                        <TouchableOpacity onPress={() => selectGender('SCBBank')} style={styles.modalItem}>
+                                            <Text>SCBBank</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => selectGender('SeABank')} style={styles.modalItem}>
                                             <Text>SeABank</Text>
@@ -207,8 +233,8 @@ const BankAccounts = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => selectGender('TPBank')} style={styles.modalItem}>
                                             <Text>TPBank</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('VIB Bank')} style={styles.modalItem}>
-                                            <Text>VIB Bank</Text>
+                                        <TouchableOpacity onPress={() => selectGender('VIBBank')} style={styles.modalItem}>
+                                            <Text>VIBBank</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => selectGender('VietcomBank')} style={styles.modalItem}>
                                             <Text>VietcomBank</Text>
@@ -229,19 +255,29 @@ const BankAccounts = ({ navigation }) => {
 
                     </View>
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={styles.button} onPress={UpBank}>
-                            {isLoading ? (
-                                <ActivityIndicator color="#fff" />
-                            ) : (
-                                <Text style={styles.textbtn}>Update</Text>
-                            )}
-                        </TouchableOpacity>
+                        {check ?(
+                            <TouchableOpacity style={styles.button} onPress={UpBank}>
+                                {isLoading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.textbtn}>Update</Text>
+                                )}
+                            </TouchableOpacity>
+                        ):(
+                            <TouchableOpacity style={styles.button} onPress={UpBank}>
+                                {isLoading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.textbtn}>Create</Text>
+                                )}
+                            </TouchableOpacity>
+                        )}
                         
-
+                        
                     </View>
                     <View>
                         <Image
-                            source={selectedGender ? bankImages[selectedGender] : require("../../assets/ImageBank/Agribank.png")}
+                            source={selectedGender ? bankImages[selectedGender] : require("../../assets/ImageBank/Bank.jpg")}
                             style={styles.image}
                             />
                     </View>
