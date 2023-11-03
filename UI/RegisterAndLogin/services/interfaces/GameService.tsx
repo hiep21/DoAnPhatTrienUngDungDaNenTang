@@ -20,7 +20,7 @@ export interface InfoGame {
     nhaCungCap: string,
     gioiThieuTroChoi: string,
 }
-export interface Notification {
+export interface NotificationInterface {
     nameGame: string,
     result: Boolean,
     reason: string

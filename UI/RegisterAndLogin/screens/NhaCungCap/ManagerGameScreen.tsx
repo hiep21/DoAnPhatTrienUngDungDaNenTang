@@ -219,7 +219,7 @@ const ManagerGameNCC = ({ navigation }) => {
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
                         if (userNCC?.note == "NCC") {
-                            navigation.navigate("Notification", { user,imageUri })
+                            navigation.navigate("List_NotificationScreen", { user, imageUri, listImageUri })
                         }
                     }}>
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />

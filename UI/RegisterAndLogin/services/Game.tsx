@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateGame, Notification } from "./interfaces/GameService";
+import { CreateGame, NotificationInterface } from "./interfaces/GameService";
 
 export const BASE_URL = 'http://10.147.17.52:5221/InfoFile/'
 
@@ -175,7 +175,7 @@ export const deleteFolder = (tenTroChoi: string) => {
     })
 }
 // thông báo chấp nhận hoặc từ chối trò chơi
-export const CreateNotification = ({ nameGame, result, reason }: Notification) => {
+export const CreateNotification = ({ nameGame, result, reason }: NotificationInterface) => {
     return axios({
         method: "POST",
         url: BASE_URL_Notification.concat('createNotification'),
