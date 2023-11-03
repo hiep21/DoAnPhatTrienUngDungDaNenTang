@@ -27,8 +27,8 @@ import ListAccountScreen from "./screens/Admin/ListAccount";
 import InfoAccount from "./screens/Admin/InfoAccount";
 import CreateAccountNCC from "./screens/Admin/CreateAccountNCC";
 import ChartComponent from './screens/Admin/ChartComponent';
-import Notification from './screens/Notification';
-import List_Notification from './screens/List_Notification';
+import NotificationScreen from './screens/Notification';
+import List_NotificationScreen from './screens/List_Notification';
 import BankAccounts from './screens/NhaCungCap/BankAccounts';
 
 
@@ -173,14 +173,14 @@ const StackNAvigator = createStackNavigator({
       title: 'Doanh thu',
     },
   },
-  Notification: {
-    screen: Notification,
+  NotificationScreen: {
+    screen: NotificationScreen,
     navigationOptions: {
       title: 'Thông báo',
     },
   },
-  List_Notification: {
-    screen: List_Notification,
+  List_NotificationScreen: {
+    screen: List_NotificationScreen,
     navigationOptions: {
       title: 'Thông báo',
     },

@@ -3,17 +3,31 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../services/Game';
-import { InfoGame } from '../services/interfaces/GameService';
+import { InfoGame, NotificationInterface } from '../services/interfaces/GameService';
 import { BASE_URL_Image, getByUser, getImageIcon } from '../services/todo';
 import { ImageUri, RegisterData } from '../services/interfaces/User.interface';
 import BottomSheet from './Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
-const Notification = ({ navigation }) => {
+const NotificationScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
     const imageUri = navigation.getParam("imageUri")
-    const loadScreen = async () => {
 
+    const [account, setAccount] = useState<RegisterData>();
+    const [notification, setNotification] = useState<NotificationInterface>();
+    const loadScreen = async () => {
+        try {
+            const response = await getByUser(user)
+            setAccount(response.data[0])
+            if (response.data[0].note == "Admin") {
+
+            }
+            else {
+
+            }
+        } catch (error) {
+            console.log(error.response.data)
+        }
     }
     let checklist: ImageUri[] = [];
 
@@ -40,47 +54,24 @@ const Notification = ({ navigation }) => {
     useEffect(() => {
 
         loadScreen()
-        return () => {
-            loadTasks()
-        };
-    }, [user])
+    }, [user, imageUri])
 
 
     return (
         <View style={styles.container}>
             <View style={styles.head}>
-                <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi'
-                    />
-                    <TouchableOpacity style={{ marginTop: 7 }}>
-                        <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../assets/Icon/paper-1349664_1280.png")} />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
-                        <Image style={{ width: 20, height: 20, }} source={require("../assets/Icon/bell-jar-1096279_1280.png")} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                        <Image style={{ width: 30, height: 30, }} source={{ uri: imageUri }} />
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={{}}>
+                    <Image style={{ width: 40, height: 40, }} source={{ uri: imageUri }} />
+                </TouchableOpacity>
             </View>
             <View style={styles.body}>
-                <Text style={{
-                    textAlign: 'left',
-                    paddingLeft: 30,
-                    borderBottomWidth: 1.5,
-                    fontSize: 17,
-                    fontWeight: '600',
-
-                }}></Text>
-
+                {account?.note != "Admin" ? (
+                    <View></View>
+                ) : (
+                    <View></View>
+                )}
             </View>
-
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
-        </View>
+        </View >
 
     );
 };
@@ -88,43 +79,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white"
-
     },
     head: {
-
         width: "80%",
-        height: 40,
-        justifyContent: 'space-between',
+        height: "10%",
+        justifyContent: 'center',
         flexDirection: 'row',
-        paddingTop: 10
+        paddingTop: 10,
+        alignSelf: 'center'
     },
-    search: {
-        width: 200,
-        height: 35,
-        backgroundColor: "#bbb",
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        borderRadius: 20,
-        marginLeft: "5%"
 
-    },
-    user: {
-        flexDirection: 'row',
-        marginLeft: "20%"
-    },
     body: {
         backgroundColor: "white",
         width: "100%",
         height: "88%",
-        marginTop: 20,
-
     },
-    end: {
-        width: "100%",
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
+
 });
 
-export default Notification;
+export default NotificationScreen;
