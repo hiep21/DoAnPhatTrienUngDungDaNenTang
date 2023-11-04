@@ -22,6 +22,7 @@ export interface InfoGame {
 }
 export interface NotificationInterface {
     nameGame: string,
+    forAccount: string,
     result: Boolean,
     reason: string
 }

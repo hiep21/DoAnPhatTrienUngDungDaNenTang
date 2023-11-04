@@ -175,23 +175,24 @@ export const deleteFolder = (tenTroChoi: string) => {
     })
 }
 // thông báo chấp nhận hoặc từ chối trò chơi
-export const CreateNotification = ({ nameGame, result, reason }: NotificationInterface) => {
+export const CreateNotification = ({ nameGame, forAccount, result, reason }: NotificationInterface) => {
     return axios({
         method: "POST",
         url: BASE_URL_Notification.concat('createNotification'),
         data: {
             nameGame,
+            forAccount,
             result,
             reason
         }
     })
 }
 
-export const GetNotification = (nameGame: string) => {
+export const GetNotification = (forAccount: string) => {
 
     return axios({
         method: "GET",
-        url: BASE_URL_Notification.concat("getNotification/").concat(nameGame)
+        url: BASE_URL_Notification.concat("getNotification/").concat(forAccount)
 
     })
 

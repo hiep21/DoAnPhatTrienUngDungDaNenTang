@@ -2,83 +2,130 @@ import React, { useEffect, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-import { GetNotification, getInfoFileNCC } from '../services/Game';
-import { InfoGame, Notification, NotificationInterface } from '../services/interfaces/GameService';
+import { BASE_URL_Image_Icon, GetNotification, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../services/Game';
+import { InfoGame, NotificationInterface } from '../services/interfaces/GameService';
 import { ImageUri, RegisterData } from '../services/interfaces/User.interface';
 import BottomSheet from './Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
+import { getByUser } from '../services/todo';
 
 const List_Notification = ({ navigation }) => {
     const user = navigation.getParam("user")
-    const listImageUri = navigation.getParam("listImageUri")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [userNCC, setUserNCC] = useState<RegisterData>()
     const [nameGame, setNameGame] = useState<string[]>([])
+    const [listNotification, setListNotification] = useState<NotificationInterface[]>([])
     let ListGame: string[] = []
-    let listNotification: NotificationInterface
+    let lsNotification: NotificationInterface[] = []
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            const response = await getInfoFileNCC(user)
+            const getAccount = await getByUser(user)
+            switch (getAccount.data[0].note) {
+                case "Admin":
+                    const responseAdmin = await getInfoFileAdmin()
+                    // console.log(responseAdmin.data[0]);
+                    //lấy thông báo theo quyền
+                    const responseNotificationAdmin = await GetNotification(getAccount.data[0].note)
+                    lsNotification = responseNotificationAdmin.data
+                    setListNotification(lsNotification)
+                    // console.log(responseNotificationAdmin.data)
+                    //lấy tên game theo thông báo
+                    for (let index = 0; index < responseAdmin.data.length; index++) {
+                        if (lsNotification.find(f => f.nameGame == responseAdmin.data[index].tenTroChoi)) {
+                            ListGame.push(responseAdmin.data[index].tenTroChoi)
+                        }
+                    }
+                    setNameGame(ListGame)
+                    //lấy icon game theo tên game
+                    for (let i = 0; i < lsNotification.length; i++) {
 
-            for (let index = 0; index < response.data.length; index++) {
-                const response2 = await GetNotification(response.data[index].tenTroChoi)
-                listNotification = response2.data[0]
-                if (listNotification != undefined) {
-                    ListGame.push(response.data[index].tenTroChoi)
-                }
+                        const response = await getImageIconGame(ListGame[i])
+                        const ImageName = response.data[0].imageName
+                        await fetchImage(ListGame[i], ImageName)
+                    }
+                    // console.log(checklist)
+                    setListImageUri(checklist)
+                    break;
+                case "NCC":
+                    const responseNCC = await getInfoFileNCC(user)
+                    // console.log(responseNCC.data[0].note);
+                    //lấy thông báo theo quyền
+                    const responseNotificationNcc = await GetNotification(getAccount.data[0].note)
+                    lsNotification = responseNotificationNcc.data
+                    setListNotification(lsNotification)
+                    // console.log(responseNotificationNcc.data)
+                    //lấy tên game theo thông báo
+                    for (let index = 0; index < responseNCC.data.length; index++) {
+                        if (lsNotification.find(f => f.nameGame == responseNCC.data[index].tenTroChoi)) {
+                            ListGame.push(responseNCC.data[index].tenTroChoi)
+                        }
+                    }
+                    setNameGame(ListGame)
+                    //lấy icon game theo tên game
+                    for (let i = 0; i < lsNotification.length; i++) {
+
+                        const response = await getImageIconGame(ListGame[i])
+                        const ImageName = response.data[0].imageName
+                        await fetchImage(ListGame[i], ImageName)
+                    }
+                    // console.log(checklist)
+                    setListImageUri(checklist)
+                    break;
+                default:
+                    break;
+
             }
-
-            setNameGame(ListGame)
-
 
         } catch (err) {
             const errorMessage = err.response
-            console.log("Lỗi: " + errorMessage)
+            setErr(errorMessage.data)
         }
         setRefreshing(false)
     }
+    const [err, setErr] = useState<string[]>([])
+    let ListImageGame: InfoGame[] = []
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+    let checklist: ImageUri[] = [];
+    const fetchImage = async (username: string, imageName: string) => {
 
+        let check: ImageUri = {
+            username: "",
+            imageUri: ""
+        };
+
+
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
+            check.username = username
+            check.imageUri = response.uri
+            checklist.push(check)
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+        }
+    };
 
     useEffect(() => {
 
         loadTasks()
-    }, [user, listImageUri])
+    }, [user])
     const goToDetail = (item: InfoGame, imageUri: string) => {
         navigation.navigate("NotificationScreen", {})
     }
-    const renderTask = ({ item }: { item: string }) => {
+    const renderTask = ({ item }: { item: NotificationInterface }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.username == item)?.imageUri) }} >
-                {item.nhaCungCap == userNCC?.user ? (
-                    <View style={{
-                        flexDirection: 'row',
-                        marginLeft: "5%",
-                        marginTop: 20
-                    }}>
-                        {listImageUri.length != 0 ? (
-                            // <Text>{listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri}</Text>
-                            <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item)?.imageUri }} />
-                        ) : (
-                            <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../assets/favicon.png")} />
-                        )}
-                        <View style={{
-                            marginLeft: 15,
-                            width: "70%"
-                        }}>
-                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.replace(".apk", "")}</Text>
-                            <Text style={{
-                                fontSize: 12,
-                                paddingTop: 10
-                            }}>Trạng thái
-                                { }
-                            </Text>
-                        </View>
-                    </View>
-                ) : (
-                    <View></View>
-                )}
-
+            <TouchableOpacity onPress={() => { }} style={{
+                flexDirection: "row",
+                padding: 20,
+                justifyContent: "flex-start"
+            }}>
+                <Image style={{ marginLeft: 10, width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.nameGame)?.imageUri }} />
+                <View style={{ marginLeft: 20, marginTop: 10 }}>
+                    <Text>Thông báo từ: {item.nameGame}</Text>
+                </View>
             </TouchableOpacity >
 
         )
@@ -95,21 +142,44 @@ const List_Notification = ({ navigation }) => {
                     fontWeight: '600',
 
                 }}>Danh sách thông báo</Text>
+                {err && <Text style={{
+                    color: "red",
+                    fontSize: 20,
+                    alignSelf: 'center'
+                }}>{err}</Text>}
 
-                <FlatList
-                    data={nameGame}
-                    renderItem={(list) => renderTask(list)}
-                    onRefresh={loadTasks}
-                    refreshing={refreshing}
-                    style={{
-                        marginTop: "5%",
-                        borderWidth: 1,
-                        width: "95%",
-                        alignSelf: 'center',
-                        borderRadius: 5,
-                        borderColor: "#bbb"
-                    }}
-                />
+                {userNCC?.note != "Admin" ? (
+                    <FlatList
+                        data={listNotification}
+                        renderItem={(list) => renderTask(list)}
+                        onRefresh={loadTasks}
+                        refreshing={refreshing}
+                        style={{
+                            marginTop: "5%",
+                            borderWidth: 1,
+                            width: "95%",
+                            alignSelf: 'center',
+                            borderRadius: 5,
+                            borderColor: "#bbb"
+                        }}
+                    />
+                ) : (
+
+                    <FlatList
+                        data={listNotification}
+                        renderItem={(list) => renderTask(list)}
+                        onRefresh={loadTasks}
+                        refreshing={refreshing}
+                        style={{
+                            marginTop: "5%",
+                            borderWidth: 1,
+                            width: "95%",
+                            alignSelf: 'center',
+                            borderRadius: 5,
+                            borderColor: "#bbb"
+                        }}
+                    />
+                )}
 
             </View>
         </View>

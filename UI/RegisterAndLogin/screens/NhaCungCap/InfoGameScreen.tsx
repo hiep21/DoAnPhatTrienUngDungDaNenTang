@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 
-import { UpdateGame, deleteApi, deleteFolder, getById, getByName } from '../../services/Game';
-import { InfoGame } from '../../services/interfaces/GameService';
+import { CreateNotification, UpdateGame, deleteApi, deleteFolder, getById, getByName } from '../../services/Game';
+import { InfoGame, NotificationInterface } from '../../services/interfaces/GameService';
 import { getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
 const InfoGameNCC = ({ navigation }) => {
@@ -44,11 +44,16 @@ const InfoGameNCC = ({ navigation }) => {
         }
     }
 
-
-    const deleteGame = async () => {
+    let createNotification: NotificationInterface = {
+        nameGame: "",
+        forAccount: "",
+        result: false,
+        reason: ""
+    };
+    const NotificationDeleteGame = async () => {
         Alert.alert(
             "Xác nhận",
-            "Bạn có chắc chắn muốn xóa không",
+            "Bạn có chắc chắn muốn gỡ không",
             [
                 {
                     text: "Hủy",
@@ -57,10 +62,15 @@ const InfoGameNCC = ({ navigation }) => {
                 {
                     text: "Đồng ý",
                     onPress: async () => {
+                        createNotification.nameGame = tenTroChoi
+                        createNotification.forAccount = "Admin"
+                        createNotification.result = false;
+                        createNotification.reason = "Gỡ trò chơi"
+
                         try {
-                            await deleteFolder(tenTroChoi);
+                            await CreateNotification(createNotification);
                             navigation.navigate("ManagerGameNCC", { user });
-                            alert('Xóa game thành công');
+                            alert('Gửi yêu cầu xóa game thành công');
                         } catch (error) {
                             console.log(error.response)
                         }
@@ -81,11 +91,68 @@ const InfoGameNCC = ({ navigation }) => {
             console.log(error.response.data)
         }
     }
+
+
+    const denyGame = async (Reason: string) => {
+        let notification : NotificationInterface = {
+            nameGame: game?.tenTroChoi,
+            forAccount: 'NCC',
+            result: false,
+            reason: Reason,
+        }
+        try {
+            await CreateNotification(notification)
+            alert("Gửi thông báo thành công")
+            navigation.navigate("ManagerGameNCC", { user })
+        } catch (error) {
+            alert(error.response.data)
+        }
+    };
+    const [isDeny, setIsDeny] = useState<boolean>(false)
     useEffect(() => {
         getGameById()
     }, [gameId, tenTroChoi, imageUri, user])
+    const [reason, setReason] = useState<string>("Trò chơi không đạt yêu cầu")
     return (
         <View style={styles.container}>
+            {isDeny == true &&
+                <View style={{
+                    width: "90%",
+                    height: "30%",
+                    marginLeft: "5%",
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    alignItems: "center"
+                }}>
+                    <Text>Ghi rõ lý do</Text>
+                    <TextInput numberOfLines={3}
+                        multiline
+                        value={reason}
+                        onChangeText={(value) => {
+                            setReason(value)
+                        }}
+                        style={{
+                            width: "90%",
+                            paddingHorizontal: 15,
+                            paddingVertical: 10,
+                            borderRadius: 10,
+                            borderWidth: 1,
+                            borderColor: "#bbb",
+
+                        }} />
+                    <TouchableOpacity style={{
+                        height: "20%",
+                        width: "30%",
+                        backgroundColor: "yellow",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: 5,
+                        marginTop: 10
+                    }} onPress={() => { denyGame(reason) }}>
+                        <Text>Gửi thông báo</Text>
+                    </TouchableOpacity>
+                </View>
+            }
             <View style={styles.body}>
                 <Text style={{
                     textAlign: 'left',
@@ -145,7 +212,7 @@ const InfoGameNCC = ({ navigation }) => {
                                         marginTop: "5%",
                                         justifyContent: 'center',
                                         borderRadius: 5
-                                    }} onPress={() => { deleteGame() }}>
+                                    }} onPress={() => { NotificationDeleteGame() }}>
                                         <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -180,12 +247,28 @@ const InfoGameNCC = ({ navigation }) => {
                                         marginTop: "5%",
                                         justifyContent: 'center',
                                         borderRadius: 5
-                                    }} onPress={() => { }}>
+                                    }} onPress={() => {
+                                        setIsDeny(true)
+                                    }}>
                                         <Text style={{ textAlign: 'center' }}>Từ chối</Text>
                                     </TouchableOpacity>
                                 </View>
                             ) : (
-                                <View>
+                                <View style={{
+                                    height: "100%",
+                                    marginTop: 10
+                                }}>
+                                    <TouchableOpacity style={{
+                                        height: "50%",
+                                        width: "100%",
+                                        backgroundColor: "#FF6C6C",
+                                        marginTop: "5%",
+                                        justifyContent: 'center',
+                                        borderRadius: 5,
+                                        alignSelf: 'center'
+                                    }} onPress={() => { }}>
+                                        <Text style={{ textAlign: 'center' }}>Gỡ trò chơi</Text>
+                                    </TouchableOpacity>
                                 </View>
                             )}
                         </View>

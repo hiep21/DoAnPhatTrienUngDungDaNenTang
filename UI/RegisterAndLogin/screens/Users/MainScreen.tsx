@@ -154,7 +154,7 @@ const MainScreen = ({ navigation }) => {
         } catch (error) {
             if (error.response.data == "Tài khoản " + user + " chưa mua với tải game") {
 
-                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user,imageGameUri })
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user, imageGameUri })
 
             }
             else {
@@ -229,7 +229,9 @@ const MainScreen = ({ navigation }) => {
                     <View></View>
                 )}
                 <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
+                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
+                        navigation.navigate("List_NotificationScreen", { user });
+                    }}>
 
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>

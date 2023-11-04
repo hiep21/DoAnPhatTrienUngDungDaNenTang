@@ -74,7 +74,7 @@ const ManagerGameUser = ({ navigation }) => {
             setListImageUri(checklist)
         } catch (err) {
             const errorMessage = err.response
-            alert(errorMessage)
+            alert("Lỗi: " + errorMessage.data)
         }
         setRefreshing(false)
     }

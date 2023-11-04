@@ -62,12 +62,15 @@ const MainScreenAdmin = ({ navigation }) => {
 
 
                     <View style={styles.user}>
-                        <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}>
+                        <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}
+                            onPress={() => {
+                                navigation.navigate("List_NotificationScreen", { user });
+                            }}>
 
                             <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                            {imageUri ? (
+                            {imageUri != undefined ? (
                                 <Image style={{ width: 30, height: 30, }} source={{
                                     uri: imageUri
                                 }} />
@@ -124,7 +127,7 @@ const MainScreenAdmin = ({ navigation }) => {
                 </View>
 
                 <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
-            </View>
+            </View >
         )
     }
 
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
     },
     user: {
         flexDirection: 'row',
-        width:100
+        width: 100
     },
     danhsachtrochoi: {
         fontSize: 15,
