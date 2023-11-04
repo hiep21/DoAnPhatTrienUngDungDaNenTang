@@ -160,10 +160,12 @@ const BankAccounts = ({ navigation }) => {
                         ) : null}
                         <Text style={styles.label}>AccountNumber</Text>
                         <TextInput value={bank.accountNumber} onChangeText={(value) => {
-                            setBank({
-                                ...bank,
-                                accountNumber: value
-                            }),
+                            if (/^\d+$/.test(value) || value === "") {
+                                setBank({
+                                  ...bank,
+                                  accountNumber: value
+                                });
+                            }
 
                                 setAccountNumber(value)
                         }} style={styles.input}  />
