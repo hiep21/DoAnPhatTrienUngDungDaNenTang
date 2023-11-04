@@ -124,7 +124,7 @@ const InfoGameNCC = ({ navigation }) => {
                             {game?.trangThai != "Chờ xét duyệt" ? (
                                 <View style={{
 
-                                    width: "30%",
+                                    width: "120%",
 
                                 }}>
 
@@ -185,7 +185,8 @@ const InfoGameNCC = ({ navigation }) => {
                                     </TouchableOpacity>
                                 </View>
                             ) : (
-                                <View></View>
+                                <View>
+                                </View>
                             )}
                         </View>
                     )}
