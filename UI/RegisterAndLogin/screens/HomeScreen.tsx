@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Background from './Users/Background';
+import { ImageUri } from '../services/interfaces/User.interface';
 
 const HomeScreen = ({ navigation }) => {
-
+    const [lsUri, setLsUri] = useState<ImageUri[]>([])
+    const loadToken =()=>{
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+    useEffect(() => {
+        loadToken()
+        
+    }, [])
     return (
         <Background>
             <View style={styles.container}>

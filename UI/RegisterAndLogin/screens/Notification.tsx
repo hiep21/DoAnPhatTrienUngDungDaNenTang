@@ -11,66 +11,60 @@ import * as FileSystem from 'expo-file-system';
 
 const NotificationScreen = ({ navigation }) => {
     const user = navigation.getParam("user")
+    const notification = navigation.getParam("notification")
     const imageUri = navigation.getParam("imageUri")
 
-    const [account, setAccount] = useState<RegisterData>();
-    const [notification, setNotification] = useState<NotificationInterface>();
     const loadScreen = async () => {
-        try {
-            const response = await getByUser(user)
-            setAccount(response.data[0])
-            if (response.data[0].note == "Admin") {
 
-            }
-            else {
-
-            }
-        } catch (error) {
-            console.log(error.response.data)
-        }
     }
-    let checklist: ImageUri[] = [];
 
-    const fetchImage = async (username: string, imageName: string) => {
-
-        let check: ImageUri = {
-            username: "",
-            imageUri: ""
-        };
-
-
-        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
-
-        try {
-            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
-            check.username = username
-            check.imageUri = response.uri
-            checklist.push(check)
-
-        } catch (error) {
-            console.error('Error fetching image:', error.response.data);
-        }
-    };
     useEffect(() => {
-
         loadScreen()
-    }, [user, imageUri])
+    }, [user, notification, imageUri])
 
 
     return (
         <View style={styles.container}>
-            <View style={styles.head}>
-                <TouchableOpacity style={{}}>
-                    <Image style={{ width: 40, height: 40, }} source={{ uri: imageUri }} />
-                </TouchableOpacity>
-            </View>
+
+            {imageUri &&
+                <View style={styles.head}>
+
+                    <TouchableOpacity style={{}}>
+                        <Image style={{ width: 40, height: 40, }} source={{ uri: imageUri }} />
+                    </TouchableOpacity>
+                    <View style={{
+                        justifyContent: "center",
+                        paddingLeft: 10
+                    }}>
+                        <Text>{notification.nameGame.replace(".apk", "")}</Text>
+                    </View>
+                </View>
+            }
             <View style={styles.body}>
-                {account?.note != "Admin" ? (
-                    <View></View>
+
+                {notification.forAccount == "NCC" ? (
+                    <View>
+                        {notification.result == true ?
+                            (
+                                <View>
+                                    <Text style={{ alignSelf: 'center' }}>Trò chơi của bạn đã được chấp nhận bạn có thể cập nhật trò chơi của mình</Text>
+                                </View>
+                            ) : (
+                                <View>
+                                    <Text style={{ alignSelf: 'center', paddingBottom: 10 }}>Lý do từ chối</Text>
+                                    <Text>{notification.reason}</Text>
+                                </View>
+                            )
+                        }
+                    </View>
                 ) : (
-                    <View></View>
+                    <View >
+
+                        <Text>{notification.reason}</Text>
+                    </View>
                 )}
-            </View>
+
+            </View >
         </View >
 
     );
@@ -90,9 +84,12 @@ const styles = StyleSheet.create({
     },
 
     body: {
-        backgroundColor: "white",
-        width: "100%",
-        height: "88%",
+        borderRadius: 10,
+        borderWidth: 1,
+        marginHorizontal: "5%",
+        marginTop: 10,
+        alignItems: "center",
+        paddingVertical: 20
     },
 
 });

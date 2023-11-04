@@ -65,7 +65,7 @@ const InfoGameNCC = ({ navigation }) => {
                         createNotification.nameGame = tenTroChoi
                         createNotification.forAccount = "Admin"
                         createNotification.result = false;
-                        createNotification.reason = "Gỡ trò chơi"
+                        createNotification.reason = "Nhà cung cấp " + user + "muốn gỡ trò chơi"
 
                         try {
                             await CreateNotification(createNotification);
@@ -94,7 +94,7 @@ const InfoGameNCC = ({ navigation }) => {
 
 
     const denyGame = async (Reason: string) => {
-        let notification : NotificationInterface = {
+        let notification: NotificationInterface = {
             nameGame: game?.tenTroChoi,
             forAccount: 'NCC',
             result: false,
@@ -201,7 +201,7 @@ const InfoGameNCC = ({ navigation }) => {
                                         backgroundColor: "#6C9EFF",
                                         justifyContent: 'center',
                                         borderRadius: 5
-                                    }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri }) }}>
+                                    }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri,user }) }}>
                                         <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
                                     </TouchableOpacity>
 

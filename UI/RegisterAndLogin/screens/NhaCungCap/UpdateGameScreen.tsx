@@ -1,32 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, FlatList } from 'react-native';
 import { UpdateRegisterApi, getByUser, getImageIcon, postImageAva } from '../../services/todo';
-import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
+import { ImageUri, RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
 import Background from '../Users/Background';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { deleteImage, deleteImageIcon, getById, getImageIconGame, postImage, postImageIcon } from '../../services/Game';
+import { BASE_URL_Image, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postImage, postImageIcon } from '../../services/Game';
+import * as FileSystem from 'expo-file-system';
 
 const UpdateGameNCC = ({ navigation }) => {
-
+    const user = navigation.getParam("user")
     const gameId = navigation.getParam("gameId")
     const textChange = navigation.getParam("textChange")
     const imageUri = navigation.getParam("imageUri")
+    const tenGame = navigation.getParam("tenGame")
     const [game, setGame] = useState<InfoGame>();
+    const [refreshing, setRefreshing] = useState<boolean>(false)
 
     const [imageGameName, setImageGameName] = useState<string>();
     const [isLoading, setIsLoading] = useState(false);
 
 
+    const loadImage = async () => {
+        setRefreshing(true)
+        console.log(tenGame)
+        try {
+            const response = await getImageGame(tenGame)
+            for (let index = 0; index < response.data.length; index++) {
+                const imageName = response.data[index].imageName
+                await fetchImage(tenGame, imageName)
+
+            }
+            console.log(checklist[0])
+            setListImageUri(checklist)
+        } catch (err) {
+            const errorMessage = err.response
+            console.log(errorMessage)
+        }
+        setRefreshing(false)
+    }
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+    let checklist: ImageUri[] = [];
+    const fetchImage = async (username: string, imageName: string) => {
+
+        let check: ImageUri = {
+            username: "",
+            imageUri: ""
+        };
+
+
+        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
+            check.username = username
+            check.imageUri = response.uri
+            checklist.push(check)
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+        }
+    };
 
     const loadTasks = async () => {
-
-
         try {
             const response1 = await getById(gameId)
             setGame(response1.data[0])
-
             const response2 = await getImageIconGame(response1.data[0].tenTroChoi)
             setImageGameName(response2.data[0].imageName)
         } catch (err) {
@@ -66,8 +106,8 @@ const UpdateGameNCC = ({ navigation }) => {
         try {
 
             const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi.replace(".apk", ""))
-
             alert('Thêm ảnh thành công: ' + response.data.oldFileName);
+            navigation.navigate("ManagerGameNCC", user)
         } catch (error) {
             alert(error.response.data);
         }
@@ -78,11 +118,23 @@ const UpdateGameNCC = ({ navigation }) => {
             console.error('Chưa chọn hình ảnh.');
             return;
         }
-
         try {
             const response = await postImage(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi.replace(".apk", ""))
 
-            alert('Thêm ảnh thành công: ' + response.data.oldFileName);
+            Alert.alert("Thành công", "Bạn có muốn thêm ảnh không?",
+                [
+                    {
+                        text: "Hủy",
+                        onPress: async () => {
+                            navigation.navigate("ManagerGameNCC", user)
+                        },
+                    },
+                    {
+                        text: "Đồng ý",
+                        style: "cancel",
+                    },
+                ]
+            )
         } catch (error) {
             alert(error.response.data);
         }
@@ -121,10 +173,29 @@ const UpdateGameNCC = ({ navigation }) => {
         image: ""
     }
     );
-    useEffect(() => {
+    const renderTask = async ({ item }: { item: ImageUri }) => {
+        const size = await new Promise((resolve, reject) => {
+            Image.getSize(item.imageUri, (width, height) => {
+                resolve({ width, height });
+            }, (error) => {
+                reject("lỗi:" + error);
+            });
+        });
+        return (
+            <TouchableOpacity onPress={() => { }} >
+                <Image style={{
+                    width: size.width,
+                    height: size.height
+                }} source={{ uri: item.imageUri }} />
+            </TouchableOpacity >
 
+        )
+    }
+    useEffect(() => {
         loadTasks();
-    }, [textChange, gameId, imageUri])
+        loadImage();
+
+    }, [textChange, gameId, imageUri, user])
     const renderInputField = (key: string) => {
         switch (key) {
             case '0':
@@ -202,6 +273,33 @@ const UpdateGameNCC = ({ navigation }) => {
                     </View>
                 );
             case '2':
+                return (
+                    <View style={{
+                        width: 300,
+                        height: 400,
+                        backgroundColor: "#fff",
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        borderWidth: 1
+                    }}>
+                        <FlatList
+                            data={listImageUri}
+                            renderItem={(list) => renderTask(list)}
+                            onRefresh={loadTasks}
+                            refreshing={refreshing}
+                            style={{
+                                marginTop: "5%",
+                                borderWidth: 1,
+                                width: "95%",
+                                alignSelf: 'center',
+                                borderRadius: 5,
+                                borderColor: "#bbb"
+                            }}
+                        />
+                    </View>
+                );
+            case '3':
                 return (
                     <View>
                         <Text style={styles.textInput}>Sửa địa chỉ của bạn</Text>

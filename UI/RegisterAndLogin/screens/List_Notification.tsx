@@ -12,7 +12,6 @@ import { getByUser } from '../services/todo';
 const List_Notification = ({ navigation }) => {
     const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const [userNCC, setUserNCC] = useState<RegisterData>()
     const [nameGame, setNameGame] = useState<string[]>([])
     const [listNotification, setListNotification] = useState<NotificationInterface[]>([])
     let ListGame: string[] = []
@@ -84,7 +83,6 @@ const List_Notification = ({ navigation }) => {
         setRefreshing(false)
     }
     const [err, setErr] = useState<string[]>([])
-    let ListImageGame: InfoGame[] = []
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
     let checklist: ImageUri[] = [];
     const fetchImage = async (username: string, imageName: string) => {
@@ -112,12 +110,12 @@ const List_Notification = ({ navigation }) => {
 
         loadTasks()
     }, [user])
-    const goToDetail = (item: InfoGame, imageUri: string) => {
-        navigation.navigate("NotificationScreen", {})
+    const goToDetail = (notification: NotificationInterface, imageUri: string) => {
+        navigation.navigate("NotificationScreen", { user, notification, imageUri })
     }
     const renderTask = ({ item }: { item: NotificationInterface }) => {
         return (
-            <TouchableOpacity onPress={() => { }} style={{
+            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.username == item.nameGame)?.imageUri) }} style={{
                 flexDirection: "row",
                 padding: 20,
                 justifyContent: "flex-start"
@@ -148,38 +146,21 @@ const List_Notification = ({ navigation }) => {
                     alignSelf: 'center'
                 }}>{err}</Text>}
 
-                {userNCC?.note != "Admin" ? (
-                    <FlatList
-                        data={listNotification}
-                        renderItem={(list) => renderTask(list)}
-                        onRefresh={loadTasks}
-                        refreshing={refreshing}
-                        style={{
-                            marginTop: "5%",
-                            borderWidth: 1,
-                            width: "95%",
-                            alignSelf: 'center',
-                            borderRadius: 5,
-                            borderColor: "#bbb"
-                        }}
-                    />
-                ) : (
+                <FlatList
+                    data={listNotification}
+                    renderItem={(list) => renderTask(list)}
+                    onRefresh={loadTasks}
+                    refreshing={refreshing}
+                    style={{
+                        marginTop: "5%",
+                        borderWidth: 1,
+                        width: "95%",
+                        alignSelf: 'center',
+                        borderRadius: 5,
+                        borderColor: "#bbb"
+                    }}
+                />
 
-                    <FlatList
-                        data={listNotification}
-                        renderItem={(list) => renderTask(list)}
-                        onRefresh={loadTasks}
-                        refreshing={refreshing}
-                        style={{
-                            marginTop: "5%",
-                            borderWidth: 1,
-                            width: "95%",
-                            alignSelf: 'center',
-                            borderRadius: 5,
-                            borderColor: "#bbb"
-                        }}
-                    />
-                )}
 
             </View>
         </View>

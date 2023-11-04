@@ -4,11 +4,11 @@ import { getById } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 
 const ChoseUpdateGameScreen = ({ navigation }) => {
-
+    const user = navigation.getParam("user")
     const gameId = navigation.getParam("gameId")
     const imageUri = navigation.getParam("imageUri")
     const [game, setGame] = useState<InfoGame>()
-    
+
     const getGameById = async () => {
         try {
             const { data } = await getById(gameId)
@@ -24,7 +24,7 @@ const ChoseUpdateGameScreen = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, imageUri])
+    }, [gameId, imageUri, user])
 
     return (
         <View style={styles.container}>
@@ -34,22 +34,27 @@ const ChoseUpdateGameScreen = ({ navigation }) => {
             />
             <View style={styles.overlay}>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "0", gameId, imageUri }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "0", gameId, imageUri, user }) }}
                 >
                     <Text style={styles.buttonText}>Cập nhật Icon</Text>
                 </TouchableOpacity >
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "1", gameId, imageUri }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "1", gameId, imageUri, user }) }}
                 >
                     <Text style={styles.buttonText}>Thêm hình ảnh cho trò chơi</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "2", gameId, imageUri }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "2", gameId, imageUri, user, tenGame: game?.tenTroChoi }) }}
+                >
+                    <Text style={styles.buttonText}>Ảnh trò chơi đã tải lên  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "3", gameId, imageUri, user }) }}
                 >
                     <Text style={styles.buttonText}>Cập nhật file</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "3", gameId, imageUri }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "3", gameId, imageUri, user }) }}
                 >
                     <Text style={styles.buttonText}>Cập nhật thông tin trò chơi</Text>
                 </TouchableOpacity>

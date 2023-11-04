@@ -74,11 +74,11 @@ export const getById = (id: string) => {
     })
 
 }
-export const getImageGame = (filename: string, imageName: string) => {
+export const getImageGame = (filename: string) => {
 
     return axios({
         method: "GET",
-        url: BASE_URL_Image.concat("getImage/").concat(filename).concat("/").concat(imageName)
+        url: BASE_URL_Image.concat("getImageName/").concat(filename)
 
     })
 
