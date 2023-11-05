@@ -24,23 +24,30 @@ const UpdateGameNCC = ({ navigation }) => {
 
     const loadImage = async () => {
         setRefreshing(true)
-        console.log(tenGame)
+        // console.log(tenGame)
         try {
             const response = await getImageGame(tenGame)
+
             for (let index = 0; index < response.data.length; index++) {
                 const imageName = response.data[index].imageName
                 await fetchImage(tenGame, imageName)
 
             }
-            console.log(checklist[0])
+            let lsImageUri: string[] = []
+            for (let index = 0; index < checklist.length; index++) {
+                lsImageUri.push(checklist[index].imageUri)
+            }
+            letSizeImage(lsImageUri);
+            // console.log(checklist)
             setListImageUri(checklist)
         } catch (err) {
             const errorMessage = err.response
-            console.log(errorMessage)
+            alert("lỗi: " + errorMessage.data)
         }
+
         setRefreshing(false)
     }
-    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>()
     let checklist: ImageUri[] = [];
     const fetchImage = async (username: string, imageName: string) => {
 
@@ -173,21 +180,57 @@ const UpdateGameNCC = ({ navigation }) => {
         image: ""
     }
     );
-    const renderTask = async ({ item }: { item: ImageUri }) => {
-        const size = await new Promise((resolve, reject) => {
-            Image.getSize(item.imageUri, (width, height) => {
+    let height: number
+    let width: number
+    const getSizeImage = async (imageUri: string): Promise<{ width: number, height: number }> => {
+        return new Promise((resolve, reject) => {
+            Image.getSize(imageUri, (width, height) => {
                 resolve({ width, height });
             }, (error) => {
                 reject("lỗi:" + error);
             });
         });
+    }
+    const [imageSize, setImageSize] = useState<{
+        width: number;
+        height: number;
+        imageUri: string;
+    }[]>([]);
+
+    const letSizeImage = async (imageUris: string[]) => {
+        try {
+            const sizePromises = imageUris.map(async (imageUri) => {
+                const size = await getSizeImage(imageUri);
+                const { width, height } = size;
+                return { width, height, imageUri };
+            });
+
+            const imageSizes = await Promise.all(sizePromises);
+            setImageSize(imageSizes);
+            // Thực hiện các thao tác khác dựa trên imageSizes ở đây
+        } catch (error) {
+            console.error("Lỗi khi lấy kích thước ảnh:", error);
+        }
+    };
+
+    // Sử dụng hàm letSizeImage với một mảng các imageUri
+    // Thay bằng mảng các địa chỉ URL của ảnh của bạn
+    const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+
+    const renderTask = ({ item }: { item: ImageUri }) => {
+
         return (
-            <TouchableOpacity onPress={() => { }} >
-                <Image style={{
-                    width: size.width,
-                    height: size.height
-                }} source={{ uri: item.imageUri }} />
-            </TouchableOpacity >
+            <TouchableOpacity style={{
+                alignItems: 'center',
+                margin: 5,
+            }} onPress={() => setSelectedImageUri(item.imageUri)}>
+                {imageSize.find(f => f.imageUri === item.imageUri) ? (
+                    <Image style={{
+                        width: selectedImageUri === item.imageUri ? imageSize.find(f => f.imageUri === item.imageUri).width : imageSize.find(f => f.imageUri === item.imageUri).width / 3,
+                        height: selectedImageUri === item.imageUri ? imageSize.find(f => f.imageUri === item.imageUri).height : imageSize.find(f => f.imageUri === item.imageUri).height / 3
+                    }} source={{ uri: item.imageUri }} />
+                ) : null}
+            </TouchableOpacity>
 
         )
     }
@@ -286,15 +329,15 @@ const UpdateGameNCC = ({ navigation }) => {
                         <FlatList
                             data={listImageUri}
                             renderItem={(list) => renderTask(list)}
-                            onRefresh={loadTasks}
+                            onRefresh={loadImage}
                             refreshing={refreshing}
                             style={{
-                                marginTop: "5%",
+                                marginVertical: "5%",
                                 borderWidth: 1,
                                 width: "95%",
                                 alignSelf: 'center',
                                 borderRadius: 5,
-                                borderColor: "#bbb"
+                                borderColor: "#bbb",
                             }}
                         />
                     </View>
