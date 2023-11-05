@@ -2,19 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Background from './Users/Background';
 import { ImageUri } from '../services/interfaces/User.interface';
+import { BASE_URL_Image, getAllImage } from '../services/Game';
+import * as FileSystem from 'expo-file-system';
 
 const HomeScreen = ({ navigation }) => {
-    const [lsUri, setLsUri] = useState<ImageUri[]>([])
-    const loadToken =()=>{
+    const loadToken = async () => {
         try {
-            
+            const response = await getAllImage();
+
+            for (let i = 0; i < response.data.length; i++) {
+
+
+                await fetchImage(response.data[i].imagePath, response.data[i].imageName)
+
+            }
+            setListImageUri(checklist)
+            console.log(checklist)
         } catch (error) {
-            
+            console.log(error.response.data)
         }
     }
+    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
+    let checklist: ImageUri[] = [];
+    const fetchImage = async (username: string, imageName: string) => {
+
+        let check: ImageUri = {
+            username: "",
+            imageUri: ""
+        };
+        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
+
+        try {
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
+            check.username = username
+            check.imageUri = response.uri
+            checklist.push(check)
+
+        } catch (error) {
+            console.error('Error fetching image:', error.response.data);
+        }
+    };
     useEffect(() => {
         loadToken()
-        
+
     }, [])
     return (
         <Background>
@@ -24,10 +54,10 @@ const HomeScreen = ({ navigation }) => {
                     <Image source={require("../assets/Icon/game2.png")} style={styles.image} />
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen')}>
+                    <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen', { listImageUri })}>
                         <Text style={styles.buttonText1}>Login</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonRegisterScreen} onPress={() => navigation.navigate('RegisterScreen')}>
+                    <TouchableOpacity style={styles.buttonRegisterScreen} onPress={() => navigation.navigate('RegisterScreen', { listImageUri })}>
                         <Text style={styles.buttonText2}>Signup</Text>
                     </TouchableOpacity>
                 </View>

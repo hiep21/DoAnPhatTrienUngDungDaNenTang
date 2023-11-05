@@ -74,6 +74,16 @@ export const getById = (id: string) => {
     })
 
 }
+
+export const getAllImage = () => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_Image.concat("getAllImage/")
+
+    })
+
+}
 export const getImageGame = (filename: string) => {
 
     return axios({

@@ -10,6 +10,7 @@ import { deleteItemAsync, getItemAsync } from 'expo-secure-store';
 
 
 const LoginScreen = ({ navigation }) => {
+    const listImageUri = navigation.getParam("listImageUri")
     const [users, setUsers] = useState<LoginData>({
         user: "",
         password: ""
@@ -30,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
         if (token) {
             configAxiosWithAccessToken(token)
             if (note == "User") {
-                navigation.navigate("MainScreenUser", { user: tokenObject.user })
+                navigation.navigate("MainScreenUser", { user: tokenObject.user, listImageUri })
             }
             else if (note == "NCC") {
                 navigation.navigate("MainScreenNCC", { user: tokenObject.user })
@@ -47,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
         return () => {
             loadToken()
         };
-    }, [])
+    }, [listImageUri])
 
 
     const login = async () => {

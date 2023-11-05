@@ -72,7 +72,7 @@ const InfoGameNCC = ({ navigation }) => {
                             navigation.navigate("ManagerGameNCC", { user });
                             alert('Gửi yêu cầu xóa game thành công');
                         } catch (error) {
-                            console.log(error.response)
+                            alert(error.response.data)
                         }
                     },
                 },
@@ -201,7 +201,7 @@ const InfoGameNCC = ({ navigation }) => {
                                         backgroundColor: "#6C9EFF",
                                         justifyContent: 'center',
                                         borderRadius: 5
-                                    }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri,user }) }}>
+                                    }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri, user }) }}>
                                         <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
                                     </TouchableOpacity>
 

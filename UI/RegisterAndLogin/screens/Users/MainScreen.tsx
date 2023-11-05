@@ -11,6 +11,7 @@ import { GameManager, ImageUri } from '../../services/interfaces/User.interface'
 
 
 const MainScreen = ({ navigation }) => {
+    const lsImageUri = navigation.getParam("listImageUri")
     const user = navigation.getParam("user")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
@@ -103,7 +104,7 @@ const MainScreen = ({ navigation }) => {
 
         loadimage()
         loadTasks()
-    }, [])
+    }, [user, lsImageUri])
 
 
     const [checks, setChecks] = useState<boolean>(false)
