@@ -55,7 +55,7 @@ const StackNAvigator = createStackNavigator({
     screen: MainScreenUser,
     navigationOptions: {
       title: 'Màn hình chính',
-      //headerLeft: null, 
+      headerLeft: null, 
     },
   },
   UserScreen: {
@@ -111,6 +111,7 @@ const StackNAvigator = createStackNavigator({
     screen: MainScreenNCC,
     navigationOptions: {
       title: 'Màn hình chính',
+      headerLeft: null, 
     },
   },
   ManagerGameNCC: {
@@ -147,6 +148,7 @@ const StackNAvigator = createStackNavigator({
     screen: MainScreenAdmin,
     navigationOptions: {
       title: 'Màn hình chính',
+      headerLeft: null, 
     },
   },
   ListAccountScreen: {

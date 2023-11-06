@@ -63,7 +63,7 @@ export default function Carousel() {
           })}
         </ScrollView>
       </View>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
         {images.map((_, i) => {
           let opacity = position.interpolate({
             inputRange: [i - 1, i, i + 1],
