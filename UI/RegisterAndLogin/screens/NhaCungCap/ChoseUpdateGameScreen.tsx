@@ -54,7 +54,7 @@ const ChoseUpdateGameScreen = ({ navigation }) => {
                     <Text style={styles.buttonText}>Cập nhật file</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "3", gameId, imageUri, user }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "4", gameId, imageUri, user }) }}
                 >
                     <Text style={styles.buttonText}>Cập nhật thông tin trò chơi</Text>
                 </TouchableOpacity>
@@ -71,17 +71,18 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         position: 'absolute',
-        width: '80%',
-        height: '70%',
+        width: '100%',
+        height: '100%',
+        
     },
     overlay: {
-        backgroundColor: 'rgba(255, 255, 255, 0.5)', // Adjust opacity as needed
+        backgroundColor: 'rgba(255, 255, 255, 0.7)', // Adjust opacity as needed
         width: '80%',
         height: '70%',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
+        
     },
     button: {
         backgroundColor: 'red',
@@ -97,5 +98,6 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         fontSize: 20
     },
+    
 });
 export default ChoseUpdateGameScreen;

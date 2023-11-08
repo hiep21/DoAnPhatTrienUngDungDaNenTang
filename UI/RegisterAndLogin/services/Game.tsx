@@ -123,9 +123,25 @@ export const postFileApk = (documentUri: string, nameDocumentUri: string) => {
             'Content-Type': 'multipart/form-data',
         },
         data: formData
-
     })
 }
+export const updateFileApk = (documentUri: string, nameDocumentUri: string) => {
+    let formData = new FormData();
+    formData.append('apkFile', {
+        uri: documentUri,
+        type: 'application/vnd.android.package-archive',
+        name: nameDocumentUri,
+    });
+    return axios({
+        method: "POST",
+        url: BASE_URL_APK_FILE.concat("updateFile"),
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        data: formData
+    })
+}
+
 export const postImage = (imageUri: string, nameImageUri: string, nameGame: string) => {
     let formData = new FormData();
     formData.append('imageFile', {
