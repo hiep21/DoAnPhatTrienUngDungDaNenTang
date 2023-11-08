@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, FlatList } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, FlatList, ScrollView } from 'react-native';
 import { UpdateRegisterApi, getByUser, getImageIcon, postImageAva } from '../../services/todo';
 import { ImageUri, RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
 import Background from '../Users/Background';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { BASE_URL_Image, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postImage, postImageIcon } from '../../services/Game';
+import { BASE_URL_Image, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
 import * as FileSystem from 'expo-file-system';
 
 const UpdateGameNCC = ({ navigation }) => {
@@ -21,7 +21,21 @@ const UpdateGameNCC = ({ navigation }) => {
     const [imageGameName, setImageGameName] = useState<string>();
     const [isLoading, setIsLoading] = useState(false);
 
-
+    const validateInputs = () => {
+        if (game.tenTroChoi.length < 5) {
+            Alert.alert("Lỗi", "tên phải tối thiểu 5 ký tự");
+            return false;
+        }
+        if (game.moTaTroChoi.length < 5) {
+            Alert.alert("Lỗi", "mô tả trò chơi phải tối thiểu 5 ký tự");
+            return false;
+        }
+        if (game.gioiThieuTroChoi.length < 50) {
+            Alert.alert("Lỗi", "Giới thiệu trò chơi phải tối thiểu 50 ký tự");
+            return false;
+        }
+        return true;
+    };
     const loadImage = async () => {
         setRefreshing(true)
         // console.log(tenGame)
@@ -84,7 +98,7 @@ const UpdateGameNCC = ({ navigation }) => {
     }
 
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState();
     const pickImage = async () => {
 
         try {
@@ -103,21 +117,23 @@ const UpdateGameNCC = ({ navigation }) => {
             console.error('Chưa chọn hình ảnh.');
             return;
         }
-        try {
-            const response = await deleteImageIcon(game?.tenTroChoi.replace(".apk", ""), imageGameName?.replace(".png", ""))
-        } catch (error) {
 
-            console.log(error.response.data);
-            return;
-        }
         try {
 
             const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi.replace(".apk", ""))
             alert('Thêm ảnh thành công: ' + response.data.oldFileName);
             navigation.navigate("ManagerGameNCC", user)
+            try {
+                const response = await deleteImageIcon(game?.tenTroChoi.replace(".apk", ""), imageGameName?.replace(".png", ""))
+            } catch (error) {
+
+                console.log(error.response.data);
+                return;
+            }
         } catch (error) {
             alert(error.response.data);
         }
+
     };
 
     const uploadImage = async () => {
@@ -147,39 +163,51 @@ const UpdateGameNCC = ({ navigation }) => {
         }
     };
 
-    const uploadTextChange = async (change: string) => {
+    const [documentUri, setDocumentUri] = useState<string>();
+    const [nameDocumentUri, setNameDocumentUri] = useState<string>();
+    const pickApkFile = async () => {
+        try {
+            let result = await DocumentPicker.getDocumentAsync({
+                type: '*/*',
+            });
 
-        if (!isLoading) {
-            setIsLoading(true)
-            console.log();
+            if (result != null) {
+                if (game?.tenTroChoi != result.assets[0].name) {
+                    Alert.alert("Cảnh báo", 'Sai file game đã tải.');
+                } else {
+                    setDocumentUri(result.assets[0].uri);
+                    setNameDocumentUri(result.assets[0].name);
+                    setGame({
+                        ...game,
+                        kichCoFile: ((result.assets[0].size / 1024) / 1024).toFixed(2)
+                    })
+                }
 
-
-            try {
-                const { data } = await UpdateRegisterApi(users)
-
-                console.log('Upload success:', data);
-                navigation.navigate("HomeScreen")
-            } catch (error) {
-                console.log('Upload failed:', error.response.data.errors.Address);
-
+            } else {
+                Alert.alert("Cảnh báo", 'Chưa chọn file.');
             }
+        } catch (error) {
+            Alert.alert("Cảnh báo", 'Lỗi khi chọn file:' + error.message);
         }
-        setIsLoading(false)
-    }
-    const [usersUpdate, setUsersUpdate] = useState<UpdateRegister>({
-        user: "",
-        password: "",
-        newPassword: "",
-        name: "",
-        email: "",
-        note: "",
-        gender: "",
-        dateOfBirth: "",
-        address: "",
-        phone: "",
-        image: ""
-    }
-    );
+    };
+
+    const uploadApkFile = async () => {
+        if (documentUri) {
+            try {
+                // Gửi tệp APK lên API endpoint sử dụng Axios
+                const response = await updateFileApk(documentUri, nameDocumentUri)
+                // Xử lý kết quả từ API nếu cần
+                alert('Cập nhật thành công' + response.data);
+                navigation
+            } catch (err) {
+                alert(err.response.data);
+                // Xử lý lỗi nếu cần
+            }
+        } else {
+            console.log('Chưa chọn tài liệu.');
+        }
+    };
+
     let height: number
     let width: number
     const getSizeImage = async (imageUri: string): Promise<{ width: number, height: number }> => {
@@ -234,9 +262,55 @@ const UpdateGameNCC = ({ navigation }) => {
 
         )
     }
+
+    const uploadData = async () => {
+        console.log(nameDocumentUri)
+        if (!isLoading) {
+
+            if (!validateInputs()) {
+                return;
+            }
+
+            try {
+                const response = await createGame(game)
+                alert("Thành công")
+                console.log('Upload success:', response.data);
+                await navigation.navigate("MainScreenNCC")
+            } catch (err) {
+
+                const message = err.response.data
+                console.log(message)
+            }
+        }
+
+
+    };
+
+    const onCancel = () => {
+        Alert.alert(
+            "Xác nhận",
+            "Bạn có chắc chắn muốn hủy thêm mới?",
+            [
+                {
+                    text: "Hủy",
+                    style: "cancel",
+                },
+                {
+                    text: "Đồng ý",
+                    onPress: () => {
+                        navigation.navigate("TaskScreen");
+                    },
+                },
+            ]
+        );
+    };
+
     useEffect(() => {
         loadTasks();
-        loadImage();
+        if (textChange == "2") {
+            loadImage();
+        }
+
 
     }, [textChange, gameId, imageUri, user])
     const renderInputField = (key: string) => {
@@ -344,43 +418,81 @@ const UpdateGameNCC = ({ navigation }) => {
                 );
             case '3':
                 return (
-                    <View>
-                        <Text style={styles.textInput}>Sửa địa chỉ của bạn</Text>
-                        <TextInput
-                            value={usersUpdate.address}
-                            onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
-                                    address: value
-                                })
-                            }}
-                            style={styles.input}
-                            placeholder='Address'
-                        />
-                        <TouchableOpacity style={{
-                            backgroundColor: "#7FFF00",
-                            width: 200,
-                            height: 30,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 5,
-                            alignSelf: 'center',
-                            marginTop: 10,
-                            borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.address); }}>
-                            {isLoading ? (
-                                <ActivityIndicator color="#fff" />
-                            ) : (
-                                <Text style={styles.textbtn}>Cập nhật</Text>
-                            )}
+                    <View style={{
+                        width: 300,
+                        height: 400,
+                        backgroundColor: "#fff",
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        borderWidth: 1
+                    }}>
+                        <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { pickApkFile(); }}>
+                            <Text style={{ fontWeight: '700' }}>Click chọn file </Text>
                         </TouchableOpacity>
+                        {documentUri && <Text>{nameDocumentUri}</Text>}
+                        <Text> </Text>
+                        {documentUri != null ? (
+                            <TouchableOpacity style={{
+                                width: 100,
+                                height: 30,
+                                backgroundColor: "#bbb",
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 10,
+                                borderWidth: 1.25
+                            }} onPress={() => { uploadApkFile() }}>
+                                {isLoading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={styles.textbtn}>Cập nhật</Text>
+                                )}
+                            </TouchableOpacity>
+                        ) : (
+                            <Text></Text>
+                        )}
                     </View>
+                );
+            case '4':
+                return (
+                    <View style={{
+                        backgroundColor: "white",
+                        width: "80%",
+                        height: "80%",
+                        borderRadius: 10
+
+                    }}>
+                        <Text style={styles.mainText}>Cập nhật thông tin trò chơi</Text>
+
+
+
+                        <View style={styles.buttons}>
+                            <TouchableOpacity style={styles.buttonSave} onPress={() => { onCancel() }}>
+                                <Text style={{ color: "white", fontWeight: "700" }}>Hủy bỏ</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.buttonSave, { backgroundColor: "green" }]} onPress={() => { uploadData() }}>
+                                {isLoading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={{ color: "white", fontWeight: "700" }}>Cập nhật</Text>
+                                )}
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+
+
+
                 );
         }
     };
     return (
         <View style={styles.container}>
-
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={{ uri: imageUri }} />
             <View style={{
                 alignItems: "center",
                 justifyContent: 'center',
@@ -403,10 +515,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: 'center',
-
         backgroundColor: "white"
-
-
     },
 
     input: {
@@ -462,6 +571,22 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: 'center',
     },
+    mainText: {
+        alignSelf: "center",
+        fontSize: 20,
+        fontWeight: "900"
+    },
+    buttons: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+
+    },
+    buttonSave: {
+        backgroundColor: "red",
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 5
+    }
 
 })
 

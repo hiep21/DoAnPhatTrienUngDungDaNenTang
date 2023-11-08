@@ -144,7 +144,7 @@ const AddGameNCC = ({ navigation }) => {
         }
     };
     const uploadData = async () => {
-        console.log(nameDocumentUri)
+        // console.log(nameDocumentUri)
         if (!isLoading) {
             try {
                 await uploadDocument();
