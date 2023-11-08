@@ -21,7 +21,7 @@ const MainScreen = ({ navigation }) => {
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
-
+        //console.log(lsImageUri)
         try {
             const { data } = await getByName()
             // console.log(data)
@@ -255,7 +255,7 @@ const MainScreen = ({ navigation }) => {
                     <View style={{
                         justifyContent: 'space-around'
                     }}>
-                        <Carousel />
+                        <Carousel listImageUri={listImageUri} user={user} navigation={navigation}/>
                         <View style={styles.body}>
                             <View style={{
                                 height: 220
