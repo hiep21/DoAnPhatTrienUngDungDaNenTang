@@ -37,25 +37,28 @@ const StackNAvigator = createStackNavigator({
     screen: RegisterScreen,
     navigationOptions: {
       title: 'Đăng ký',
+      headerTransparent: true
     },
   },
   LoginScreen: {
     screen: LoginScreen,
     navigationOptions: {
       title: 'Đăng nhập',
+      headerTransparent: true
     },
   },
   HomeScreen: {
     screen: HomeScreen,
     navigationOptions: {
       title: '',
+      headerTransparent: true
     },
   },
   MainScreenUser: {
     screen: MainScreenUser,
     navigationOptions: {
       title: 'Màn hình chính',
-      headerLeft: null, 
+      headerLeft: () => (null),
     },
   },
   UserScreen: {
@@ -110,14 +113,16 @@ const StackNAvigator = createStackNavigator({
   MainScreenNCC: {
     screen: MainScreenNCC,
     navigationOptions: {
-      title: 'Màn hình chính',
-      headerLeft: null, 
+      title: '',
+      headerLeft: () => (null),
+      headerTransparent: true
     },
   },
   ManagerGameNCC: {
     screen: ManagerGameNCC,
     navigationOptions: {
       title: 'Quản lý trò chơi',
+
     },
   },
   InfoGameNCC: {
@@ -148,7 +153,7 @@ const StackNAvigator = createStackNavigator({
     screen: MainScreenAdmin,
     navigationOptions: {
       title: 'Màn hình chính',
-      headerLeft: null, 
+      headerLeft: () => (null),
     },
   },
   ListAccountScreen: {
