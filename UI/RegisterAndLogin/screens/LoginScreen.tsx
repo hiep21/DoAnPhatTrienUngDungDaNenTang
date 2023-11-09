@@ -43,11 +43,9 @@ const LoginScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        console.log("Load token called!");
+        // console.log("Load token called!");
         loadToken()
-        return () => {
-            loadToken()
-        };
+        
     }, [listImageUri])
 
 
@@ -66,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
                     password
                 })
                 const message = loginResponse.data
-                console.log(loginResponse.data.note);
+                // console.log(loginResponse.data.note);
                 //Lưu token lại
 
                 const result = await saveTokenToDevice({

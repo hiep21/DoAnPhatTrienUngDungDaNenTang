@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Image, ScrollView, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { getGameManager } from '../../services/todo';
+import { string } from 'yup';
 const { width, height } = Dimensions.get('window');
 
 // const images = [
@@ -38,30 +39,25 @@ export default function Carousel({ listImageUri ,user, navigation} ) {
     };
   }, [scrollX,listImageUri,user]);
 
-  const CheckBuyAndInstall = async (name: string, item: InfoGame, imageUri: string) => {
+  const CheckBuyAndInstall = async (id: string, nameFile:string, imageUri: string) => {
     try {
       const { data } = await getGameManager(user);
       const GameCheck = [];
 
       for (let index = 0; index < data.length; index++) {
-        if (data[index].nameGame == name) {
+        if (data[index].nameGame == nameFile) {
           GameCheck.push(data[index]);
         }
       }
 
       if (GameCheck.length == 0) {
-        navigation.navigate("InfoGame_dont_Install", { gameId: item.tenTroChoi, user, imageGameUri: imageUri });
+        navigation.navigate("InfoGame_dont_Install", { gameId :id,user, imageGameUri: imageUri });
       } else {
-        navigation.navigate("InfoGameScreen", {
-          gameId: item.tenTroChoi,
-          gameManager: GameCheck[0],
-          installGame: GameCheck[0].isInstall,
-          imageGameUri: imageUri,
-        });
+        navigation.navigate("InfoGameScreen", { gameId:id ,gameManager: GameCheck[0], installGame: GameCheck[0].isInstall,imageGameUri:imageUri});
       }
     } catch (error) {
       if (error.response.data == "Tài khoản " + user + " chưa mua với tải game") {
-        navigation.navigate("InfoGame_dont_Install", { gameId: item.tenTroChoi, user, imageGameUri: imageUri });
+        navigation.navigate("InfoGame_dont_Install", { gameId:id, user, imageGameUri: imageUri });
       } else {
         console.log(error.response.data);
       }
@@ -80,13 +76,17 @@ export default function Carousel({ listImageUri ,user, navigation} ) {
           horizontal={true}
           pagingEnabled={true}
           showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }])}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: false } 
+          )}
+          
           scrollEventThrottle={16}
           ref={scrollViewRef}
         >
           {listImageUri.map((image, i) => {
             return (
-              <TouchableOpacity key={i} onPress={() => CheckBuyAndInstall(image.username,image.username,image.imageUri)} style={{ width, height: containerHeight }}>
+              <TouchableOpacity key={i} onPress={() => CheckBuyAndInstall(image.id,image.nameFile,image.imageUri)} style={{ width, height: containerHeight }}>
                 <Image
                   style={{ flex: 1, width: undefined, height: undefined, borderRadius: 15, marginHorizontal: 10 }}
                   source={{ uri: image.imageUri }}

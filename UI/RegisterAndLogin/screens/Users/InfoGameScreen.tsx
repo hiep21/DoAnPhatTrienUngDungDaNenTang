@@ -176,7 +176,7 @@ const InfoGameScreen = ({ navigation }) => {
                             }} onPress={async () => {
                                 await downloadApk(game?.tenTroChoi)
                                 if (checkDownload == true) {
-                                    navigation.navigate("LoginScreen")
+                                    navigation.navigate("MainScreenUser")
                                 }
                             }}>
                                 <Text style={{ textAlign: 'center' }}>Cài đặt</Text>

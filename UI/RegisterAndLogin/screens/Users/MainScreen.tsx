@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
 import Carousel from './Carousel';
-import { InfoGame } from '../../services/interfaces/GameService';
+import { ImageGameUri, InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
 import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
@@ -24,7 +24,7 @@ const MainScreen = ({ navigation }) => {
         //console.log(lsImageUri)
         try {
             const { data } = await getByName()
-            // console.log(data)
+            //console.log(data)
             setListGame(data)
             setReListGame(data)
             const response = await getImageIcon(user)
@@ -35,8 +35,8 @@ const MainScreen = ({ navigation }) => {
             for (let i = 0; i < ListGame.length; i++) {
                 const response = await getImageIconGame(ListGame[i].tenTroChoi)
                 const ImageName = response.data[0].imageName
-                // console.log(ImageName)
-                await fetchImageGame(ListGame[i].tenTroChoi, ImageName)
+                // console.log(data[i].id)
+                await fetchImageGame(ListGame[i].tenTroChoi, ImageName,data[i].id)
             }
 
             setListImageUri(checklist)
@@ -60,21 +60,23 @@ const MainScreen = ({ navigation }) => {
         }
 
     };
-    const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
-    let checklist: ImageUri[] = [];
-    const fetchImageGame = async (username: string, imageName: string) => {
+    const [listImageUri, setListImageUri] = useState<ImageGameUri[]>([])
+    let checklist: ImageGameUri[] = [];
+    const fetchImageGame = async (nameFile: string, imageName: string,id:string) => {
 
-        let check: ImageUri = {
-            username: "",
+        let check: ImageGameUri = {
+            id : "",
+            nameFile: "",
             imageUri: ""
         };
 
 
-        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(nameFile).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
-            check.username = username
+            check.id = id
+            check.nameFile = nameFile
             check.imageUri = response.uri
             checklist.push(check)
 
@@ -169,14 +171,14 @@ const MainScreen = ({ navigation }) => {
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <TouchableOpacity onPress={() => { CheckBuyAndInstall(item.tenTroChoi, item, listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri) }}>
+            <TouchableOpacity onPress={() => { CheckBuyAndInstall(item.tenTroChoi, item, listImageUri.find(f => f.nameFile == item.tenTroChoi)?.imageUri) }}>
                 <View style={{
                     flexDirection: 'row',
                     marginLeft: "5%",
                     marginVertical: 10,
 
                 }}>
-                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.nameFile == item.tenTroChoi)?.imageUri }
 
                     } />
                     <View style={{
@@ -258,7 +260,7 @@ const MainScreen = ({ navigation }) => {
                         <Carousel listImageUri={listImageUri} user={user} navigation={navigation}/>
                         <View style={styles.body}>
                             <View style={{
-                                height: 220
+                                height: "85%"
                             }}>
 
                                 <Text style={{
@@ -281,7 +283,7 @@ const MainScreen = ({ navigation }) => {
                                         alignSelf: 'center',
                                         borderRadius: 5,
                                         borderColor: "#bbb",
-                                        height: 100
+                                        height: "10%"
                                     }}
                                 />
 
@@ -377,7 +379,7 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: "white",
         width: 340,
-        height: 265,
+        height: "55%",
         marginHorizontal: 5,
 
     },

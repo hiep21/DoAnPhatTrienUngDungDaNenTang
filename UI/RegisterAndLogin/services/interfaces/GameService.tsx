@@ -26,3 +26,8 @@ export interface NotificationInterface {
     result: Boolean,
     reason: string
 }
+export interface ImageGameUri {
+    id:string,
+    nameFile:string,
+    imageUri: string
+}

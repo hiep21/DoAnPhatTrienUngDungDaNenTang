@@ -47,7 +47,7 @@ const MainScreenNCC = ({ navigation }) => {
 };
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+flex: 1,
         alignItems: "center",
         justifyContent: 'center',
         width: 300,

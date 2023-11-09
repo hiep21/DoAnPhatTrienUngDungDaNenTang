@@ -7,6 +7,7 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const AddGameNCC = ({ navigation }) => {
     const nameNCC = navigation.getParam("nameNCC")
+    const [checkNameGame, setCheckNameGame] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState(false);
     const [game, setgame] = useState<CreateGame>({
         tenTroChoi: "",
@@ -21,10 +22,14 @@ const AddGameNCC = ({ navigation }) => {
     });
 
     const validateInputs = () => {
-        if (game.tenTroChoi.length < 5) {
-            Alert.alert("Lỗi", "tên phải tối thiểu 5 ký tự");
+        if (game.tenTroChoi.length < 5 ) {
+            Alert.alert("Lỗi", "Tên game phải tối thiểu 5 ký tự, ");
             return false;
         }
+        if (/[!@#$%^&*()+={}\[\]:;<>,.?~\\|]/.test(game.tenTroChoi)&& game.tenTroChoi.includes(" ")) {
+            Alert.alert("Lỗi", "Tên game không được chứa ký tự đặc biệt, thay vào đó sử dụng _ như là dấu cách");
+            return false;
+          }
         if (game.moTaTroChoi.length < 5) {
             Alert.alert("Lỗi", "mô tả trò chơi phải tối thiểu 5 ký tự");
             return false;
@@ -146,6 +151,7 @@ const AddGameNCC = ({ navigation }) => {
     const uploadData = async () => {
         // console.log(nameDocumentUri)
         if (!isLoading) {
+            setIsLoading(true)
             try {
                 await uploadDocument();
 
@@ -249,7 +255,7 @@ const AddGameNCC = ({ navigation }) => {
                             })
                         }} style={styles.input} placeholder='Giá' />
                         <Text style={styles.label}>Giới thiệu trò chơi</Text>
-                        <TextInput numberOfLines={5} value={game?.gioiThieuTroChoi} onChangeText={(value) => {
+                        <TextInput numberOfLines={4} multiline value={game?.gioiThieuTroChoi} onChangeText={(value) => {
                             setgame({
                                 ...game,
                                 gioiThieuTroChoi: value
@@ -263,9 +269,19 @@ const AddGameNCC = ({ navigation }) => {
 
                     </ScrollView>
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={styles.buttonSave} onPress={onCancel}>
-                            <Text >Hủy bỏ</Text>
-                        </TouchableOpacity>
+                        <View>
+                        <View style={{
+                            elevation:5, padding:3,
+                            borderRadius:5,
+                            width:90,
+                            height:30,
+                        }}>
+                                
+                            </View>
+                            <TouchableOpacity style={[styles.buttonSave,{position:"absolute"}]} onPress={onCancel}>
+                                <Text >Hủy bỏ</Text>
+                            </TouchableOpacity>
+                        </View>
                         <TouchableOpacity style={styles.buttonSave} onPress={() => { uploadData() }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
@@ -317,15 +333,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     buttonSave: {
-        borderBottomWidth: 4,
-        borderRightWidth: 4,
-        borderWidth: 2
+        backgroundColor:"#3498db",
+        padding:3,
+        borderRadius:5,
+        width:90,
+        height:30,
+        alignItems:"center",
+        justifyContent:"center"
+     
     },
     inputAdd: {
         borderWidth: 2,
-        height: 100,
+        height: 90,
         width: '100%',
-
+        paddingHorizontal:10
     }
 })
 
