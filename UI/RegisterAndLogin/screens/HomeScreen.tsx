@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         width: "100%",
-        height: "100%"
+        height: "100%",
+      
 
     },
     mainText: {
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 50,
         width: "70%",
-        height: "11%"
+        height: 100
 
 
     },

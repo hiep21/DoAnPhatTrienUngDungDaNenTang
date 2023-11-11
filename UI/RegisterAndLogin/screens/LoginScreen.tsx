@@ -165,17 +165,17 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         height: "100%",
-        width: "100%"
+        width: "100%",
+        justifyContent: "flex-end"
 
     },
     mainContainer: {
-        marginVertical: 10,
         backgroundColor: "#fff",
-        height: "100%",
+        height: "80%",
         width: "100%",
-        borderTopLeftRadius: 130,
-        paddingTop: 35,
-        alignItems: "center"
+        borderTopLeftRadius: 100,
+        alignItems: "center",
+        justifyContent: "center"
     },
     mainText: {
         marginTop: "20%",
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
         color: '#222'
     },
     image: {
-        marginTop: 10,
         width: 200,
         height: 200
     },
