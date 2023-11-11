@@ -1,24 +1,13 @@
 
 // screens/Screen1.js
 import React, { useState } from 'react';
-import { View, Text, Image, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert, Modal, ScrollView } from 'react-native';
 import { RegisterData } from '../services/interfaces/User.interface';
 import * as Yup from 'yup'
 import { postImageAva, registerApi } from '../services/todo';
 import Background from './Users/Background';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
-// const validationSchema = Yup.object().shape({
-//     user: Yup.string()
-//         .min(2, 'To Short!')
-//         .max(20, 'To Long!')
-//         .required("Username is required"),
-//     password: Yup.string().min(8).required("Password is required")
-//         .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/),
-//     email: Yup.string().email("Invalid email").required("Email is required"),
-//     dateOfBirth: Yup.string().required("Date of Birth is required").matches(/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/\d{4}$/),
-//     rePassword: Yup.string().min(8).oneOf([Yup.ref('password')]).required("Confirm password is required"),
-// });
 
 const AddUserScreen = ({ navigation }) => {
 
@@ -170,188 +159,183 @@ const AddUserScreen = ({ navigation }) => {
         }
     };
     return (
-        <Background>
-            <KeyboardAvoidingView>
-                <View style={styles.container}>
-                    <Text style={styles.mainText}>Register</Text>
-                    <View style={styles.mainContainer}>
-                        <View style={styles.content}>
-                            <ScrollView style={{
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../assets/Icon/BG.jpg")} />
+            <Text style={styles.mainText}>Register</Text>
+            <View style={styles.mainContainer}>
 
-                                width: "85%",
-                                height: "55%",
-                                marginLeft: 20,
+                <ScrollView style={styles.content}>
+                    <Text style={styles.label}>Avatar</Text>
 
-                            }}>
-                                <Text style={styles.label}>Avatar</Text>
-
-                                {image != null ? (
-                                    <Image source={{ uri: image.assets[0].uri }} style={{ width: 100, height: 100, marginVertical: 20, alignSelf: 'center' }} />
-                                ) : (
-                                    <Text style={{
-                                        paddingLeft: 10,
-                                        paddingVertical: 5,
-                                        color: "red"
-                                    }}>
-                                        Chưa chọn ảnh
-                                    </Text>
-                                )}
+                    {image != null ? (
+                        <Image source={{ uri: image.assets[0].uri }} style={{ width: 100, height: 100, marginVertical: 20, alignSelf: 'center' }} />
+                    ) : (
+                        <Text style={{
+                            paddingLeft: 10,
+                            paddingVertical: 5,
+                            color: "red"
+                        }}>
+                            Chưa chọn ảnh
+                        </Text>
+                    )}
 
 
-                                <TouchableOpacity style={[styles.input, { height: 35, justifyContent: 'center' }]} onPress={() => { pickImage(); }}>
-                                    <Text  >
-                                        Chọn ảnh
-                                    </Text>
+                    <TouchableOpacity style={[styles.input, { height: 35, justifyContent: 'center' }]} onPress={() => { pickImage(); }}>
+                        <Text  >
+                            Chọn ảnh
+                        </Text>
 
-                                </TouchableOpacity>
+                    </TouchableOpacity>
 
-                                <Text style={styles.label}>User</Text>
-                                <TextInput value={user.user} onChangeText={(value) => {
-                                    setUser({
-                                        ...user,
-                                        user: value
-                                    })
-                                }} style={styles.input} placeholder='User name' />
-                                {userVal != null && user.user.length < 5 ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.User}</Text>
-                                    </View>
-
-                                ) : null}
-                                <Text style={styles.label}>Email</Text>
-                                <TextInput value={user.email} onChangeText={(value) => {
-                                    setUser({
-                                        ...user,
-                                        email: value
-                                    })
-                                }} style={styles.input} placeholder='...@gmail.com' />
-                                {userVal != null && (!user.email.includes("@") || !user.email.includes(".")) ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Email}</Text>
-                                    </View>
-                                ) : null}
-                                <Text style={styles.label}>Full name</Text>
-                                <TextInput value={user.name} onChangeText={(value) => {
-                                    setUser({
-                                        ...user,
-                                        name: value
-                                    })
-                                }} style={styles.input} placeholder='Nguyễn Văn A' />
-                                {userVal != null && !user.name ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Name}</Text>
-                                    </View>
-                                ) : null}
-                                <Text style={styles.label}>Gender</Text>
-                                <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
-                                    <Text style={styles.selectedGenderText}>
-                                        {selectedGender ? selectedGender : 'LGBT'}
-                                    </Text>
-                                </TouchableOpacity>
-
-                                <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
-                                    <View style={styles.modalContainer}>
-                                        <View style={styles.modalContent}>
-                                            <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
-                                                <Text>Male</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
-                                                <Text>Female</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
-                                                <Text>Other</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                                <Text>Close</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </Modal>
-                                <Text style={styles.label}>Date Of Birth</Text>
-
-
-                                <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
-                                    <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
-                                </TouchableOpacity>
-                                {showDatePicker && (
-                                    <DateTimePicker
-                                        testID="dateTimePicker"
-                                        value={selectedDate}
-                                        mode="date"
-                                        is24Hour={true}
-                                        display="default"
-                                        onChange={onChange}
-                                    />
-                                )}
-                                <Text style={styles.label}>Address</Text>
-                                <TextInput value={user.address} onChangeText={(value) => {
-                                    setUser({
-                                        ...user,
-                                        address: value
-                                    })
-                                }} style={styles.input} placeholder='Address' />
-                                {userVal != null && !user.address ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Address}</Text>
-                                    </View>
-
-                                ) : null}
-                                <Text style={styles.label}>Number phone</Text>
-                                <TextInput value={user.phone} onChangeText={(value) => {
-                                    setUser({
-                                        ...user,
-                                        phone: value
-                                    })
-                                }} style={styles.input} placeholder='XXXX-XXX-XXX' />
-                                {userVal != null && !user.phone ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Phone}</Text>
-                                    </View>
-
-                                ) : null}
-
-                                <Text style={styles.label}>Password</Text>
-                                <TextInput value={user.password} onChangeText={(value) => {
-                                    setUser({
-                                        ...user,
-                                        password: value
-                                    })
-                                }} style={styles.input} secureTextEntry />
-                                {userVal != null && !user.password ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Password}</Text>
-                                    </View>
-                                ) : null}
-                                <Text style={styles.label}>Confirm Password</Text>
-                                <TextInput value={rePasswords
-                                } onChangeText={(value) => {
-                                    setRePasswords(value)
-                                }} style={styles.input} secureTextEntry />
-                                {userVal != null && user.password !== rePasswords ? (
-                                    <View>
-                                        <Text style={styles.textError}>Password không khớp</Text>
-                                    </View>
-                                ) : null}
-
-                            </ScrollView>
-                            <View style={styles.buttons}>
-
-                                <TouchableOpacity style={styles.button} onPress={addUserAction}>
-                                    <Text style={styles.textbtn}>Signup</Text>
-                                </TouchableOpacity>
-                                <View style={styles.signup}>
-                                    <Text style={styles.text}>Have an account?</Text>
-                                    <TouchableOpacity onPress={onCancel}>
-                                        <Text style={styles.textSignup}>Cancel</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                    <Text style={styles.label}>User</Text>
+                    <TextInput value={user.user} onChangeText={(value) => {
+                        setUser({
+                            ...user,
+                            user: value
+                        })
+                    }} style={styles.input} placeholder='User name' />
+                    {userVal != null && user.user.length < 5 ? (
+                        <View>
+                            <Text style={styles.textError}>{userVal.User}</Text>
                         </View>
 
+                    ) : null}
+                    <Text style={styles.label}>Email</Text>
+                    <TextInput value={user.email} onChangeText={(value) => {
+                        setUser({
+                            ...user,
+                            email: value
+                        })
+                    }} style={styles.input} placeholder='...@gmail.com' />
+                    {userVal != null && (!user.email.includes("@") || !user.email.includes(".")) ? (
+                        <View>
+                            <Text style={styles.textError}>{userVal.Email}</Text>
+                        </View>
+                    ) : null}
+                    <Text style={styles.label}>Full name</Text>
+                    <TextInput value={user.name} onChangeText={(value) => {
+                        setUser({
+                            ...user,
+                            name: value
+                        })
+                    }} style={styles.input} placeholder='Nguyễn Văn A' />
+                    {userVal != null && !user.name ? (
+                        <View>
+                            <Text style={styles.textError}>{userVal.Name}</Text>
+                        </View>
+                    ) : null}
+                    <Text style={styles.label}>Gender</Text>
+                    <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
+                        <Text style={styles.selectedGenderText}>
+                            {selectedGender ? selectedGender : 'LGBT'}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
+                                    <Text>Male</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
+                                    <Text>Female</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
+                                    <Text>Other</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                    <Text>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                    <Text style={styles.label}>Date Of Birth</Text>
+
+
+                    <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
+                        <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
+                    </TouchableOpacity>
+                    {showDatePicker && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={selectedDate}
+                            mode="date"
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChange}
+                        />
+                    )}
+                    <Text style={styles.label}>Address</Text>
+                    <TextInput value={user.address} onChangeText={(value) => {
+                        setUser({
+                            ...user,
+                            address: value
+                        })
+                    }} style={styles.input} placeholder='Address' />
+                    {userVal != null && !user.address ? (
+                        <View>
+                            <Text style={styles.textError}>{userVal.Address}</Text>
+                        </View>
+
+                    ) : null}
+                    <Text style={styles.label}>Number phone</Text>
+                    <TextInput value={user.phone} onChangeText={(value) => {
+                        setUser({
+                            ...user,
+                            phone: value
+                        })
+                    }} style={styles.input} placeholder='XXXX-XXX-XXX' />
+                    {userVal != null && !user.phone ? (
+                        <View>
+                            <Text style={styles.textError}>{userVal.Phone}</Text>
+                        </View>
+
+                    ) : null}
+
+                    <Text style={styles.label}>Password</Text>
+                    <TextInput value={user.password} onChangeText={(value) => {
+                        setUser({
+                            ...user,
+                            password: value
+                        })
+                    }} style={styles.input} secureTextEntry />
+                    {userVal != null && !user.password ? (
+                        <View>
+                            <Text style={styles.textError}>{userVal.Password}</Text>
+                        </View>
+                    ) : null}
+                    <Text style={styles.label}>Confirm Password</Text>
+                    <TextInput value={rePasswords
+                    } onChangeText={(value) => {
+                        setRePasswords(value)
+                    }} style={styles.input} secureTextEntry />
+                    {userVal != null && user.password !== rePasswords ? (
+                        <View>
+                            <Text style={styles.textError}>Password không khớp</Text>
+                        </View>
+                    ) : null}
+
+                </ScrollView>
+                <View style={styles.buttons}>
+
+                    <TouchableOpacity style={styles.button} onPress={addUserAction}>
+                        <Text style={styles.textbtn}>Signup</Text>
+                    </TouchableOpacity>
+                    <View style={styles.signup}>
+                        <Text style={styles.text}>Have an account?</Text>
+                        <TouchableOpacity onPress={onCancel}>
+                            <Text style={styles.textSignup}>Cancel</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            </KeyboardAvoidingView>
-        </Background>
+
+
+            </View>
+        </View>
 
 
     );
@@ -361,23 +345,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
+        height: "100%",
+        width: "100%"
 
     },
     mainContainer: {
         marginVertical: 10,
         backgroundColor: "#fff",
-        height: 700,
-        width: 390,
-        borderTopLeftRadius: 130,
-        paddingTop: 35,
+        height: "81%",
+        width: "100%",
+        borderTopLeftRadius: 100,
+        paddingTop: "8%",
         alignItems: "center"
     },
     content: {
-        alignItems: "flex-start",
-        width: "80%"
+        width: "85%",
+        height: "55%",
+
     },
     mainText: {
-        marginTop: 20,
+        marginTop: "20%",
         fontSize: 30,
         fontWeight: "900",
         color: '#fff'

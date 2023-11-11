@@ -26,26 +26,28 @@ const LoginScreen = ({ navigation }) => {
         // await deleteItemAsync('accessToken');
         const getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
-        const note = tokenObject.note;
-        const token = await getAccessToken()
-        if (token) {
-            configAxiosWithAccessToken(token)
-            if (note == "User") {
-                navigation.navigate("MainScreenUser", { user: tokenObject.user, listImageUri })
-            }
-            else if (note == "NCC") {
-                navigation.navigate("MainScreenNCC", { user: tokenObject.user })
-            }
-            else if (note == "Admin") {
-                navigation.navigate("MainScreenAdmin", { user: tokenObject.user })
+
+        if (tokenObject != null) {
+            const note = tokenObject.note;
+            const token = await getAccessToken()
+            if (token) {
+                configAxiosWithAccessToken(token)
+                if (note == "User") {
+                    navigation.navigate("MainScreenUser", { user: tokenObject.user, listImageUri })
+                }
+                else if (note == "NCC") {
+                    navigation.navigate("MainScreenNCC", { user: tokenObject.user })
+                }
+                else if (note == "Admin") {
+                    navigation.navigate("MainScreenAdmin", { user: tokenObject.user })
+                }
             }
         }
     }
 
     useEffect(() => {
-        // console.log("Load token called!");
+        console.log("Load token called!");
         loadToken()
-        
     }, [listImageUri])
 
 
@@ -64,7 +66,7 @@ const LoginScreen = ({ navigation }) => {
                     password
                 })
                 const message = loginResponse.data
-                // console.log(loginResponse.data.note);
+                console.log(loginResponse.data.note);
                 //Lưu token lại
 
                 const result = await saveTokenToDevice({
@@ -94,96 +96,103 @@ const LoginScreen = ({ navigation }) => {
     }
 
     return (
-        <Background>
-            <View style={styles.container}>
-                <Text style={styles.mainText}>Login</Text>
-                <View style={styles.mainContainer}>
-                    <View style={styles.content}>
 
-                        <Text style={styles.label}>User</Text>
-                        <TextInput value={users.user} onChangeText={(value) => {
-                            setUsers({
-                                ...users,
-                                user: value
-                            }),
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../assets/Icon/BG.jpg")} />
+            <Text style={styles.mainText}>Login</Text>
+            <View style={styles.mainContainer}>
+                <View style={styles.content}>
 
-                                setUser(value)
-                        }} style={styles.input} placeholder="" />
-                        {userVal != null && !users.user ? (
-                            <View>
-                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
-                            </View>
-                        ) : null}
-                        <Text style={styles.label}>Password</Text>
-                        <TextInput value={users.password} onChangeText={(value) => {
-                            setUsers({
-                                ...users,
-                                password: value
-                            }),
+                    <Text style={styles.label}>User</Text>
+                    <TextInput value={users.user} onChangeText={(value) => {
+                        setUsers({
+                            ...users,
+                            user: value
+                        }),
 
-                                setPassword(value)
-                        }} style={styles.input} secureTextEntry />
-                        {userVal != null && !users.password ? (
-                            <View>
-                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
-                            </View>
-                        ) : null}
-                    </View>
-                    <View style={styles.buttons}>
-                        <TouchableOpacity style={styles.button} onPress={login}>
-                            {isLoading ? (
-                                <ActivityIndicator color="#fff" />
-                            ) : (
-                                <Text style={styles.textbtn}>login</Text>
-                            )}
-                        </TouchableOpacity>
-                        <View style={styles.signup}>
-                            <Text style={styles.text}>Don't have an account?</Text>
-                            <TouchableOpacity >
-                                <Text style={styles.textSignup} onPress={() => navigation.navigate('RegisterScreen')}>Signup</Text>
-                            </TouchableOpacity>
+                            setUser(value)
+                    }} style={styles.input} placeholder="" />
+                    {userVal != null && !users.user ? (
+                        <View>
+                            <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
                         </View>
+                    ) : null}
+                    <Text style={styles.label}>Password</Text>
+                    <TextInput value={users.password} onChangeText={(value) => {
+                        setUsers({
+                            ...users,
+                            password: value
+                        }),
 
-                    </View>
-                    <View>
-                        <Image source={require("../assets/Icon/kisspng-joystick-game-controllers-xbox-accessory-computer-gamepad-5b3bee0604bfc9.5411179315306542140195.png")} style={styles.image} />
-                    </View>
+                            setPassword(value)
+                    }} style={styles.input} secureTextEntry />
+                    {userVal != null && !users.password ? (
+                        <View>
+                            <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
+                        </View>
+                    ) : null}
                 </View>
+                <View style={styles.buttons}>
+                    <TouchableOpacity style={styles.button} onPress={login}>
+                        {isLoading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text style={styles.textbtn}>login</Text>
+                        )}
+                    </TouchableOpacity>
+                    <View style={styles.signup}>
+                        <Text style={styles.text}>Don't have an account?</Text>
+                        <TouchableOpacity >
+                            <Text style={styles.textSignup} onPress={() => navigation.navigate('RegisterScreen')}>Signup</Text>
+                        </TouchableOpacity>
+                    </View>
 
+                </View>
+                <View>
+                    <Image source={require("../assets/Icon/kisspng-joystick-game-controllers-xbox-accessory-computer-gamepad-5b3bee0604bfc9.5411179315306542140195.png")} style={styles.image} />
+                </View>
             </View>
-        </Background>
+
+        </View>
     )
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
+        height: "100%",
+        width: "100%"
 
     },
     mainContainer: {
         marginVertical: 10,
         backgroundColor: "#fff",
-        height: 700,
-        width: 390,
+        height: "100%",
+        width: "100%",
         borderTopLeftRadius: 130,
         paddingTop: 35,
         alignItems: "center"
     },
     mainText: {
-        marginTop: 20,
+        marginTop: "20%",
         fontSize: 30,
         fontWeight: "900",
         color: '#fff'
     },
     content: {
         alignItems: "flex-start",
-        width: "80%"
+        width: "80%",
+        margin: "5%"
     },
     input: {
         borderWidth: 1,
         borderColor: "#bbb",
         padding: 5,
-        borderRadius: 100,
+        borderRadius: 20,
         width: "100%",
         backgroundColor: "#5555"
     },
@@ -191,21 +200,21 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         fontWeight: "bold",
         color: '#17741d',
-        fontSize: 16
+        fontSize: 16,
+        marginLeft: 6
     },
     buttons: {
 
         justifyContent: "space-between",
-        width: 320,
-        marginTop: 20,
+        width: "80%",
+        marginTop: "1%",
         alignItems: "center",
 
     },
     button: {
-
         borderWidth: 1,
         borderColor: "#177413",
-        padding: 8,
+        paddingVertical: 8,
         borderRadius: 100,
         backgroundColor: "#27bc32",
         width: "80%",
@@ -225,8 +234,7 @@ const styles = StyleSheet.create({
     textSignup: {
         fontWeight: 'bold',
         color: '#17741d',
-
-
+        marginLeft: 5
     },
     text: {
         fontWeight: "500",
