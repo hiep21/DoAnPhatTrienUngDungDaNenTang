@@ -188,7 +188,7 @@ const AddUserScreen = ({ navigation }) => {
                         )}
 
 
-                        <TouchableOpacity style={[styles.input, { height: 35, justifyContent: 'center' }]} onPress={() => { pickImage(); }}>
+                        <TouchableOpacity style={[styles.input, { justifyContent: 'center' }]} onPress={() => { pickImage(); }}>
                             <Text  >
                                 Chọn ảnh
                             </Text>
@@ -233,7 +233,7 @@ const AddUserScreen = ({ navigation }) => {
                             </View>
                         ) : null}
                         <Text style={styles.label}>Gender</Text>
-                        <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
+                        <TouchableOpacity onPress={toggleModal} style={[styles.dropdownButton, styles.input]}>
                             <Text style={styles.selectedGenderText}>
                                 {selectedGender ? selectedGender : 'LGBT'}
                             </Text>
@@ -260,7 +260,7 @@ const AddUserScreen = ({ navigation }) => {
                         <Text style={styles.label}>Date Of Birth</Text>
 
 
-                        <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
+                        <TouchableOpacity style={[styles.dropdownButton, styles.input]} onPress={() => setShowDatePicker(true)}>
                             <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
                         </TouchableOpacity>
                         {showDatePicker && (
@@ -384,7 +384,8 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: "#7777",
         borderColor: '#555',
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+        height: "7%"
     },
     label: {
         marginTop: 8,
@@ -410,18 +411,12 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         color: 'blue'
     },
-    inputAdd: {
-        borderWidth: 2,
-        height: 100,
-        width: '100%',
 
-    },
     dropdownButton: {
         flexDirection: 'row',
         alignItems: 'center',
         borderWidth: 1.25,
         borderColor: '#777',
-        padding: 6,
         borderRadius: 100,
         justifyContent: 'space-between',
         backgroundColor: "#5555",
@@ -430,8 +425,6 @@ const styles = StyleSheet.create({
     },
     selectedGenderText: {
         flex: 1,
-
-        marginLeft: 10
     },
     modalContainer: {
         flex: 1,

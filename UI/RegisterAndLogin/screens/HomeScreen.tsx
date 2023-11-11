@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
             setListImageUri(checklist)
             // console.log(checklist)
         } catch (error) {
-            console.log(error.response.data)
+            console.log(error.response)
         }
     }
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#27bc32",
         width: "100%",
         alignItems: "center",
-        height: "100%"
+        height: "100%",
+        justifyContent: 'center'
 
     },
     buttonRegisterScreen: {
