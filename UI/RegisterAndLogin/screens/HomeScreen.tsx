@@ -47,44 +47,55 @@ const HomeScreen = ({ navigation }) => {
 
     }, [])
     return (
-        <Background>
-            <View style={styles.container}>
-                <Text style={styles.mainText}>Welcome to the game store</Text>
-                <View>
-                    <Image source={require("../assets/Icon/game2.png")} style={styles.image} />
-                </View>
-                <View style={styles.buttons}>
-                    <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen', { listImageUri })}>
-                        <Text style={styles.buttonText1}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonRegisterScreen} onPress={() => navigation.navigate('RegisterScreen', { listImageUri })}>
-                        <Text style={styles.buttonText2}>Signup</Text>
-                    </TouchableOpacity>
-                </View>
-
-
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../assets/Icon/BG.jpg")} />
+            <Text style={styles.mainText}>Welcome to the game store</Text>
+            <View>
+                <Image source={require("../assets/Icon/game2.png")} style={styles.image} />
+            </View>
+            <View style={styles.buttons}>
+                <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen', { listImageUri })}>
+                    <Text style={styles.buttonText1}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonRegisterScreen} onPress={() => navigation.navigate('RegisterScreen', { listImageUri })}>
+                    <Text style={styles.buttonText2}>Signup</Text>
+                </TouchableOpacity>
             </View>
 
-        </Background>
+
+        </View>
+
+
 
     );
 };
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
         alignItems: "center",
-        padding: 40
+        width: "100%",
+        height: "100%"
+
     },
     mainText: {
         fontSize: 40,
         color: "#fff",
-        fontWeight: '500'
+        fontWeight: '500',
+        width: "80%",
+        height: "20%",
+        marginTop: "25%",
+        textAlign: "center"
     },
     buttons: {
 
         alignItems: 'center',
-        paddingTop: 50
+        paddingTop: 50,
+        width: "70%",
+        height: "11%"
 
 
     },
@@ -95,19 +106,19 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 100,
         backgroundColor: "#27bc32",
-        width: 280,
-        alignItems: "center"
+        width: "100%",
+        alignItems: "center",
+        height: "100%"
 
     },
     buttonRegisterScreen: {
-
-
         borderColor: "#000",
         padding: 8,
         borderRadius: 100,
         backgroundColor: "#fff",
-        width: 280,
-        alignItems: "center"
+        width: "100%",
+        alignItems: "center",
+        height: "90%"
     },
     buttonText1: {
         fontWeight: 'bold',
