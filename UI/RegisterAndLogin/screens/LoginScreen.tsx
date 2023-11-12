@@ -66,22 +66,33 @@ const LoginScreen = ({ navigation }) => {
                     password
                 })
                 const message = loginResponse.data
-                console.log(loginResponse.data.note);
+                // console.log(loginResponse.data.note);
                 //Lưu token lại
-
+                const note = loginResponse.data.note
                 const result = await saveTokenToDevice({
                     user,
                     email: message.email,
                     image: message.image,
-                    note: loginResponse.data.note,
+                    note: message.note,
                     password
                 })
                 if (!result) {
                     alert("Lỗi khi xử lý đăng nhập!")
                 }
                 alert("Đăng nhập thành công")
+                console.log(note)
 
-                navigation.navigate("HomeScreen")
+                if (note == "User") {
+                    navigation.navigate("MainScreenUser", { user, listImageUri })
+                }
+                else if (note == "NCC") {
+                    navigation.navigate("MainScreenNCC", { user })
+                }
+                else if (note == "Admin") {
+                    navigation.navigate("MainScreenAdmin", { user })
+                }
+
+
                 //Chuyển hướng sang màn home
 
             } catch (err) {

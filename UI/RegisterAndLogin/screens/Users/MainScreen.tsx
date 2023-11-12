@@ -36,7 +36,7 @@ const MainScreen = ({ navigation }) => {
                 const response = await getImageIconGame(ListGame[i].tenTroChoi)
                 const ImageName = response.data[0].imageName
                 // console.log(data[i].id)
-                await fetchImageGame(ListGame[i].tenTroChoi, ImageName,data[i].id)
+                await fetchImageGame(ListGame[i].tenTroChoi, ImageName, data[i].id)
             }
 
             setListImageUri(checklist)
@@ -62,10 +62,10 @@ const MainScreen = ({ navigation }) => {
     };
     const [listImageUri, setListImageUri] = useState<ImageGameUri[]>([])
     let checklist: ImageGameUri[] = [];
-    const fetchImageGame = async (nameFile: string, imageName: string,id:string) => {
+    const fetchImageGame = async (nameFile: string, imageName: string, id: string) => {
 
         let check: ImageGameUri = {
-            id : "",
+            id: "",
             nameFile: "",
             imageUri: ""
         };
@@ -210,19 +210,25 @@ const MainScreen = ({ navigation }) => {
         <View style={styles.container}>
 
             <View style={styles.head}>
-                <View style={styles.search}>
-                    <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
-                    <TextInput placeholder='Tìm kiếm trò chơi'
-                        value={searchKeyword}
-                        onChangeText={(text) => setSearchKeyword(text)}
-                        onFocus={() => setChecks(true)}
-                    />
-                    <TouchableOpacity style={{
+                <View style={{
+                    flexDirection: "row"
+                }}>
+                    <Image style={{ height: 30, width: 30, marginRight: 10 }} source={require("../../assets/favicon.png")} />
+                    <View style={styles.search}>
 
-                        paddingTop: 5
-                    }} onPress={() => { handleSearch() }}>
-                        <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
-                    </TouchableOpacity>
+                        <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
+                        <TextInput placeholder='Tìm kiếm trò chơi'
+                            value={searchKeyword}
+                            onChangeText={(text) => setSearchKeyword(text)}
+                            onFocus={() => setChecks(true)}
+                        />
+                        <TouchableOpacity style={{
+
+                            paddingTop: 5
+                        }} onPress={() => { handleSearch() }}>
+                            <Image style={{ width: 20, height: 10, marginTop: 7, }} source={require("../../assets/Icon/paper-1349664_1280.png")} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 {checks ? (
                     <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => { setChecks(false) }}>
@@ -252,25 +258,35 @@ const MainScreen = ({ navigation }) => {
                 </View>
 
             </View>
-            <View>
+            <View style={styles.bottom}>
                 {!checks ? (
-                    <View style={{
-                        justifyContent: 'space-around'
-                    }}>
-                        <Carousel listImageUri={listImageUri} user={user} navigation={navigation}/>
+                    <View >
+                        <Carousel listImageUri={listImageUri} user={user} navigation={navigation} />
+
                         <View style={styles.body}>
+
                             <View style={{
                                 height: "85%"
                             }}>
 
-                                <Text style={{
-                                    textAlign: 'left',
-                                    paddingLeft: 30,
-                                    borderBottomWidth: 1.5,
-                                    fontSize: 17,
-                                    fontWeight: '600',
+                                <View style={styles.scrollView}>
+                                    <ScrollView horizontal={true} style={{
+                                        padding: 4,
+                                    }}>
+                                        <TouchableOpacity>
+                                            <Text style={{
+                                                fontSize: 17,
+                                                fontWeight: '600',
 
-                                }}>Được đề xuất cho bạn</Text>
+                                            }}>Được đề xuất cho bạn</Text>
+                                        </TouchableOpacity>
+
+                                    </ScrollView>
+
+                                </View>
+                                <View style={{
+                                    borderBottomWidth: 1.5,
+                                }}></View>
                                 <FlatList
                                     data={listGame}
                                     renderItem={(list) => renderTask(list)}
@@ -321,10 +337,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        padding: 10,
         justifyContent: 'flex-start',
         width: "100%",
-
+        height: "100%",
         backgroundColor: "#fff"
 
     },
@@ -335,53 +350,30 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         borderRadius: 20,
-
     },
     head: {
 
         width: "100%",
-        height: 40,
+        height: "6%",
         justifyContent: 'space-between',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        paddingHorizontal: 10
     },
     user: {
         flexDirection: 'row',
     },
-    danhsachtrochoi: {
-        fontSize: 15,
-        fontWeight: "500",
-        marginLeft: 20,
-        paddingTop: 20
-
-    },
-    title: {
-        justifyContent: 'flex-start',
-        width: "100%",
-        marginRight: 100
-    },
-    underlined: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#000",
-        width: 420,
-        fontSize: 15,
-        fontWeight: "500",
-        paddingLeft: 30,
-        paddingTop: 10,
-
-
-    },
-    image: {
-        //borderRadius: 15,
-        //width:'95%',
-        //marginTop:15,
-        padding: 20
+    bottom: {
+        backgroundColor: "#fff",
+        paddingVertical: 10
     },
     body: {
         backgroundColor: "white",
-        width: 340,
+        width: "100%",
         height: "55%",
-        marginHorizontal: 5,
 
+    },
+    scrollView: {
+        height: "10%"
     },
 
 })
