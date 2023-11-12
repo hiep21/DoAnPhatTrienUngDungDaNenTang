@@ -7,7 +7,6 @@ import BottomSheet from "./BottomSheet";
 import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
 import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
-import { GameManager, ImageUri } from '../../services/interfaces/User.interface';
 
 
 const MainScreen = ({ navigation }) => {
@@ -418,7 +417,9 @@ const MainScreen = ({ navigation }) => {
                 <View style={{
                     flexDirection: "row"
                 }}>
-                    <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
+                    <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { user, lsImageUri }) }}>
+                        <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
+                    </TouchableOpacity>
                     <View style={styles.search}>
 
                         <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
@@ -505,8 +506,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'flex-start',
         width: "100%",
-        height: "100%",
-        backgroundColor: "#fff"
+        height: "95%",
+        backgroundColor: "#fff",
+        paddingTop: "5%"
 
     },
     search: {

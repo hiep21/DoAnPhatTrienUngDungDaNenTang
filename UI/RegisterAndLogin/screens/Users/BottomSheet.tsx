@@ -79,7 +79,7 @@ class BottomSheet extends React.Component {
         const { isPanelVisible } = this.state;
         if (isPanelVisible) {
 
-          this._panel.show(height / 1.23);
+          this._panel.show(height / 1.23 + height * 1 / 100);
         } else {
           this._panel.hide(0);
         }

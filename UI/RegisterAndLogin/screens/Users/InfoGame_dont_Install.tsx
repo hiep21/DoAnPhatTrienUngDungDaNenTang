@@ -47,7 +47,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
     }, [gameId, user, imageGameUri])
     return (
         <View style={styles.container}>
-            
+
             <View style={styles.body}>
                 <Text style={{
                     textAlign: 'left',
@@ -100,22 +100,22 @@ const InfoGame_dont_Install = ({ navigation }) => {
                     height: 100,
                     marginTop: 10,
                     borderTopWidth: 1,
-                    borderBottomWidth: 1,
+
                     flexDirection: 'row',
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                 }}>
                     <View style={[styles.itemInfo, { width: 80 }]}>
                         <Text>Giá cho thuê</Text>
-                        <Text>{game?.gia}</Text>
+                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderColor: "#bbb", paddingHorizontal: 5 }}>{game?.gia}</Text>
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Tuổi</Text>
-                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderLeftWidth: 1, borderColor: "#bbb" }}>{game?.doTuoi}</Text>
+                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderColor: "#bbb", paddingHorizontal: 5 }}>{game?.doTuoi}</Text>
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Thể loại</Text>
-                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderColor: "#bbb" }}>{game?.theLoai}</Text>
+                        <Text style={{ width: "100%", height: 20, textAlign: 'center', borderRightWidth: 1, borderColor: "#bbb", paddingHorizontal: 5 }}>{game?.theLoai}</Text>
                     </View>
                     <View style={styles.itemInfo}>
                         <Text>Kích cỡ</Text>
@@ -129,7 +129,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
                     {game?.gioiThieuTroChoi}
                 </Text>
             </View>
-            {/* <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} /> */}
+
         </View>
 
 
@@ -141,14 +141,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
 
     },
-    head: {
 
-        width: "80%",
-        height: 40,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-
-    },
     search: {
         width: 200,
         height: 35,
@@ -166,9 +159,9 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: "white",
         width: "100%",
-        height: "40%",
+        height: "30%",
         marginTop: 20,
-
+        borderBottomWidth: 1,
     },
     describeGame: {
 
@@ -181,14 +174,14 @@ const styles = StyleSheet.create({
     },
     itemInfo: {
 
-        width: 70,
+        width: "20%",
         height: 40,
         alignItems: 'center'
 
     },
     end: {
         width: "95%",
-        height: 260,
+        height: "80%",
         marginHorizontal: 15,
 
     }
