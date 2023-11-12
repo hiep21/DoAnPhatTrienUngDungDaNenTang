@@ -68,20 +68,21 @@ class BottomSheet extends React.Component {
 
   };
   showPanel = () => {
-    //this._panel.show(480);
-    this.setState((prevState) => ({
-      isPanelVisible: !prevState.isPanelVisible,
-    }));
-    const { isPanelVisible } = this.state
-    if (isPanelVisible == true) {
-      // this.test();
-      this._panel.show(480);
-    }
-    else {
-      this._panel.show(-48);
-    }
-
+    this.setState(
+      (prevState) => ({
+        isPanelVisible: !prevState.isPanelVisible,
+      }),
+      () => {
+        const { isPanelVisible } = this.state;
+        if (isPanelVisible) {
+          this._panel.show(625);
+        } else {
+          this._panel.hide(0);
+        }
+      }
+    );
   };
+
   navigateToUserScreen = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
@@ -231,10 +232,11 @@ class BottomSheet extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 0,
-    width: "100%",
+    width: "90%",
     backgroundColor: "#f8f9fa",
     alignItems: "center",
     justifyContent: "center",
+    alignSelf: "center"
 
   },
   panel: {
