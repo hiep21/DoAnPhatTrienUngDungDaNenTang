@@ -55,7 +55,7 @@ const HomeScreen = ({ navigation }) => {
             }} source={require("../assets/Icon/BG.jpg")} />
             <Text style={styles.mainText}>Welcome to the game store</Text>
             <View>
-                <Image source={require("../assets/Icon/game2.png")} style={styles.image} />
+                <Image source={require("../assets/Icon/Logo.png")} style={styles.image} />
             </View>
             <View style={styles.buttons}>
                 <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('LoginScreen', { listImageUri })}>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         height: "100%",
-      
+
 
     },
     mainText: {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     image: {
 
         width: 250,
-        height: 200
+        height: 250
     }
 
 })

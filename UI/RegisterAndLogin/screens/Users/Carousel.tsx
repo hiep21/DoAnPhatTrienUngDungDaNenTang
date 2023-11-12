@@ -23,11 +23,11 @@ const { width, height } = Dimensions.get('window');
 
 const imageAspectRatio = 1920 / 1080;
 
-export default function Carousel({ listImageUri ,user, navigation} ) {
+export default function Carousel({ listImageUri, user, navigation }) {
   const containerHeight = width / imageAspectRatio;
   const scrollX = new Animated.Value(0);
   const scrollViewRef = useRef();
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       const nextIndex = (Math.floor(scrollX._value / width) + 1) % listImageUri.length;
@@ -37,9 +37,9 @@ export default function Carousel({ listImageUri ,user, navigation} ) {
     return () => {
       clearInterval(timer);
     };
-  }, [scrollX,listImageUri,user]);
+  }, [scrollX, listImageUri, user]);
 
-  const CheckBuyAndInstall = async (id: string, nameFile:string, imageUri: string) => {
+  const CheckBuyAndInstall = async (id: string, nameFile: string, imageUri: string) => {
     try {
       const { data } = await getGameManager(user);
       const GameCheck = [];
@@ -51,26 +51,29 @@ export default function Carousel({ listImageUri ,user, navigation} ) {
       }
 
       if (GameCheck.length == 0) {
-        navigation.navigate("InfoGame_dont_Install", { gameId :id,user, imageGameUri: imageUri });
+        navigation.navigate("InfoGame_dont_Install", { gameId: id, user, imageGameUri: imageUri });
       } else {
-        navigation.navigate("InfoGameScreen", { gameId:id ,gameManager: GameCheck[0], installGame: GameCheck[0].isInstall,imageGameUri:imageUri});
+        navigation.navigate("InfoGameScreen", { gameId: id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri: imageUri });
       }
     } catch (error) {
       if (error.response.data == "Tài khoản " + user + " chưa mua với tải game") {
-        navigation.navigate("InfoGame_dont_Install", { gameId:id, user, imageGameUri: imageUri });
+        navigation.navigate("InfoGame_dont_Install", { gameId: id, user, imageGameUri: imageUri });
       } else {
         console.log(error.response.data);
       }
     };
   }
   // const CheckBuyAndInstall = async ()=> {
-    
+
   //   navigation.navigate("InfoGame_dont_Install")
   // }
   const position = Animated.divide(scrollX, width);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{
+      flex: 1,
+      marginTop: 30
+    }}>
       <View style={{ width, height: containerHeight }}>
         <ScrollView
           horizontal={true}
@@ -78,15 +81,15 @@ export default function Carousel({ listImageUri ,user, navigation} ) {
           showsHorizontalScrollIndicator={false}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false } 
+            { useNativeDriver: false }
           )}
-          
+
           scrollEventThrottle={16}
           ref={scrollViewRef}
         >
           {listImageUri.map((image, i) => {
             return (
-              <TouchableOpacity key={i} onPress={() => CheckBuyAndInstall(image.id,image.nameFile,image.imageUri)} style={{ width, height: containerHeight }}>
+              <TouchableOpacity key={i} onPress={() => CheckBuyAndInstall(image.id, image.nameFile, image.imageUri)} style={{ width, height: containerHeight }}>
                 <Image
                   style={{ flex: 1, width: undefined, height: undefined, borderRadius: 15, marginHorizontal: 10 }}
                   source={{ uri: image.imageUri }}

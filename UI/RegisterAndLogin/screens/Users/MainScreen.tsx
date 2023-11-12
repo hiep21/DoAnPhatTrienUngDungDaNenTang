@@ -203,8 +203,203 @@ const MainScreen = ({ navigation }) => {
 
         )
     }
+    const [choseTitle, setChoseTitle] = useState<number>(1)
+    const choseScrollView = () => {
+        return (
+            <ScrollView
+                horizontal={true}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                style={{
+                    paddingTop: 4,
+                    paddingLeft: 4
+                }}>
+                <View style={{
+                    marginHorizontal: 10
+                }}>
+                    <TouchableOpacity style={{
+                        height: 25,
+                        marginRight: 10,
+                        borderRadius: 10,
+                    }} onPress={() => { setChoseTitle(1) }}>
+                        {choseTitle != 1 ? (
+                            <Text style={styles.textScroll}>Cho bạn</Text>
+                        ) : (
+                            <Text style={[styles.textScroll, { color: "#45A0D2" }]}>Cho bạn</Text>
+                        )}
+                    </TouchableOpacity>
+                    {choseTitle != 1 ? (
+                        <View ></View>
+                    ) : (
+                        <View style={[styles.hightLine, { borderColor: "#45A0D2" }]}></View>
+                    )}
 
+                </View>
+                <View style={{
+                    marginHorizontal: 10
+                }}>
+                    <TouchableOpacity style={{
+                        height: 25,
+                        marginRight: 10,
+                        borderRadius: 10,
+                    }} onPress={() => { setChoseTitle(2) }}>
+                        {choseTitle != 2 ? (
+                            <Text style={styles.textScroll}>Bảng xếp hạng</Text>
+                        ) : (
+                            <Text style={[styles.textScroll, { color: "#45A0D2" }]}>Bảng xếp hạng</Text>
+                        )}
+                    </TouchableOpacity>
+                    {choseTitle != 2 ? (
+                        <View ></View>
+                    ) : (
+                        <View style={[styles.hightLine, { borderColor: "#45A0D2" }]}></View>
+                    )}
+                </View>
+                <View style={{
+                    marginHorizontal: 10
+                }}>
+                    <TouchableOpacity style={{
+                        height: 25,
+                        marginRight: 10,
+                        borderRadius: 10,
+                    }} onPress={() => { setChoseTitle(3) }}>
+                        {choseTitle != 3 ? (
+                            <Text style={styles.textScroll}>Theo xu hướng</Text>
+                        ) : (
+                            <Text style={[styles.textScroll, { color: "#45A0D2" }]}>Theo xu hướng</Text>
+                        )}
+                    </TouchableOpacity>
+                    {choseTitle != 3 ? (
+                        <View ></View>
+                    ) : (
+                        <View style={[styles.hightLine, { borderColor: "#45A0D2" }]}></View>
+                    )}
+                </View>
+                <View style={{
+                    marginHorizontal: 10
+                }}>
+                    <TouchableOpacity style={{
+                        height: 25,
+                        marginRight: 10,
+                        borderRadius: 10,
+                    }} onPress={() => { setChoseTitle(4) }}>
+                        {choseTitle != 4 ? (
+                            <Text style={styles.textScroll}>Miễn phí</Text>
+                        ) : (
+                            <Text style={[styles.textScroll, { color: "#45A0D2" }]}>Miễn phí</Text>
+                        )}
+                    </TouchableOpacity>
+                    {choseTitle != 4 ? (
+                        <View ></View>
+                    ) : (
+                        <View style={[styles.hightLine, { borderColor: "#45A0D2" }]}></View>
+                    )}
+                </View>
+                <View style={{
+                    marginHorizontal: 10
+                }}>
+                    <TouchableOpacity style={{
+                        height: 25,
+                        marginRight: 10,
+                        borderRadius: 10,
+                    }} onPress={() => { setChoseTitle(5) }}>
+                        {choseTitle != 5 ? (
+                            <Text style={styles.textScroll}>Loại</Text>
+                        ) : (
+                            <Text style={[styles.textScroll, { color: "#45A0D2" }]}>Loại</Text>
+                        )}
+                    </TouchableOpacity>
+                    {choseTitle != 5 ? (
+                        <View ></View>
+                    ) : (
+                        <View style={[styles.hightLine, { borderColor: "#45A0D2" }]}></View>
+                    )}
+                </View>
 
+            </ScrollView>
+
+        )
+    }
+
+    const viewChose = () => {
+        switch (choseTitle) {
+            case 1:
+                return (
+                    <View style={{
+                        width: "100%",
+                        height: "95%"
+                    }}>
+                        <View style={{
+                            width: "100%",
+                            height: "50%"
+                        }}>
+                            <Carousel listImageUri={listImageUri} user={user} navigation={navigation} />
+                        </View>
+                        <View style={styles.body}>
+
+                            <View style={{
+                                height: "47%"
+                            }}>
+
+                                <Text style={{
+                                    fontSize: 17,
+                                    fontWeight: '600',
+                                    paddingLeft: 30
+                                }}>Được đề xuất cho bạn</Text>
+                                <View style={{
+                                    borderBottomWidth: 1.5,
+                                }}></View>
+                                <FlatList
+                                    data={listGame}
+                                    renderItem={(list) => renderTask(list)}
+                                    onRefresh={loadTasks}
+                                    refreshing={refreshing}
+                                    style={{
+                                        marginTop: "5%",
+                                        borderWidth: 1,
+                                        width: "95%",
+                                        alignSelf: 'center',
+                                        borderRadius: 5,
+                                        borderColor: "#bbb",
+                                        height: "10%"
+                                    }}
+                                />
+                            </View>
+                            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+
+                        </View>
+                    </View>
+                )
+                break;
+            case 2:
+                return (
+                    <View style={{
+                        backgroundColor: "red",
+                        width: "100%",
+                        height: "95%"
+                    }}></View>
+                )
+                break;
+            case 3:
+                return (
+                    <View style={{
+                        backgroundColor: "blue",
+                        width: "100%",
+                        height: "95%"
+                    }}></View>
+                )
+                break;
+            case 4:
+                return (
+                    <View style={{
+                        backgroundColor: "green",
+                        width: "100%",
+                        height: "95%"
+                    }}></View>
+                )
+                break;
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -213,7 +408,7 @@ const MainScreen = ({ navigation }) => {
                 <View style={{
                     flexDirection: "row"
                 }}>
-                    <Image style={{ height: 30, width: 30, marginRight: 10 }} source={require("../../assets/favicon.png")} />
+                    <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
                     <View style={styles.search}>
 
                         <Image style={{ width: 20, height: 20, marginTop: 7 }} source={require("../../assets/Icon/search.png")} />
@@ -258,56 +453,16 @@ const MainScreen = ({ navigation }) => {
                 </View>
 
             </View>
-            <View style={styles.bottom}>
+            <View style={styles.body}>
+                <View style={styles.scrollView}>
+                    {choseScrollView()}
+                </View>
+                <View style={{
+                    borderTopWidth: 1.5,
+                }}></View>
                 {!checks ? (
                     <View >
-                        <Carousel listImageUri={listImageUri} user={user} navigation={navigation} />
-
-                        <View style={styles.body}>
-
-                            <View style={{
-                                height: "85%"
-                            }}>
-
-                                <View style={styles.scrollView}>
-                                    <ScrollView horizontal={true} style={{
-                                        padding: 4,
-                                    }}>
-                                        <TouchableOpacity>
-                                            <Text style={{
-                                                fontSize: 17,
-                                                fontWeight: '600',
-
-                                            }}>Được đề xuất cho bạn</Text>
-                                        </TouchableOpacity>
-
-                                    </ScrollView>
-
-                                </View>
-                                <View style={{
-                                    borderBottomWidth: 1.5,
-                                }}></View>
-                                <FlatList
-                                    data={listGame}
-                                    renderItem={(list) => renderTask(list)}
-                                    onRefresh={loadTasks}
-                                    refreshing={refreshing}
-                                    style={{
-                                        marginTop: "5%",
-                                        borderWidth: 1,
-                                        width: "95%",
-                                        alignSelf: 'center',
-                                        borderRadius: 5,
-                                        borderColor: "#bbb",
-                                        height: "10%"
-                                    }}
-                                />
-
-                            </View>
-
-                            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
-
-                        </View>
+                        {viewChose()}
                     </View>
                 ) : (
                     <FlatList
@@ -367,15 +522,26 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     body: {
-        backgroundColor: "white",
+        backgroundColor: "#fff",
+        paddingVertical: 10,
         width: "100%",
-        height: "55%",
-
+        height: "100%",
     },
     scrollView: {
-        height: "10%"
+        height: "4.8%",
+        width: "100%"
     },
-
+    textScroll: {
+        fontSize: 17,
+        fontWeight: '600',
+        paddingHorizontal: 3
+    },
+    hightLine: {
+        height: 30,
+        borderTopWidth: 5,
+        marginRight: 10,
+        borderRadius: 10,
+    },
 })
 
 export default MainScreen;
