@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, Dimensions, Animated, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React from "react";
+import { Text, View, Dimensions, Animated, StyleSheet, Image, TouchableOpacity, Pressable } from "react-native";
 
 import SlidingUpPanel from "rn-sliding-up-panel";
 import * as SecureStore from 'expo-secure-store';
@@ -28,6 +28,9 @@ class BottomSheet extends React.Component {
       image: "",
       note: ""
     };
+    this.effect = {
+
+    }
   }
   async componentDidMount() {
     // Lấy userName từ SecureStore và cập nhật state userName
@@ -75,7 +78,8 @@ class BottomSheet extends React.Component {
       () => {
         const { isPanelVisible } = this.state;
         if (isPanelVisible) {
-          this._panel.show(625);
+
+          this._panel.show(height / 1.23);
         } else {
           this._panel.hide(0);
         }
@@ -141,9 +145,8 @@ class BottomSheet extends React.Component {
         console.log(userName);
         console.log(email);
         console.log(image);
-        await SecureStore.deleteItemAsync('accessToken');
         await deleteUsers(userName);
-
+        await SecureStore.deleteItemAsync('accessToken');
         const { navigation } = this.props;
         alert("Đăng xuất thành công");
         navigation.navigate("HomeScreen");
