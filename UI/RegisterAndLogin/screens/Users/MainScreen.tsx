@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
 import Carousel from './Carousel';
 import { ImageGameUri, InfoGame } from '../../services/interfaces/GameService';
@@ -203,10 +203,20 @@ const MainScreen = ({ navigation }) => {
 
         )
     }
+    const scrollToItem = (index: number) => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({
+                x: index * 50, // Thay ITEM_WIDTH bằng chiều rộng của mỗi mục trong ScrollView
+                animated: true,
+            });
+        }
+    };
+    const scrollViewRef = useRef(null);
     const [choseTitle, setChoseTitle] = useState<number>(1)
     const choseScrollView = () => {
         return (
             <ScrollView
+                ref={scrollViewRef}
                 horizontal={true}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -221,7 +231,7 @@ const MainScreen = ({ navigation }) => {
                         height: 25,
                         marginRight: 10,
                         borderRadius: 10,
-                    }} onPress={() => { setChoseTitle(1) }}>
+                    }} onPress={() => { setChoseTitle(1); scrollToItem(0); }}>
                         {choseTitle != 1 ? (
                             <Text style={styles.textScroll}>Cho bạn</Text>
                         ) : (
@@ -242,7 +252,7 @@ const MainScreen = ({ navigation }) => {
                         height: 25,
                         marginRight: 10,
                         borderRadius: 10,
-                    }} onPress={() => { setChoseTitle(2) }}>
+                    }} onPress={() => { setChoseTitle(2); scrollToItem(1); }}>
                         {choseTitle != 2 ? (
                             <Text style={styles.textScroll}>Bảng xếp hạng</Text>
                         ) : (
@@ -262,7 +272,7 @@ const MainScreen = ({ navigation }) => {
                         height: 25,
                         marginRight: 10,
                         borderRadius: 10,
-                    }} onPress={() => { setChoseTitle(3) }}>
+                    }} onPress={() => { setChoseTitle(3); scrollToItem(2); }}>
                         {choseTitle != 3 ? (
                             <Text style={styles.textScroll}>Theo xu hướng</Text>
                         ) : (
@@ -282,7 +292,7 @@ const MainScreen = ({ navigation }) => {
                         height: 25,
                         marginRight: 10,
                         borderRadius: 10,
-                    }} onPress={() => { setChoseTitle(4) }}>
+                    }} onPress={() => { setChoseTitle(4); scrollToItem(3); }}>
                         {choseTitle != 4 ? (
                             <Text style={styles.textScroll}>Miễn phí</Text>
                         ) : (
@@ -302,7 +312,7 @@ const MainScreen = ({ navigation }) => {
                         height: 25,
                         marginRight: 10,
                         borderRadius: 10,
-                    }} onPress={() => { setChoseTitle(5) }}>
+                    }} onPress={() => { setChoseTitle(5); scrollToItem(4); }}>
                         {choseTitle != 5 ? (
                             <Text style={styles.textScroll}>Loại</Text>
                         ) : (
