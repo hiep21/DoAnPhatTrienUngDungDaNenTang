@@ -418,7 +418,7 @@ const MainScreen = ({ navigation }) => {
                     flexDirection: "row"
                 }}>
                     <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { user, lsImageUri }) }}>
-                        <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
+                        <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/royale_3959283.png")} />
                     </TouchableOpacity>
                     <View style={styles.search}>
 
@@ -508,7 +508,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "95%",
         backgroundColor: "#fff",
-        paddingTop: "5%"
+        paddingTop: "2%"
 
     },
     search: {
@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
     head: {
 
         width: "100%",
-        height: "6%",
+        height: "8%",
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingHorizontal: 10

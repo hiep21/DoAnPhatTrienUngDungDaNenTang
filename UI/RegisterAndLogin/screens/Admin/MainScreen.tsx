@@ -126,7 +126,7 @@ const MainScreenAdmin = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+                
             </View >
         )
     }
@@ -144,6 +144,7 @@ const MainScreenAdmin = ({ navigation }) => {
                     width: "100%",
                 }}
             />
+            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
         </View>
 
 
