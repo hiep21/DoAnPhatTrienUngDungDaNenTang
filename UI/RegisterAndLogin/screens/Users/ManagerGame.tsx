@@ -16,7 +16,7 @@ const ManagerGameUser = ({ navigation }) => {
     const [isBuy, setIsBuy] = useState<boolean>()
     const [isInstall, setIsInstall] = useState<boolean>()
 
-    const [check, setCheck] = useState<boolean>(false)
+
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
@@ -101,17 +101,65 @@ const ManagerGameUser = ({ navigation }) => {
             console.error('Error fetching image:', error.response.data);
         }
     };
-    const daCaiDat = async () => {
+    const [check, setCheck] = useState<number>(0)
+    const ChoseBtn = () => {
+        switch (check) {
+            case 0:
+                return (
+                    <View style={styles.frameChoseBtn}>
+                        <TouchableOpacity style={{
+                            width: 100,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 30,
+                            backgroundColor: "#7FFF00",
+                            borderRadius: 10
+                        }} >
+                            <Text>Đã cài đặt</Text>
+                        </TouchableOpacity>
 
-        await setCheck(false)
+                        <TouchableOpacity style={{
+                            width: 100,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 30,
+                            backgroundColor: "gray",
+                            borderRadius: 10
+                        }} onPress={() => { setCheck(1) }}>
+                            <Text style={{ color: "white" }}>Đã Mua</Text>
+                        </TouchableOpacity>
+                    </View>
+                )
+                break;
+            case 1:
+                return (
+                    <View style={styles.frameChoseBtn}>
+                        <TouchableOpacity style={{
+                            width: 100,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 30,
+                            backgroundColor: "gray",
+                            borderRadius: 10
+                        }} onPress={() => { setCheck(0) }}>
+                            <Text style={{ color: "white" }} >Đã cài đặt</Text>
+                        </TouchableOpacity>
 
+                        <TouchableOpacity style={{
+                            width: 100,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 30,
+                            backgroundColor: "#7FFF00",
+                            borderRadius: 10
+                        }} >
+                            <Text >Đã Mua</Text>
+                        </TouchableOpacity>
+                    </View>
+                )
+                break;
 
-    }
-    const daMua = async () => {
-
-        await setCheck(true)
-
-
+        }
     }
     const renderListGameInstall = ({ item }: { item: InfoGame }) => {
         return (
@@ -160,56 +208,8 @@ const ManagerGameUser = ({ navigation }) => {
                 height: 30,
                 justifyContent: 'space-between',
                 alignItems: 'center',
-
-
             }}>
-                {!check ? (
-                    <TouchableOpacity style={{
-                        width: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 30,
-                        backgroundColor: "#7FFF00",
-                        borderRadius: 10
-                    }} >
-                        <Text>Đã cài đặt</Text>
-                    </TouchableOpacity>
-                ) : (<Text>
-                    <TouchableOpacity style={{
-                        width: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 30,
-                        borderRadius: 10,
-                        backgroundColor: "#eee"
-                    }} onPress={daCaiDat}>
-                        <Text>Đã cài đặt</Text>
-                    </TouchableOpacity>
-                </Text>)}
-
-                {check ? (
-                    <TouchableOpacity style={{
-                        width: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 30,
-                        borderRadius: 10,
-                        backgroundColor: "#7FFF00"
-                    }}>
-                        <Text>Đã mua</Text>
-                    </TouchableOpacity>
-                ) : (<Text>
-                    <TouchableOpacity style={{
-                        width: 100,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 30,
-                        borderRadius: 10,
-                        backgroundColor: "#eee"
-                    }} onPress={daMua}>
-                        <Text>Đã mua</Text>
-                    </TouchableOpacity>
-                </Text>)}
+                {ChoseBtn()}
             </View>
             {!check ? (
                 <View style={{
@@ -288,6 +288,11 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: "#fff"
 
+    },
+    frameChoseBtn: {
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "space-between"
     },
 
 })
