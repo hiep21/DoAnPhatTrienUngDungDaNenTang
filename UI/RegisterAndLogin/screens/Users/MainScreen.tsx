@@ -340,7 +340,7 @@ const MainScreen = ({ navigation }) => {
                     }}>
                         <View style={{
                             width: "100%",
-                            height: "50%"
+                            height: "51%"
                         }}>
                             <Carousel listImageUri={listImageUri} user={user} navigation={navigation} />
                         </View>
@@ -404,6 +404,15 @@ const MainScreen = ({ navigation }) => {
                         backgroundColor: "green",
                         width: "100%",
                         height: "95%"
+                    }}></View>
+                )
+                break;
+            case 5:
+                return (
+                    <View style={{
+                        backgroundColor: "gray",
+                        width: "100%",
+                        height: "96%"
                     }}></View>
                 )
                 break;
