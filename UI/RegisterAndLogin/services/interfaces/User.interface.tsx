@@ -8,7 +8,6 @@ export interface RegisterData {
     dateOfBirth: string,
     address: string,
     phone: string,
-    image: string
 }
 export interface UpdateRegister {
     user: string,
@@ -21,7 +20,6 @@ export interface UpdateRegister {
     dateOfBirth: string,
     address: string,
     phone: string,
-    image: string
 }
 export interface LoginData {
     user: string

@@ -3,6 +3,7 @@ import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, I
 import { CreateGame } from '../../services/interfaces/GameService';
 import { createGame, deleteApkFile, deleteFolder, deleteImage, deleteImageIcon, getByName, postFileApk, postImage, postImageIcon } from '../../services/Game';
 import * as DocumentPicker from 'expo-document-picker';
+import { number } from 'yup';
 
 
 const AddGameNCC = ({ navigation }) => {
@@ -12,24 +13,24 @@ const AddGameNCC = ({ navigation }) => {
     const [game, setgame] = useState<CreateGame>({
         tenTroChoi: "",
         moTaTroChoi: "",
-        doTuoi: "",
+        doTuoi: 0,
         theLoai: "",
-        gia: "",
+        gia: 0,
         nhaCungCap: nameNCC,
         gioiThieuTroChoi: "",
-        kichCoFile: "23",
+        kichCoFile: 0,
         trangThai: "Chờ xét duyệt"
     });
 
     const validateInputs = () => {
-        if (game.tenTroChoi.length < 5 ) {
+        if (game.tenTroChoi.length < 5) {
             Alert.alert("Lỗi", "Tên game phải tối thiểu 5 ký tự, ");
             return false;
         }
-        if (/[!@#$%^&*()+={}\[\]:;<>,.?~\\|]/.test(game.tenTroChoi)&& game.tenTroChoi.includes(" ")) {
+        if (/[!@#$%^&*()+={}\[\]:;<>,.?~\\|]/.test(game.tenTroChoi) && game.tenTroChoi.includes(" ")) {
             Alert.alert("Lỗi", "Tên game không được chứa ký tự đặc biệt, thay vào đó sử dụng _ như là dấu cách");
             return false;
-          }
+        }
         if (game.moTaTroChoi.length < 5) {
             Alert.alert("Lỗi", "mô tả trò chơi phải tối thiểu 5 ký tự");
             return false;
@@ -55,12 +56,7 @@ const AddGameNCC = ({ navigation }) => {
 
             const message = err.response.data
             console.log(message)
-            try {
-                await deleteFolder(nameDocumentUri)
-            } catch (error) {
-                const message = err.response.data
-                console.log(message)
-            }
+            await deleteFolder(nameDocumentUri)
         }
     }
     const onCancel = () => {
@@ -102,10 +98,11 @@ const AddGameNCC = ({ navigation }) => {
         }
 
         try {
-            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, nameDocumentUri.replace(".apk", ""))
+            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, nameDocumentUri)
 
             console.log('Upload success:', response.data);
         } catch (error) {
+            await deleteApkFile(nameDocumentUri);
             console.error('Upload failed:', error.response.data);
         }
     };
@@ -123,7 +120,7 @@ const AddGameNCC = ({ navigation }) => {
                 setNameDocumentUri(result.assets[0].name);
                 setgame({
                     ...game,
-                    kichCoFile: ((result.assets[0].size / 1024) / 1024).toFixed(2)
+                    kichCoFile: parseFloat(((result.assets[0].size / 1024) / 1024).toFixed(2))
                 })
             } else {
                 Alert.alert("Cảnh báo", 'Chưa chọn file.');
@@ -232,10 +229,10 @@ const AddGameNCC = ({ navigation }) => {
                         }} style={styles.input} placeholder='Mô tả trò chơi' />
 
                         <Text style={styles.label}>Độ tuổi</Text>
-                        <TextInput value={game?.doTuoi} onChangeText={(value) => {
+                        <TextInput value={game?.doTuoi.toString()} onChangeText={(value) => {
                             setgame({
                                 ...game,
-                                doTuoi: value
+                                doTuoi: parseInt(value)
                             })
                         }} style={styles.input} placeholder='Độ tuổi' />
 
@@ -248,10 +245,10 @@ const AddGameNCC = ({ navigation }) => {
                         }} style={styles.input} placeholder='Thể loại' />
 
                         <Text style={styles.label}>Giá</Text>
-                        <TextInput value={game?.gia} onChangeText={(value) => {
+                        <TextInput value={game?.gia.toString()} onChangeText={(value) => {
                             setgame({
                                 ...game,
-                                gia: value
+                                gia: parseInt(value)
                             })
                         }} style={styles.input} placeholder='Giá' />
                         <Text style={styles.label}>Giới thiệu trò chơi</Text>
@@ -270,15 +267,15 @@ const AddGameNCC = ({ navigation }) => {
                     </ScrollView>
                     <View style={styles.buttons}>
                         <View>
-                        <View style={{
-                            elevation:5, padding:3,
-                            borderRadius:5,
-                            width:90,
-                            height:30,
-                        }}>
-                                
+                            <View style={{
+                                elevation: 5, padding: 3,
+                                borderRadius: 5,
+                                width: 90,
+                                height: 30,
+                            }}>
+
                             </View>
-                            <TouchableOpacity style={[styles.buttonSave,{position:"absolute"}]} onPress={onCancel}>
+                            <TouchableOpacity style={[styles.buttonSave, { position: "absolute" }]} onPress={onCancel}>
                                 <Text >Hủy bỏ</Text>
                             </TouchableOpacity>
                         </View>
@@ -333,20 +330,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     buttonSave: {
-        backgroundColor:"#3498db",
-        padding:3,
-        borderRadius:5,
-        width:90,
-        height:30,
-        alignItems:"center",
-        justifyContent:"center"
-     
+        backgroundColor: "#3498db",
+        padding: 3,
+        borderRadius: 5,
+        width: 90,
+        height: 30,
+        alignItems: "center",
+        justifyContent: "center"
+
     },
     inputAdd: {
         borderWidth: 2,
         height: 90,
         width: '100%',
-        paddingHorizontal:10
+        paddingHorizontal: 10
     }
 })
 

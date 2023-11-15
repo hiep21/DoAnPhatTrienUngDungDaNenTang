@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, Alert, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 
-import { deleteApi, getById, getByName } from '../../services/Game';
-import { InfoGame } from '../../services/interfaces/GameService';
 import { RegisterData } from '../../services/interfaces/User.interface';
 import { DeleteAccount, deleteImage, deleteUsers, getImageIcon } from '../../services/todo';
 const InfoAccount = ({ navigation }) => {

@@ -3,12 +3,12 @@ import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 import { BankAccount, GameManager, LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./interfaces/User.interface";
 
-const BASE_URL_REGISTER = 'http://10.147.17.52:5133/Register/'
-const BASE_URL_LOGIN = 'http://10.147.17.52:5133/Login/'
-export const BASE_URL_Image = 'http://10.147.17.52:5133/ImageIcon/'
-const BASE_URL_GameManager = "http://10.147.17.52:5133/GameManager/"
-const BASE_URL_BankAccount = "http://10.147.17.52:5133/BankAccount/"
-export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone, image }: RegisterData) => {
+const BASE_URL_REGISTER = 'http://10.147.17.52:5026/Register/'
+const BASE_URL_LOGIN = 'http://10.147.17.52:5026/Login/'
+export const BASE_URL_Image = 'http://10.147.17.52:5026/ImageIcon/'
+const BASE_URL_GameManager = "http://10.147.17.52:5026/GameManager/"
+const BASE_URL_BankAccount = "http://10.147.17.52:5026/BankAccount/"
+export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone }: RegisterData) => {
     return axios({
         method: "POST",
         url: BASE_URL_REGISTER.concat('createRegister'),
@@ -22,12 +22,11 @@ export const registerApi = ({ user, name, email, password, note, gender, dateOfB
             dateOfBirth,
             address,
             phone,
-            image
 
         }
     })
 }
-export const UpdateRegisterApi = (username: string, { user, name, email, password, newPassword, note, gender, dateOfBirth, address, phone, image }: UpdateRegister) => {
+export const UpdateRegisterApi = (username: string, { user, name, email, password, newPassword, note, gender, dateOfBirth, address, phone }: UpdateRegister) => {
     return axios({
         method: "put",
         url: BASE_URL_REGISTER.concat("updateRegister/").concat(username),
@@ -42,8 +41,7 @@ export const UpdateRegisterApi = (username: string, { user, name, email, passwor
             gender,
             dateOfBirth,
             address,
-            phone,
-            image
+            phone
 
         }
     })
@@ -121,7 +119,7 @@ export const DeleteAccount = (user: string) => {
 //         url: BASE_URL_REGISTER.concat("delete/").concat(user),
 //     })
 // }
-// http://10.147.17.52:5133/ImageIcon/deleteImage/
+// http://10.147.17.52:5026/ImageIcon/deleteImage/
 
 export const saveTokenToDevice = async (tokenToSave: LoginDataToken) => {
     try {
@@ -190,7 +188,7 @@ export const getImageIcon = (username: string) => {
 export const deleteImage = (user: string, imageName: string) => {
     return axios({
         method: "delete",
-        url: BASE_URL_Image.concat("deleteImage/").concat(user).concat("/").concat(imageName.replace(".png", "")),
+        url: BASE_URL_Image.concat("deleteImage/").concat(user).concat("/").concat(imageName),
     })
 }
 // đăng lý stk

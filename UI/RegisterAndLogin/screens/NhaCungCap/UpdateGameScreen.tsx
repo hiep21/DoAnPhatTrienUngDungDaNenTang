@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, FlatList, ScrollView } from 'react-native';
-import { UpdateRegisterApi, getByUser, getImageIcon, postImageAva } from '../../services/todo';
-import { ImageUri, RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
+
+import { ImageUri } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
-import { getItemAsync } from 'expo-secure-store';
-import Background from '../Users/Background';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
 import * as FileSystem from 'expo-file-system';

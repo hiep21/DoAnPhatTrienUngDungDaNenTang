@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 
-import { getByName } from '../../services/Game';
-import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image, getAllAccount, getByUser, getImageIcon } from '../../services/todo';
 import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
 import BottomSheet from '../Users/BottomSheet';
@@ -44,7 +42,7 @@ const ListAccountScreen = ({ navigation }) => {
         }
         setRefreshing(false)
     }
-   
+
 
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
     const [imageAdminUri, setImageAdminUri] = useState<string>();
@@ -58,10 +56,10 @@ const ListAccountScreen = ({ navigation }) => {
         };
 
         if (username == user) {
-            const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName.replace(".png", ""));
+            const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
 
             try {
-                const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+                const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
                 setImageAdminUri(response.uri);
 
             } catch (error) {
@@ -70,10 +68,10 @@ const ListAccountScreen = ({ navigation }) => {
             }
         }
         else {
-            const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName.replace(".png", ""));
+            const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
 
             try {
-                const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+                const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
                 check.username = username
                 check.imageUri = response.uri
                 checklist.push(check)
@@ -166,7 +164,9 @@ const ListAccountScreen = ({ navigation }) => {
                 </View>
 
                 <View style={styles.user}>
-                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }} onPress={() => {
+                        navigation.navigate("List_NotificationScreen", { user });
+                    }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
