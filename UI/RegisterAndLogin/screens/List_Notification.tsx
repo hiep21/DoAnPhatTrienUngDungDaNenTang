@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 import { BASE_URL_Image_Icon, GetNotification, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../services/Game';
-import { InfoGame, NotificationInterface } from '../services/interfaces/GameService';
+import { NotificationInterface } from '../services/interfaces/GameService';
 import { ImageUri, RegisterData } from '../services/interfaces/User.interface';
-import BottomSheet from './Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 import { getByUser } from '../services/todo';
 

@@ -15,12 +15,12 @@ const InfoGameNCC = ({ navigation }) => {
     const [acceptGame, setAcceptGame] = useState<InfoGame>({
         tenTroChoi: "",
         moTaTroChoi: "",
-        doTuoi: "",
+        doTuoi: 0,
         theLoai: "",
-        gia: "",
+        gia: 0,
         nhaCungCap: "",
         gioiThieuTroChoi: "",
-        kichCoFile: "",
+        kichCoFile: 0,
         trangThai: ""
     })
     const [users, setUsers] = useState<RegisterData>()

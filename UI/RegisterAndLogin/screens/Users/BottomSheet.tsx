@@ -4,9 +4,7 @@ import { Text, View, Dimensions, Animated, StyleSheet, Image, TouchableOpacity, 
 import SlidingUpPanel from "rn-sliding-up-panel";
 import * as SecureStore from 'expo-secure-store';
 import { BASE_URL_Image, deleteUsers, getByUser, getImageIcon } from "../../services/todo";
-import { string } from "yup";
-import { LoginData, LoginDataToken, RegisterData } from "../../services/interfaces/User.interface";
-import ChangeInfo from "./ChangeInfo";
+
 import * as FileSystem from 'expo-file-system';
 const { height } = Dimensions.get("window");
 
@@ -60,9 +58,9 @@ class BottomSheet extends React.Component {
 
   fetchImage = async (username: string, imageName: string) => {
 
-    const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName.replace(".png", ""));
+    const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
     try {
-      const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+      const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
       return response;
     } catch (error) {
       console.error('Error fetching image:', error.response.data);

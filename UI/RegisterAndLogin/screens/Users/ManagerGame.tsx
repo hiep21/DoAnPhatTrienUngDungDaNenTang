@@ -47,7 +47,6 @@ const ManagerGameUser = ({ navigation }) => {
                 const listGameBuy = []
                 const listGameInfo = []
                 for (let index = 0; index < response.data.length; index++) {
-
                     if (response.data[index].isBuy) {
                         listGameBuy.push(response.data[index])
                         for (let index2 = 0; index2 < data.length; index2++) {
@@ -59,7 +58,6 @@ const ManagerGameUser = ({ navigation }) => {
                 }
                 await setListGame(listGameInfo)
                 await setListGameHaveBuy(listGameBuy)
-
             }
 
             ListGame = data

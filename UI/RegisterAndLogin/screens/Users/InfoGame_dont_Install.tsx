@@ -29,10 +29,10 @@ const InfoGame_dont_Install = ({ navigation }) => {
     const [imageUri, setImageUri] = useState<string>();
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName.replace(".png", ""));
+        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName);
 
         try {
-            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
 
         } catch (error) {

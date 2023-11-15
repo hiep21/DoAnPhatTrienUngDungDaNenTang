@@ -4,7 +4,6 @@ import { UpdateRegisterApi, deleteImage, getByUser, getImageIcon, postImageAva }
 import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
-import { bool } from 'yup';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Background from './Background';
 const ChangeInfo = ({ navigation }) => {
@@ -24,8 +23,7 @@ const ChangeInfo = ({ navigation }) => {
             gender: "",
             dateOfBirth: "",
             address: "",
-            phone: "",
-            image: ""
+            phone: ""
         }
     );
     const [isLoading, setIsLoading] = useState(false);
@@ -156,7 +154,7 @@ const ChangeInfo = ({ navigation }) => {
         try {
             const images = await getImageIcon(users)
             if (images) {
-                
+
                 await deleteImage(users, images.data[0].imageName)
             }
             const response = await postImageAva(image.assets[0].uri, image.assets[0].name, users)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Image, ScrollView, Dimensions, Animated, TouchableOpacity } from 'react-native';
-import { InfoGame } from '../../services/interfaces/GameService';
+
 import { getGameManager } from '../../services/todo';
 import { string } from 'yup';
 const { width, height } = Dimensions.get('window');

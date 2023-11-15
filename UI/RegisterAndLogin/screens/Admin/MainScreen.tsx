@@ -1,13 +1,9 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
-import Carousel from '../Users/Carousel';
-import { InfoGame } from '../../services/interfaces/GameService';
 import { getByName } from '../../services/Game';
 import BottomSheet from "../Users/BottomSheet";
 import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
-import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
-import { GameManager } from '../../services/interfaces/User.interface';
 
 
 const MainScreenAdmin = ({ navigation }) => {
@@ -36,10 +32,10 @@ const MainScreenAdmin = ({ navigation }) => {
     }
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName.replace(".png", ""));
+        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName);
 
         try {
-            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName.replace(".png", ""));
+            const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
 
         } catch (error) {

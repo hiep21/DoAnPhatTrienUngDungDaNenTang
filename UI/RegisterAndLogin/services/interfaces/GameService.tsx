@@ -1,22 +1,22 @@
 export interface CreateGame {
     tenTroChoi: string,
     moTaTroChoi: string,
-    doTuoi: string,
+    doTuoi: number,
     theLoai: string,
-    gia: string,
+    gia: number,
     nhaCungCap: string,
     gioiThieuTroChoi: string,
-    kichCoFile: string,
+    kichCoFile: number,
     trangThai: string
 }
 export interface InfoGame {
     tenTroChoi: string,
     moTaTroChoi: string,
     trangThai: string,
-    doTuoi: string,
+    doTuoi: number,
     theLoai: string,
-    kichCoFile: string,
-    gia: string,
+    kichCoFile: number,
+    gia: number,
     nhaCungCap: string,
     gioiThieuTroChoi: string,
 }
@@ -27,7 +27,7 @@ export interface NotificationInterface {
     reason: string
 }
 export interface ImageGameUri {
-    id:string,
-    nameFile:string,
+    id: string,
+    nameFile: string,
     imageUri: string
 }
