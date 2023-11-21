@@ -149,7 +149,7 @@ const ManagerGameNCC = ({ navigation }) => {
                             marginLeft: 15,
                             width: "70%"
                         }}>
-                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
+                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi}</Text>
                             <Text style={{ fontSize: 10, marginTop: 5 }}>Thể Loại: {item.theLoai}</Text>
                             <View style={{
                                 flexDirection: 'row',
@@ -179,7 +179,7 @@ const ManagerGameNCC = ({ navigation }) => {
                             marginLeft: 15,
                             width: "70%"
                         }}>
-                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
+                            <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi}</Text>
                             <View style={{ flexDirection: "row", width: 250, paddingTop: 5 }}>
                                 <Text style={{ fontSize: 10, width: 115 }}>Thể Loại: {item.theLoai}</Text>
                                 <Text style={{ fontSize: 10 }}>Nhà cung cấp: {item.nhaCungCap}</Text>

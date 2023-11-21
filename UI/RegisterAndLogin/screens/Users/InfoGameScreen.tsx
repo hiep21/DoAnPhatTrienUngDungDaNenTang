@@ -34,7 +34,7 @@ const InfoGameScreen = ({ navigation }) => {
     }
     const [checkDownload, setCheckDownload] = useState<boolean>()
     const downloadApk = async (nameGame: string) => {
-        const apkUrl = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame); // Thay thế bằng URL của tệp APK bạn muốn tải về
+        const Url = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame); 
         setitemGameManager({
             ...itemGameManager,
             isInstall: true
@@ -47,14 +47,14 @@ const InfoGameScreen = ({ navigation }) => {
 
                 if (status === 'granted') {
                     const downloadResumable = FileSystem.createDownloadResumable(
-                        apkUrl,
+                        Url,
                         FileSystem.documentDirectory + nameGame
                     );
 
                     const { uri } = await downloadResumable.downloadAsync();
                     await MediaLibrary.createAssetAsync(uri);
 
-                    console.log('APK downloaded successfully:', uri);
+                    console.log('Downloaded successfully:', uri);
 
                     await UpdateGameManager(itemGameManager)
                     alert("Download thành công")
@@ -63,7 +63,7 @@ const InfoGameScreen = ({ navigation }) => {
                     return
                 }
             } catch (error) {
-                console.error('Error downloading APK:', error.response.data);
+                console.error('Error downloading :', error.response.data);
             }
         }
         else {

@@ -31,7 +31,7 @@ const NotificationScreen = ({ navigation }) => {
                         justifyContent: "center",
                         paddingLeft: 10
                     }}>
-                        <Text>{notification.nameGame.replace(".apk", "")}</Text>
+                        <Text>{notification.nameGame}</Text>
                     </View>
                 </View>
             }

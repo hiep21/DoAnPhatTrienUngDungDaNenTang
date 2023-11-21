@@ -157,9 +157,8 @@ const styles = StyleSheet.create({
         marginLeft: "20%"
     },
     body: {
-        backgroundColor: "white",
         width: "100%",
-        height: "30%",
+        height: "37%",
         marginTop: 20,
         borderBottomWidth: 1,
     },
@@ -180,9 +179,10 @@ const styles = StyleSheet.create({
 
     },
     end: {
-        width: "95%",
+        width: "90%",
         height: "80%",
-        marginHorizontal: 15,
+        marginHorizontal: "5%",
+        paddingTop: "5%"
 
     }
 

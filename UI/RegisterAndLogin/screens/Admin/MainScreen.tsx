@@ -122,7 +122,7 @@ const MainScreenAdmin = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                
+
             </View >
         )
     }
@@ -211,11 +211,11 @@ const styles = StyleSheet.create({
         width: 325,
         height: 450,
         marginTop: 20,
-        marginHorizontal: 5,
+        marginHorizontal: 15,
         borderRadius: 5,
         borderWidth: 1,
         padding: 30,
-        marginHorizontal: 15
+
 
     },
 

@@ -21,8 +21,7 @@ const CreateAccountNCC = ({ navigation }) => {
         gender: "LGBT",
         dateOfBirth: "",
         address: "",
-        phone: "",
-        image: ""
+        phone: ""
     });
     const [userVal, setUserVal] = useState(null);
     const [rePasswords, setRePasswords] = useState<string>();

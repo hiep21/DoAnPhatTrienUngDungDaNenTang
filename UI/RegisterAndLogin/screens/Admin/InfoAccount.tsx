@@ -29,7 +29,7 @@ const InfoAccount = ({ navigation }) => {
                     onPress: async () => {
                         try {
                             await DeleteAccount(Account.user)
-                            await deleteImage(Account.user, imageName.replace(".png",""))
+                            await deleteImage(Account.user, imageName)
                             
                             alert('Xóa game thành công');
                             navigation.navigate("MainScreenAdmin");

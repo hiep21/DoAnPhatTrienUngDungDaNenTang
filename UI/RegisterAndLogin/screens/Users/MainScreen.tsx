@@ -184,7 +184,7 @@ const MainScreen = ({ navigation }) => {
                         marginLeft: 15,
                         width: "70%"
                     }}>
-                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
+                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi}</Text>
                         <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
                         <View style={{
                             flexDirection: 'row',
@@ -205,7 +205,7 @@ const MainScreen = ({ navigation }) => {
     const scrollToItem = (index: number) => {
         if (scrollViewRef.current) {
             scrollViewRef.current.scrollTo({
-                x: index * 50, // Thay ITEM_WIDTH bằng chiều rộng của mỗi mục trong ScrollView
+                x: index * 55, // Thay ITEM_WIDTH bằng chiều rộng của mỗi mục trong ScrollView
                 animated: true,
             });
         }
@@ -221,7 +221,8 @@ const MainScreen = ({ navigation }) => {
                 showsHorizontalScrollIndicator={false}
                 style={{
                     paddingTop: 4,
-                    paddingLeft: 4
+                    paddingLeft: 4,
+                    borderBottomWidth: 1
                 }}>
                 <View style={{
                     marginHorizontal: 10
@@ -427,7 +428,7 @@ const MainScreen = ({ navigation }) => {
                     flexDirection: "row"
                 }}>
                     <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { user, lsImageUri }) }}>
-                        <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/royale_3959283.png")} />
+                        <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
                     </TouchableOpacity>
                     <View style={styles.search}>
 
@@ -476,10 +477,9 @@ const MainScreen = ({ navigation }) => {
             <View style={styles.body}>
                 <View style={styles.scrollView}>
                     {choseScrollView()}
+
                 </View>
-                <View style={{
-                    borderTopWidth: 1.5,
-                }}></View>
+
                 {!checks ? (
                     <View >
                         {viewChose()}
@@ -517,12 +517,11 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "95%",
         backgroundColor: "#fff",
-        paddingTop: "2%"
 
     },
     search: {
-        width: 200,
-        height: 35,
+        width: "65%",
+        height: "80%",
         backgroundColor: "#bbb",
         flexDirection: 'row',
         justifyContent: 'space-evenly',
@@ -531,7 +530,7 @@ const styles = StyleSheet.create({
     head: {
 
         width: "100%",
-        height: "8%",
+        height: 40,
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingHorizontal: 10
@@ -550,7 +549,7 @@ const styles = StyleSheet.create({
         height: "100%",
     },
     scrollView: {
-        height: "4.8%",
+        height: 34,
         width: "100%"
     },
     textScroll: {

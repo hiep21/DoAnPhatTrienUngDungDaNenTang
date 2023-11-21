@@ -118,11 +118,11 @@ const UpdateGameNCC = ({ navigation }) => {
 
         try {
 
-            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi.replace(".apk", ""))
+            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi)
             alert('Thêm ảnh thành công: ' + response.data.oldFileName);
             navigation.navigate("ManagerGameNCC", user)
             try {
-                const response = await deleteImageIcon(game?.tenTroChoi.replace(".apk", ""), imageGameName?.replace(".png", ""))
+                const response = await deleteImageIcon(game?.tenTroChoi, imageGameName)
             } catch (error) {
 
                 console.log(error.response.data);
@@ -140,7 +140,7 @@ const UpdateGameNCC = ({ navigation }) => {
             return;
         }
         try {
-            const response = await postImage(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi.replace(".apk", ""))
+            const response = await postImage(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi)
 
             Alert.alert("Thành công", "Bạn có muốn thêm ảnh không?",
                 [
