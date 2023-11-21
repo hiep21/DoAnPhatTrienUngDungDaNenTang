@@ -184,7 +184,7 @@ const MainScreen = ({ navigation }) => {
                         marginLeft: 15,
                         width: "70%"
                     }}>
-                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi.replace(".apk", "")}</Text>
+                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi}</Text>
                         <Text style={{ fontSize: 10, marginTop: 10 }}>Thể Loại: {item.theLoai}</Text>
                         <View style={{
                             flexDirection: 'row',
