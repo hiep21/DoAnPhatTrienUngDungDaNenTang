@@ -230,10 +230,12 @@ const AddGameNCC = ({ navigation }) => {
 
                         <Text style={styles.label}>Độ tuổi</Text>
                         <TextInput value={game?.doTuoi.toString()} onChangeText={(value) => {
-                            setgame({
-                                ...game,
-                                doTuoi: parseInt(value)
-                            })
+                            if (value != "") {
+                                setgame({
+                                    ...game,
+                                    doTuoi: parseInt(value)
+                                })
+                            }
                         }} style={styles.input} placeholder='Độ tuổi' />
 
                         <Text style={styles.label}>Thể loại</Text>
@@ -246,10 +248,12 @@ const AddGameNCC = ({ navigation }) => {
 
                         <Text style={styles.label}>Giá</Text>
                         <TextInput value={game?.gia.toString()} onChangeText={(value) => {
-                            setgame({
-                                ...game,
-                                gia: parseInt(value)
-                            })
+                            if (value != "") {
+                                setgame({
+                                    ...game,
+                                    gia: parseInt(value)
+                                })
+                            }
                         }} style={styles.input} placeholder='Giá' />
                         <Text style={styles.label}>Giới thiệu trò chơi</Text>
                         <TextInput numberOfLines={4} multiline value={game?.gioiThieuTroChoi} onChangeText={(value) => {
@@ -266,19 +270,16 @@ const AddGameNCC = ({ navigation }) => {
 
                     </ScrollView>
                     <View style={styles.buttons}>
-                        <View>
-                            <View style={{
-                                elevation: 5, padding: 3,
-                                borderRadius: 5,
-                                width: 90,
-                                height: 30,
-                            }}>
 
-                            </View>
-                            <TouchableOpacity style={[styles.buttonSave, { position: "absolute" }]} onPress={onCancel}>
-                                <Text >Hủy bỏ</Text>
-                            </TouchableOpacity>
+                        <View style={[styles.buttonSave, {
+                            elevation: 5, padding: 3,
+                            borderRadius: 5,
+                            width: 90,
+                            height: 30,
+                            position: "absolute"
+                        }]}>
                         </View>
+
                         <TouchableOpacity style={styles.buttonSave} onPress={() => { uploadData() }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
     },
     buttons: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         width: "100%",
         marginTop: 20
     },

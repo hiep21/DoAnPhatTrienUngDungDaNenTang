@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
             setListImageUri(checklist)
             // console.log(checklist)
         } catch (error) {
-            console.log(error.response)
+            console.log(error.response.data)
         }
     }
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])

@@ -92,7 +92,6 @@ const ChangeInfo = ({ navigation }) => {
                     dateOfBirth: data[0].dateOfBirth,
                     address: data[0].address,
                     phone: data[0].phone,
-                    image: data[0].image
                 }
             )
 
