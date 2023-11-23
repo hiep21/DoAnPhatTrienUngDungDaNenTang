@@ -3,11 +3,13 @@ import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 import { BankAccount, GameManager, LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./interfaces/User.interface";
 
-const BASE_URL_REGISTER = 'http://10.147.17.52:5026/Register/'
-const BASE_URL_LOGIN = 'http://10.147.17.52:5026/Login/'
+export const BASE_URL_REGISTER = 'http://10.147.17.52:5026/Register/'
+export const BASE_URL_LOGIN = 'http://10.147.17.52:5026/Login/'
 export const BASE_URL_Image = 'http://10.147.17.52:5026/ImageIcon/'
-const BASE_URL_GameManager = "http://10.147.17.52:5026/GameManager/"
-const BASE_URL_BankAccount = "http://10.147.17.52:5026/BankAccount/"
+export const BASE_URL_GameManager = "http://10.147.17.52:5026/GameManager/"
+export const BASE_URL_BankAccount = "http://10.147.17.52:5026/BankAccount/"
+
+
 export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone }: RegisterData) => {
     return axios({
         method: "POST",
@@ -22,10 +24,64 @@ export const registerApi = ({ user, name, email, password, note, gender, dateOfB
             dateOfBirth,
             address,
             phone,
+        }
+    })
+}
+
+export const loginApi = ({ user, password }: LoginData) => {
+    return axios({
+        method: "POST",
+        url: BASE_URL_LOGIN.concat("createLogin"),
+        data: {
+            user,
+            password
+        }
+    })
+}
+export const CreateGameManager = ({ username, nameGame, isBuy, isInstall }: GameManager) => {
+    return axios({
+        method: "POST",
+        url: BASE_URL_GameManager.concat("create"),
+        data: {
+            username,
+            nameGame,
+            isBuy,
+            isInstall
+        }
+    })
+}
+export const postImageAva = (imageUri: string, nameImageUri: string, username: string) => {
+    let formData = new FormData();
+    formData.append('imageFile', {
+        uri: imageUri,
+        type: 'image/jpeg', // Hoặc 'image/png', tùy thuộc vào loại hình ảnh bạn chọn
+        name: nameImageUri, // Tên tệp hình ảnh khi gửi lên server
+    });
+    return axios({
+        method: "POST",
+        url: BASE_URL_Image.concat("addimage/").concat(username),
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        data: formData
+
+    })
+}
+// đăng lý stk
+export const CreateBankAccount = ({ account, accountNumber, nameBank }: BankAccount) => {
+    return axios({
+        method: "POST",
+        url: BASE_URL_BankAccount.concat('createBankAccount'),
+        data: {
+            account,
+            accountNumber,
+            nameBank
 
         }
     })
 }
+
+// API Put
 export const UpdateRegisterApi = (username: string, { user, name, email, password, newPassword, note, gender, dateOfBirth, address, phone }: UpdateRegister) => {
     return axios({
         method: "put",
@@ -60,28 +116,40 @@ export const UpdateGameManager = ({ username, nameGame, isBuy, isInstall }: Game
         }
     })
 }
-export const loginApi = ({ user, password }: LoginData) => {
+
+export const UpdateBankAccount = ({ account, accountNumber, nameBank }: BankAccount) => {
     return axios({
-        method: "POST",
-        url: BASE_URL_LOGIN.concat("createLogin"),
+        method: "put",
+        url: BASE_URL_BankAccount.concat('updateBankAccount'),
         data: {
-            user,
-            password
+            account,
+            accountNumber,
+            nameBank
+
         }
     })
 }
-export const CreateGameManager = ({ username, nameGame, isBuy, isInstall }: GameManager) => {
+
+// API Get
+export const GetAccountByUser = (username: string) => {
+
     return axios({
-        method: "POST",
-        url: BASE_URL_GameManager.concat("create"),
-        data: {
-            username,
-            nameGame,
-            isBuy,
-            isInstall
-        }
+        method: "GET",
+        url: BASE_URL_BankAccount.concat("getAccountByUser/").concat(username)
+
     })
+
 }
+export const GetAllBankAccount = () => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_BankAccount.concat("getAll/")
+
+    })
+
+}
+
 export const getByUser = (user: string) => {
     return axios({
         method: "GET",
@@ -100,7 +168,17 @@ export const getGameManager = (user: string) => {
         url: BASE_URL_GameManager.concat("getByUser/").concat(user),
     })
 }
+export const getImageIcon = (username: string) => {
 
+    return axios({
+        method: "GET",
+        url: BASE_URL_Image.concat("GetImageByUser/").concat(username)
+
+    })
+
+}
+
+// API Delete
 export const deleteUsers = (user: string) => {
     return axios({
         method: "delete",
@@ -113,14 +191,21 @@ export const DeleteAccount = (user: string) => {
         url: BASE_URL_REGISTER.concat("delete/").concat(user),
     })
 }
-// export const DeleteAva = (user: string) => {
-//     return axios({
-//         method: "delete",
-//         url: BASE_URL_REGISTER.concat("delete/").concat(user),
-//     })
-// }
-// http://10.147.17.52:5026/ImageIcon/deleteImage/
 
+export const deleteImage = (user: string, imageName: string) => {
+    return axios({
+        method: "delete",
+        url: BASE_URL_Image.concat("deleteImage/").concat(user).concat("/").concat(imageName),
+    })
+}
+
+export const DeleteBankAccount = (username: string) => {
+    return axios({
+        method: "delete",
+        url: BASE_URL_BankAccount.concat("deleteBankAccount/").concat(username),
+    })
+}
+//Token
 export const saveTokenToDevice = async (tokenToSave: LoginDataToken) => {
     try {
         // Chuyển đổi tokenToSave thành chuỗi bằng JSON.stringify nếu nó không phải là chuỗi
@@ -158,85 +243,4 @@ export const configAxiosWithAccessToken = (token: string) => {
             return Promise.reject(error);
         }
     );
-}
-export const postImageAva = (imageUri: string, nameImageUri: string, username: string) => {
-    let formData = new FormData();
-    formData.append('imageFile', {
-        uri: imageUri,
-        type: 'image/jpeg', // Hoặc 'image/png', tùy thuộc vào loại hình ảnh bạn chọn
-        name: nameImageUri, // Tên tệp hình ảnh khi gửi lên server
-    });
-    return axios({
-        method: "POST",
-        url: BASE_URL_Image.concat("addimage/").concat(username),
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-        data: formData
-
-    })
-}
-export const getImageIcon = (username: string) => {
-
-    return axios({
-        method: "GET",
-        url: BASE_URL_Image.concat("GetImageByUser/").concat(username)
-
-    })
-
-}
-export const deleteImage = (user: string, imageName: string) => {
-    return axios({
-        method: "delete",
-        url: BASE_URL_Image.concat("deleteImage/").concat(user).concat("/").concat(imageName),
-    })
-}
-// đăng lý stk
-export const CreateBankAccount = ({ account, accountNumber, nameBank }: BankAccount) => {
-    return axios({
-        method: "POST",
-        url: BASE_URL_BankAccount.concat('createBankAccount'),
-        data: {
-            account,
-            accountNumber,
-            nameBank
-
-        }
-    })
-}
-export const UpdateBankAccount = ({ account, accountNumber, nameBank }: BankAccount) => {
-    return axios({
-        method: "put",
-        url: BASE_URL_BankAccount.concat('updateBankAccount'),
-        data: {
-            account,
-            accountNumber,
-            nameBank
-
-        }
-    })
-}
-export const GetAccountByUser = (username: string) => {
-
-    return axios({
-        method: "GET",
-        url: BASE_URL_BankAccount.concat("getAccountByUser/").concat(username)
-
-    })
-
-}
-export const GetAllBankAccount = () => {
-
-    return axios({
-        method: "GET",
-        url: BASE_URL_BankAccount.concat("getAll/")
-
-    })
-
-}
-export const DeleteBankAccount = (username: string) => {
-    return axios({
-        method: "delete",
-        url: BASE_URL_BankAccount.concat("deleteBankAccount/").concat(username),
-    })
 }

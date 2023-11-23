@@ -60,24 +60,6 @@ const AddUserScreen = ({ navigation }) => {
 
     };
 
-    const validateInputs = () => {
-        if (user.user.length < 5 && (user.user == null || user.user.includes(""))) {
-            Alert.alert("Lỗi", "User phải tối thiểu 5 ký tự, không được bỏ trống");
-            return false;
-        }
-        if (!user.email.includes("@")) {
-            Alert.alert("Lỗi", "Email phải chứa ký tự @");
-            return false;
-        }
-        if (user.dateOfBirth == null) {
-            Alert.alert("Lỗi", "Ngày sinh không được bỏ trống");
-            return false;
-        }
-
-
-
-        return true;
-    };
     const addUserAction = async () => {
 
         // if (!validateInputs()) {
