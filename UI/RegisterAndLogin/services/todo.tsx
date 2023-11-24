@@ -10,12 +10,12 @@ export const BASE_URL_GameManager = "http://10.147.17.52:5026/GameManager/"
 export const BASE_URL_BankAccount = "http://10.147.17.52:5026/BankAccount/"
 
 
-export const registerApi = ({ user, name, email, password, note, gender, dateOfBirth, address, phone }: RegisterData) => {
+export const registerApi = ({ userName, name, email, password, note, gender, dateOfBirth, address, phone }: RegisterData) => {
     return axios({
         method: "POST",
         url: BASE_URL_REGISTER.concat('createRegister'),
         data: {
-            user,
+            userName,
             name,
             email,
             password,

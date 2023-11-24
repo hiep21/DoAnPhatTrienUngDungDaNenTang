@@ -1,5 +1,5 @@
 export interface RegisterData {
-    user: string,
+    username: string,
     name: string,
     email: string,
     password: string,
@@ -10,7 +10,7 @@ export interface RegisterData {
     phone: string,
 }
 export interface UpdateRegister {
-    user: string,
+    username: string,
     password: string,
     newPassword: string,
     name: string,
@@ -22,11 +22,11 @@ export interface UpdateRegister {
     phone: string,
 }
 export interface LoginData {
-    user: string
+    username: string
     password: string
 }
 export interface LoginDataToken {
-    user: string
+    username: string
     email: string
     note: string
     image: string
@@ -39,7 +39,7 @@ export interface GameManager {
     isInstall: boolean
 }
 export interface ImageUri {
-    namePass: string,
+    namePath: string,
     imageUri: string
 }
 export interface BankAccount {

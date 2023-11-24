@@ -12,7 +12,7 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const CreateAccountNCC = ({ navigation }) => {
     const userName = navigation.getParam("userName")
-    const [userName, setUserName] = useState<RegisterData>({
+    const [account, setAcount] = useState<RegisterData>({
         userName: "",
         name: "",
         email: "",
