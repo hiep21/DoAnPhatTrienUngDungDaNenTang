@@ -8,7 +8,7 @@ import { BASE_URL_Image, deleteImage, deleteImageIcon, getById, getImageGame, ge
 import * as FileSystem from 'expo-file-system';
 
 const UpdateGameNCC = ({ navigation }) => {
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const gameId = navigation.getParam("gameId")
     const textChange = navigation.getParam("textChange")
     const imageUri = navigation.getParam("imageUri")
@@ -61,19 +61,19 @@ const UpdateGameNCC = ({ navigation }) => {
     }
     const [listImageUri, setListImageUri] = useState<ImageUri[]>()
     let checklist: ImageUri[] = [];
-    const fetchImage = async (username: string, imageName: string) => {
+    const fetchImage = async (namePath: string, imageName: string) => {
 
         let check: ImageUri = {
-            username: "",
+            namePath: "",
             imageUri: ""
         };
 
 
-        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(namePath).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
-            check.username = username
+            check.namePath = namePath
             check.imageUri = response.uri
             checklist.push(check)
 
@@ -120,7 +120,7 @@ const UpdateGameNCC = ({ navigation }) => {
 
             const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi)
             alert('Thêm ảnh thành công: ' + response.data.oldFileName);
-            navigation.navigate("ManagerGameNCC", user)
+            navigation.navigate("ManagerGameNCC", userName)
             try {
                 const response = await deleteImageIcon(game?.tenTroChoi, imageGameName)
             } catch (error) {
@@ -147,7 +147,7 @@ const UpdateGameNCC = ({ navigation }) => {
                     {
                         text: "Hủy",
                         onPress: async () => {
-                            navigation.navigate("ManagerGameNCC", user)
+                            navigation.navigate("ManagerGameNCC", userName)
                         },
                     },
                     {
@@ -310,7 +310,7 @@ const UpdateGameNCC = ({ navigation }) => {
         }
 
 
-    }, [textChange, gameId, imageUri, user])
+    }, [textChange, gameId, imageUri, userName])
     const renderInputField = (key: string) => {
         switch (key) {
             case '0':

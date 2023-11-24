@@ -10,7 +10,7 @@ const InfoGameNCC = ({ navigation }) => {
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
     const imageUri = navigation.getParam("imageUri")
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [game, setGame] = useState<InfoGame>()
     const [acceptGame, setAcceptGame] = useState<InfoGame>({
         tenTroChoi: "",
@@ -31,7 +31,7 @@ const InfoGameNCC = ({ navigation }) => {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
-            const response = await getByUser(user)
+            const response = await getByUser(userName)
 
             setUsers(response.data[0])
             // console.log(data[0])
@@ -65,11 +65,11 @@ const InfoGameNCC = ({ navigation }) => {
                         createNotification.nameGame = tenTroChoi
                         createNotification.forAccount = "Admin"
                         createNotification.result = false;
-                        createNotification.reason = "Nhà cung cấp " + user + "muốn gỡ trò chơi"
+                        createNotification.reason = "Nhà cung cấp " + userName + "muốn gỡ trò chơi"
 
                         try {
                             await CreateNotification(createNotification);
-                            navigation.navigate("ManagerGameNCC", { user });
+                            navigation.navigate("ManagerGameNCC", { userName });
                             alert('Gửi yêu cầu xóa game thành công');
                         } catch (error) {
                             alert(error.response.data)
@@ -103,7 +103,7 @@ const InfoGameNCC = ({ navigation }) => {
         try {
             await CreateNotification(notification)
             alert("Gửi thông báo thành công")
-            navigation.navigate("ManagerGameNCC", { user })
+            navigation.navigate("ManagerGameNCC", { userName })
         } catch (error) {
             alert(error.response.data)
         }
@@ -111,7 +111,7 @@ const InfoGameNCC = ({ navigation }) => {
     const [isDeny, setIsDeny] = useState<boolean>(false)
     useEffect(() => {
         getGameById()
-    }, [gameId, tenTroChoi, imageUri, user])
+    }, [gameId, tenTroChoi, imageUri, userName])
     const [reason, setReason] = useState<string>("Trò chơi không đạt yêu cầu")
     return (
         <View style={styles.container}>

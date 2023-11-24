@@ -6,17 +6,18 @@ import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken
 import Background from './Users/Background';
 import { LoginData, LoginDataToken } from '../services/interfaces/User.interface';
 import { deleteItemAsync, getItemAsync } from 'expo-secure-store';
+import React from 'react';
 
 
 
 const LoginScreen = ({ navigation }) => {
     const listImageUri = navigation.getParam("listImageUri")
     const [users, setUsers] = useState<LoginData>({
-        user: "",
+        userName: "",
         password: ""
     })
 
-    const [user, setUser] = useState<string>("")
+    const [userName, setUserName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
@@ -33,13 +34,13 @@ const LoginScreen = ({ navigation }) => {
             if (token) {
                 configAxiosWithAccessToken(token)
                 if (note == "User") {
-                    navigation.navigate("MainScreenUser", { user: tokenObject.user, listImageUri })
+                    navigation.navigate("MainScreenUser", { userName: tokenObject.userName, listImageUri })
                 }
                 else if (note == "NCC") {
-                    navigation.navigate("MainScreenNCC", { user: tokenObject.user })
+                    navigation.navigate("MainScreenNCC", { userName: tokenObject.userName })
                 }
                 else if (note == "Admin") {
-                    navigation.navigate("MainScreenAdmin", { user: tokenObject.user })
+                    navigation.navigate("MainScreenAdmin", { userName: tokenObject.userName })
                 }
             }
         }
@@ -62,7 +63,7 @@ const LoginScreen = ({ navigation }) => {
             try {
 
                 const loginResponse = await loginApi({
-                    user,
+                    userName,
                     password
                 })
                 const message = loginResponse.data
@@ -70,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
                 //Lưu token lại
                 const note = loginResponse.data.note
                 const result = await saveTokenToDevice({
-                    user,
+                    userName,
                     email: message.email,
                     image: message.image,
                     note: message.note,
@@ -83,13 +84,13 @@ const LoginScreen = ({ navigation }) => {
                 console.log(note)
 
                 if (note == "User") {
-                    navigation.navigate("MainScreenUser", { user, listImageUri })
+                    navigation.navigate("MainScreenUser", { userName, listImageUri })
                 }
                 else if (note == "NCC") {
-                    navigation.navigate("MainScreenNCC", { user })
+                    navigation.navigate("MainScreenNCC", { userName })
                 }
                 else if (note == "Admin") {
-                    navigation.navigate("MainScreenAdmin", { user })
+                    navigation.navigate("MainScreenAdmin", { userName })
                 }
 
 
@@ -119,15 +120,15 @@ const LoginScreen = ({ navigation }) => {
                 <View style={styles.content}>
 
                     <Text style={styles.label}>User</Text>
-                    <TextInput value={users.user} onChangeText={(value) => {
+                    <TextInput value={users.userName} onChangeText={(value) => {
                         setUsers({
                             ...users,
-                            user: value
+                            userName: value
                         }),
 
-                            setUser(value)
+                            setUserName(value)
                     }} style={styles.input} placeholder="" />
-                    {userVal != null && !users.user ? (
+                    {userVal != null && !users.userName ? (
                         <View>
                             <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
                         </View>

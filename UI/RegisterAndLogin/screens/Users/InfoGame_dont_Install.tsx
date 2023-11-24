@@ -9,7 +9,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
     const imageGameUri = navigation.getParam("imageGameUri")
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [game, setGame] = useState<InfoGame>()
     const getGameById = async () => {
 
@@ -17,7 +17,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
-            const response = await getImageIcon(user)
+            const response = await getImageIcon(userName)
             const name = response.data[0].imageName
 
             fetchImage(name)
@@ -29,7 +29,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
     const [imageUri, setImageUri] = useState<string>();
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
@@ -44,7 +44,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, user, imageGameUri])
+    }, [gameId, userName, imageGameUri])
     return (
         <View style={styles.container}>
 
@@ -88,7 +88,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
                             backgroundColor: "#6C9EFF",
                             justifyContent: 'center',
                             borderRadius: 5
-                        }} onPress={() => { navigation.navigate('Buy_Game_to_Id', { gameId, user }) }}>
+                        }} onPress={() => { navigation.navigate('Buy_Game_to_Id', { gameId, userName }) }}>
                             <Text style={{ textAlign: 'center' }}>Mua game</Text>
                         </TouchableOpacity>
 

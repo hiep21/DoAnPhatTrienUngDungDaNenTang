@@ -5,16 +5,16 @@ import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
 import * as FileSystem from 'expo-file-system';
 const UserScreen = ({ navigation }) => {
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [users, setUsers] = useState<RegisterData>();
     const [imageUri, setImageUri] = useState<string>();
 
     const loadTasks = async () => {
         try {
 
-            const { data } = await getByUser(user)
+            const { data } = await getByUser(userName)
             setUsers(data[0])
-            const response = await getImageIcon(user)
+            const response = await getImageIcon(userName)
             const name = response.data[0].imageName
             console.log(response.data)
             fetchImage(name)
@@ -27,7 +27,7 @@ const UserScreen = ({ navigation }) => {
     }
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
@@ -39,18 +39,18 @@ const UserScreen = ({ navigation }) => {
         }
 
     };
-    const changeInfo = (username: string, textChange: string) => {
+    const changeInfo = (namePath: string, textChange: string) => {
 
-        navigation.navigate("ChangeInfo", { user: username, textChange: textChange });
+        navigation.navigate("ChangeInfo", { userName: namePath, textChange: textChange });
     }
     useEffect(() => {
         loadTasks()
-    }, [user])
+    }, [userName])
     return (
         <Background>
             <View style={styles.container}>
                 <View style={styles.iconBg}>
-                    <TouchableOpacity onPress={() => { changeInfo(users?.user, "image") }}>
+                    <TouchableOpacity onPress={() => { changeInfo(users?.userName, "image") }}>
                         {imageUri ? (
                             <Image style={{
                                 height: 60,
@@ -67,7 +67,7 @@ const UserScreen = ({ navigation }) => {
                     </TouchableOpacity>
 
                 </View>
-                <Text style={[styles.mainText, { color: "blue" }]}>{user}</Text>
+                <Text style={[styles.mainText, { color: "blue" }]}>{userName}</Text>
                 <View style={styles.mainContainer}>
 
                     <View style={styles.content}>
@@ -83,7 +83,7 @@ const UserScreen = ({ navigation }) => {
                                     <Text style={styles.textUser}>{users?.name}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "name") }}>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.userName, "name") }}>
                                 <Text style={{ fontSize: 25 }}> {">"}</Text>
                             </TouchableOpacity>
                         </View>
@@ -95,7 +95,7 @@ const UserScreen = ({ navigation }) => {
                                     <Text style={styles.textUser}>{users?.dateOfBirth}</Text>
                                 </View>
                             </View >
-                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "dateOfBirth") }}>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.userName, "dateOfBirth") }}>
                                 <Text style={{ fontSize: 25 }}> {">"}</Text>
                             </TouchableOpacity>
                         </View>
@@ -107,7 +107,7 @@ const UserScreen = ({ navigation }) => {
                                     <Text style={styles.textUser}>{users?.gender}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "gender") }}>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.userName, "gender") }}>
                                 <Text style={{ fontSize: 25 }}> {">"}</Text>
                             </TouchableOpacity>
                         </View>
@@ -119,7 +119,7 @@ const UserScreen = ({ navigation }) => {
                                     <Text numberOfLines={1} style={styles.textUser}>{users?.email}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "email") }}>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.userName, "email") }}>
                                 <Text style={{ fontSize: 25 }}> {">"}</Text>
                             </TouchableOpacity>
                         </View>
@@ -131,7 +131,7 @@ const UserScreen = ({ navigation }) => {
                                     <Text style={styles.textUser}>{users?.phone}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "phone") }}>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.userName, "phone") }}>
                                 <Text style={{ fontSize: 25 }}> {">"}</Text>
                             </TouchableOpacity>
                         </View>
@@ -143,7 +143,7 @@ const UserScreen = ({ navigation }) => {
                                     <Text style={styles.textUser}>{users?.address}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.user, "address") }}>
+                            <TouchableOpacity style={styles.bonut} onPress={() => { changeInfo(users?.userName, "address") }}>
                                 <Text style={{ fontSize: 25 }}> {">"}</Text>
                             </TouchableOpacity>
                         </View>

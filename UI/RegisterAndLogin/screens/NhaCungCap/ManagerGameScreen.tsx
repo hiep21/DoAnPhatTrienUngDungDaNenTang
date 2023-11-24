@@ -10,7 +10,7 @@ import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
 const ManagerGameNCC = ({ navigation }) => {
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
@@ -22,13 +22,13 @@ const ManagerGameNCC = ({ navigation }) => {
         setRefreshing(true)
 
         try {
-            const { data } = await getInfoFileNCC(user)
+            const { data } = await getInfoFileNCC(userName)
             // console.log(data)
             setReListGame(data)
             setListGame(data)
             const responseAdmin = await getInfoFileAdmin()
             setListGameAdmin(responseAdmin.data)
-            const response = await getByUser(user)
+            const response = await getByUser(userName)
             setUserNCC(response.data[0])
 
             if (response.data[0].note == "Admin") {
@@ -52,7 +52,7 @@ const ManagerGameNCC = ({ navigation }) => {
 
             setListImageUri(checklist)
 
-            const response2 = await getImageIcon(user)
+            const response2 = await getImageIcon(userName)
             const name = response2.data[0].imageName
             fetchImageUser(name)
 
@@ -65,19 +65,19 @@ const ManagerGameNCC = ({ navigation }) => {
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
     const [imageAdminUri, setImageAdminUri] = useState<string>();
     let checklist: ImageUri[] = [];
-    const fetchImage = async (username: string, imageName: string) => {
+    const fetchImage = async (namePath: string, imageName: string) => {
 
         let check: ImageUri = {
-            username: "",
+            namePath: "",
             imageUri: ""
         };
 
 
-        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(namePath).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
-            check.username = username
+            check.namePath = namePath
             check.imageUri = response.uri
             checklist.push(check)
 
@@ -88,7 +88,7 @@ const ManagerGameNCC = ({ navigation }) => {
     const [imageUri, setImageUri] = useState<string>();
     const fetchImageUser = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
@@ -124,16 +124,16 @@ const ManagerGameNCC = ({ navigation }) => {
         return () => {
             loadTasks()
         };
-    }, [user])
+    }, [userName])
     const goToDetail = (item: InfoGame, imageUri: string) => {
-        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri, user })
+        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri, userName })
     }
 
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri) }} >
+            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.namePath == item.tenTroChoi)?.imageUri) }} >
 
-                {item.nhaCungCap == userNCC?.user ? (
+                {item.nhaCungCap == userNCC?.userName ? (
                     <View style={{
                         flexDirection: 'row',
                         marginLeft: "5%",
@@ -141,7 +141,7 @@ const ManagerGameNCC = ({ navigation }) => {
                     }}>
                         {listImageUri.length != 0 ? (
                             // <Text>{listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri}</Text>
-                            <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }} />
+                            <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.namePath == item.tenTroChoi)?.imageUri }} />
                         ) : (
                             <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={require("../../assets/favicon.png")} />
                         )}
@@ -174,7 +174,7 @@ const ManagerGameNCC = ({ navigation }) => {
                         marginLeft: "5%",
                         marginTop: 20
                     }}>
-                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }} />
+                        <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.namePath == item.tenTroChoi)?.imageUri }} />
                         <View style={{
                             marginLeft: 15,
                             width: "70%"
@@ -219,11 +219,11 @@ const ManagerGameNCC = ({ navigation }) => {
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
                         if (userNCC?.note == "NCC") {
-                            navigation.navigate("List_NotificationScreen", { user, imageUri, listImageUri })
+                            navigation.navigate("List_NotificationScreen", { userName, imageUri, listImageUri })
                         }
                         else {
 
-                            navigation.navigate("List_NotificationScreen", { user });
+                            navigation.navigate("List_NotificationScreen", { userName });
 
                         }
                     }}>
@@ -278,7 +278,7 @@ const ManagerGameNCC = ({ navigation }) => {
             <View style={styles.end}>
                 {userNCC?.note != "Admin" ? (
                     <View style={styles.addAndUpdate}>
-                        <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.user }) }} style={{
+                        <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.userName }) }} style={{
                             backgroundColor: "#DFEEF6",
                             width: 100,
                             height: 30,
@@ -290,7 +290,7 @@ const ManagerGameNCC = ({ navigation }) => {
                         }}>
                             <Text style={{ fontWeight: '700', fontSize: 15 }}>Up Game</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount", { user }) }} style={{
+                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount", { userName }) }} style={{
                             backgroundColor: "#DFEEF6",
                             width: 100,
                             height: 30,

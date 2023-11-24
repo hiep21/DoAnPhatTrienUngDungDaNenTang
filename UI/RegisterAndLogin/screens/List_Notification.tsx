@@ -9,7 +9,7 @@ import * as FileSystem from 'expo-file-system';
 import { getByUser } from '../services/todo';
 
 const List_Notification = ({ navigation }) => {
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [nameGame, setNameGame] = useState<string[]>([])
     const [listNotification, setListNotification] = useState<NotificationInterface[]>([])
@@ -18,7 +18,7 @@ const List_Notification = ({ navigation }) => {
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            const getAccount = await getByUser(user)
+            const getAccount = await getByUser(userName)
             switch (getAccount.data[0].note) {
                 case "Admin":
                     const responseAdmin = await getInfoFileAdmin()
@@ -46,7 +46,7 @@ const List_Notification = ({ navigation }) => {
                     setListImageUri(checklist)
                     break;
                 case "NCC":
-                    const responseNCC = await getInfoFileNCC(user)
+                    const responseNCC = await getInfoFileNCC(userName)
                     // console.log(responseNCC.data[0].note);
                     //lấy thông báo theo quyền
                     const responseNotificationNcc = await GetNotification(getAccount.data[0].note)
@@ -84,19 +84,19 @@ const List_Notification = ({ navigation }) => {
     const [err, setErr] = useState<string[]>([])
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
     let checklist: ImageUri[] = [];
-    const fetchImage = async (username: string, imageName: string) => {
+    const fetchImage = async (namePath: string, imageName: string) => {
 
         let check: ImageUri = {
-            username: "",
+            namePath: "",
             imageUri: ""
         };
 
 
-        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(namePath).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
-            check.username = username
+            check.namePath = namePath
             check.imageUri = response.uri
             checklist.push(check)
 
@@ -108,18 +108,18 @@ const List_Notification = ({ navigation }) => {
     useEffect(() => {
 
         loadTasks()
-    }, [user])
+    }, [userName])
     const goToDetail = (notification: NotificationInterface, imageUri: string) => {
-        navigation.navigate("NotificationScreen", { user, notification, imageUri })
+        navigation.navigate("NotificationScreen", { userName, notification, imageUri })
     }
     const renderTask = ({ item }: { item: NotificationInterface }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.username == item.nameGame)?.imageUri) }} style={{
+            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.namePath == item.nameGame)?.imageUri) }} style={{
                 flexDirection: "row",
                 padding: 20,
                 justifyContent: "flex-start"
             }}>
-                <Image style={{ marginLeft: 10, width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.nameGame)?.imageUri }} />
+                <Image style={{ marginLeft: 10, width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.namePath == item.nameGame)?.imageUri }} />
                 <View style={{ marginLeft: 20, marginTop: 10 }}>
                     <Text>Thông báo từ: {item.nameGame}</Text>
                 </View>
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         marginLeft: "5%"
 
     },
-    user: {
+    userName: {
         flexDirection: 'row',
         marginLeft: "20%"
     },

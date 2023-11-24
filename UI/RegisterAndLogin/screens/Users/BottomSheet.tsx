@@ -35,7 +35,7 @@ class BottomSheet extends React.Component {
     try {
       const getUser = await SecureStore.getItemAsync('accessToken');
       const tokenObject = JSON.parse(getUser);
-      const userName = tokenObject.user;
+      const userName = tokenObject.userName;
       const email = tokenObject.email;
       const note = tokenObject.note
       const getAccount = await getByUser(userName);
@@ -56,9 +56,9 @@ class BottomSheet extends React.Component {
     }
   }
 
-  fetchImage = async (username: string, imageName: string) => {
+  fetchImage = async (namePath: string, imageName: string) => {
 
-    const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
+    const url = BASE_URL_Image.concat("getImage/").concat(namePath).concat("/").concat(imageName);
     try {
       const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
       return response;
@@ -88,30 +88,30 @@ class BottomSheet extends React.Component {
   navigateToUserScreen = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.user;
+    const userName = tokenObject.userName;
     const { navigation } = this.props;
-    navigation.navigate('UserScreen', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('UserScreen', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToManageGame = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.user;
+    const userName = tokenObject.userName;
     const { navigation } = this.props;
-    navigation.navigate('ManagerGameUser', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('ManagerGameUser', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToSettingUser = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.user;
+    const userName = tokenObject.userName;
     const { navigation } = this.props;
-    navigation.navigate('SettingUser', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('SettingUser', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToSupportUser = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.user;
+    const userName = tokenObject.userName;
     const { navigation } = this.props;
-    navigation.navigate('SupportUser', { user: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('SupportUser', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
   };
   test = async () => { // Đánh dấu hàm test là async
     const getUserToken = async () => {
@@ -137,7 +137,7 @@ class BottomSheet extends React.Component {
       try {
         const getUser = await SecureStore.getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
-        const userName = tokenObject.user;
+        const userName = tokenObject.userName;
         const email = tokenObject.email;
         const image = tokenObject.image;
         console.log(userName);

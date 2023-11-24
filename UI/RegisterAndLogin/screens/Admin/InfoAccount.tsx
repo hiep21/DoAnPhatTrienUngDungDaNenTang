@@ -13,7 +13,7 @@ const InfoAccount = ({ navigation }) => {
 
 
     const deleteAccount = async () => {
-        const response = await getImageIcon(Account.user)
+        const response = await getImageIcon(Account.userName)
         const imageName = response.data[0].imageName
        
         Alert.alert(
@@ -28,8 +28,8 @@ const InfoAccount = ({ navigation }) => {
                     text: "Đồng ý",
                     onPress: async () => {
                         try {
-                            await DeleteAccount(Account.user)
-                            await deleteImage(Account.user, imageName)
+                            await DeleteAccount(Account.userName)
+                            await deleteImage(Account.userName, imageName)
                             
                             alert('Xóa game thành công');
                             navigation.navigate("MainScreenAdmin");
@@ -57,7 +57,7 @@ const InfoAccount = ({ navigation }) => {
                     fontSize: 17,
                     fontWeight: '600',
 
-                }}>Thông tin tài khoản {Account?.user}</Text>
+                }}>Thông tin tài khoản {Account?.userName}</Text>
                 <View style={styles.describeGame}>
                     <Image style={{
                         height: 50,

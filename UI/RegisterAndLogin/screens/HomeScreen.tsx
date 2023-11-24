@@ -24,17 +24,17 @@ const HomeScreen = ({ navigation }) => {
     }
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
     let checklist: ImageUri[] = [];
-    const fetchImage = async (username: string, imageName: string) => {
+    const fetchImage = async (namePath: string, imageName: string) => {
 
         let check: ImageUri = {
-            username: "",
+            namePath: "",
             imageUri: ""
         };
-        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(namePath).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
-            check.username = username
+            check.namePath = namePath
             check.imageUri = response.uri
             checklist.push(check)
 

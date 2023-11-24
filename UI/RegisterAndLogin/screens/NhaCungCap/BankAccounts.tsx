@@ -115,16 +115,16 @@ const BankAccounts = ({ navigation }) => {
         }
 
     }
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const loadTasks = async () => {
         setBank({
             ...bank,
-            account: user
+            account: userName
         }),
-        setAccount(user)
+        setAccount(userName)
         try {
 
-            const { data } = await GetAccountByUser(user)
+            const { data } = await GetAccountByUser(userName)
             if (data.length > 0) {
                 // Tài khoản ngân hàng đã tồn tại, bạn có thể hiển thị thông tin và chọn cập nhật hoặc không.
                 setBank(data[0]);
@@ -143,7 +143,7 @@ const BankAccounts = ({ navigation }) => {
     }
     useEffect(() => {
         loadTasks()
-    }, [user])
+    }, [userName])
     return (
         <Background>
             <View style={styles.container}>
@@ -152,7 +152,7 @@ const BankAccounts = ({ navigation }) => {
                     <View style={styles.content}>
 
                         <Text style={styles.label}>Account</Text>
-                        <TextInput value={bank.account} style={styles.input} placeholder={user} />
+                        <TextInput value={bank.account} style={styles.input} placeholder={userName} />
                         {userVal != null && !bank.account ? (
                             <View>
                                 <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>

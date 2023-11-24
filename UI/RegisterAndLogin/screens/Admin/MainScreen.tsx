@@ -7,7 +7,7 @@ import * as FileSystem from 'expo-file-system';
 
 
 const MainScreenAdmin = ({ navigation }) => {
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
     const [imageUri, setImageUri] = useState<string>();
@@ -19,7 +19,7 @@ const MainScreenAdmin = ({ navigation }) => {
             const { data } = await getByName()
             // console.log(data)
 
-            const response = await getImageIcon(user)
+            const response = await getImageIcon(userName)
             const name = response.data[0].imageName
 
             fetchImage(name)
@@ -32,7 +32,7 @@ const MainScreenAdmin = ({ navigation }) => {
     }
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
@@ -60,7 +60,7 @@ const MainScreenAdmin = ({ navigation }) => {
                     <View style={styles.user}>
                         <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}
                             onPress={() => {
-                                navigation.navigate("List_NotificationScreen", { user });
+                                navigation.navigate("List_NotificationScreen", { userName });
                             }}>
 
                             <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
@@ -82,7 +82,7 @@ const MainScreenAdmin = ({ navigation }) => {
                 <View style={styles.body}>
                     <TouchableOpacity style={{
                         paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("ManagerGameNCC", { user }) }}>
+                    }} onPress={() => { navigation.navigate("ManagerGameNCC", { userName }) }}>
                         <Text style={{
                             fontSize: 17,
                             fontWeight: '700'
@@ -92,7 +92,7 @@ const MainScreenAdmin = ({ navigation }) => {
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("ListAccountScreen", { user }) }}>
+                    }} onPress={() => { navigation.navigate("ListAccountScreen", { userName }) }}>
                         <Text style={{
                             fontSize: 17,
                             fontWeight: '700'
@@ -102,7 +102,7 @@ const MainScreenAdmin = ({ navigation }) => {
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("CreateAccountNCC", { user }) }}>
+                    }} onPress={() => { navigation.navigate("CreateAccountNCC", { userName }) }}>
                         <Text style={{
                             fontSize: 17,
                             fontWeight: '700'
@@ -112,7 +112,7 @@ const MainScreenAdmin = ({ navigation }) => {
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("ChartComponent", { user }) }}>
+                    }} onPress={() => { navigation.navigate("ChartComponent", { userName }) }}>
                         <Text style={{
                             fontSize: 17,
                             fontWeight: '700'

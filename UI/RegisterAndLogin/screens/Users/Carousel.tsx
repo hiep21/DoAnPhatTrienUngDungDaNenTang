@@ -23,7 +23,7 @@ const { width, height } = Dimensions.get('window');
 
 const imageAspectRatio = 1920 / 1080;
 
-export default function Carousel({ listImageUri, user, navigation }) {
+export default function Carousel({ listImageUri, userName, navigation }) {
   const containerHeight = width / imageAspectRatio;
   const scrollX = new Animated.Value(0);
   const scrollViewRef = useRef();
@@ -37,11 +37,11 @@ export default function Carousel({ listImageUri, user, navigation }) {
     return () => {
       clearInterval(timer);
     };
-  }, [scrollX, listImageUri, user]);
+  }, [scrollX, listImageUri, userName]);
 
   const CheckBuyAndInstall = async (id: string, nameFile: string, imageUri: string) => {
     try {
-      const { data } = await getGameManager(user);
+      const { data } = await getGameManager(userName);
       const GameCheck = [];
 
       for (let index = 0; index < data.length; index++) {
@@ -51,13 +51,13 @@ export default function Carousel({ listImageUri, user, navigation }) {
       }
 
       if (GameCheck.length == 0) {
-        navigation.navigate("InfoGame_dont_Install", { gameId: id, user, imageGameUri: imageUri });
+        navigation.navigate("InfoGame_dont_Install", { gameId: id, userName, imageGameUri: imageUri });
       } else {
         navigation.navigate("InfoGameScreen", { gameId: id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri: imageUri });
       }
     } catch (error) {
-      if (error.response.data == "Tài khoản " + user + " chưa mua với tải game") {
-        navigation.navigate("InfoGame_dont_Install", { gameId: id, user, imageGameUri: imageUri });
+      if (error.response.data == "Tài khoản " + userName + " chưa mua với tải game") {
+        navigation.navigate("InfoGame_dont_Install", { gameId: id, userName, imageGameUri: imageUri });
       } else {
         console.log(error.response.data);
       }

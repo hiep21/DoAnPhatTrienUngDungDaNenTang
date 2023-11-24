@@ -6,7 +6,7 @@ import Background from '../Users/Background';
 
 
 const MainScreenNCC = ({ navigation }) => {
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [userNCC, setUserNCC] = useState<RegisterData>()
 
@@ -14,7 +14,7 @@ const MainScreenNCC = ({ navigation }) => {
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            const response = await getByUser(user)
+            const response = await getByUser(userName)
             setUserNCC(response.data[0])
         } catch (err) {
             const errorMessage = err.response
@@ -25,13 +25,13 @@ const MainScreenNCC = ({ navigation }) => {
 
     useEffect(() => {
         loadTasks();
-    }, [user])
+    }, [userName])
 
 
 
     return (
         <Background>
-            <TouchableOpacity onPress={() => { navigation.navigate("ManagerGameNCC", { user: user, nameNCC: userNCC?.name }) }}>
+            <TouchableOpacity onPress={() => { navigation.navigate("ManagerGameNCC", { userName: userName, nameNCC: userNCC?.name }) }}>
                 <View style={styles.container}>
 
                     <Text style={[{ fontSize: 20, fontWeight: "900", backgroundColor: "rgba(255, 255, 255, 0.7)", padding: 10, color: "green" }]}>

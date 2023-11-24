@@ -5,7 +5,7 @@ import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } 
 
 
 const NotificationScreen = ({ navigation }) => {
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const notification = navigation.getParam("notification")
     const imageUri = navigation.getParam("imageUri")
 
@@ -15,7 +15,7 @@ const NotificationScreen = ({ navigation }) => {
 
     useEffect(() => {
         loadScreen()
-    }, [user, notification, imageUri])
+    }, [userName, notification, imageUri])
 
 
     return (

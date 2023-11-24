@@ -7,7 +7,7 @@ import { GameManager, ImageUri } from '../../services/interfaces/User.interface'
 import * as FileSystem from 'expo-file-system';
 
 const ManagerGameUser = ({ navigation }) => {
-    const users = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
 
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [listGameIsInstall, setListGameIsInstall] = useState<GameManager[]>([])
@@ -79,19 +79,19 @@ const ManagerGameUser = ({ navigation }) => {
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
 
     let checklist: ImageUri[] = [];
-    const fetchImageGame = async (username: string, imageName: string) => {
+    const fetchImageGame = async (namePath: string, imageName: string) => {
 
         let check: ImageUri = {
-            username: "",
+            namePath: "",
             imageUri: ""
         };
 
 
-        const url = BASE_URL_Image_Icon.concat("getImage/").concat(username).concat("/").concat(imageName);
+        const url = BASE_URL_Image_Icon.concat("getImage/").concat(namePath).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
-            check.username = username
+            check.namePath = namePath
             check.imageUri = response.uri
             checklist.push(check)
 
@@ -168,7 +168,7 @@ const ManagerGameUser = ({ navigation }) => {
                     marginLeft: "5%",
                     marginTop: 20,
                 }}>
-                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.username == item.tenTroChoi)?.imageUri }} />
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.namePath == item.tenTroChoi)?.imageUri }} />
                     <View style={{
                         marginLeft: 15,
                         width: "70%"
@@ -195,7 +195,7 @@ const ManagerGameUser = ({ navigation }) => {
     }
     useEffect(() => {
         loadTasks()
-    }, [users])
+    }, [userName])
     return (
         <View style={styles.container}>
 

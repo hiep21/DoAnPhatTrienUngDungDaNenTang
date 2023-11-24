@@ -9,7 +9,7 @@ import { GameManager } from '../../services/interfaces/User.interface';
 const Buy_Game_to_Id = ({ navigation }) => {
 
     const gameId = navigation.getParam("gameId")
-    const username = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [game, setGame] = useState<InfoGame>()
     const [checks, setChecks] = useState<boolean>(false)
     const [selectedAmount, setSelectedAmount] = useState(null);
@@ -38,7 +38,7 @@ const Buy_Game_to_Id = ({ navigation }) => {
     const buyGame = async ()=>{
         setChecks(false)
         await setCreate({
-            username:username,
+            username:userName,
             nameGame:game?.tenTroChoi,
             isBuy:true,
             isInstall:false
@@ -48,7 +48,7 @@ const Buy_Game_to_Id = ({ navigation }) => {
             
             await CreateGameManager(create)
             alert("Mua thành công")
-            navigation.navigate('ManagerGameUser',{user :username})
+            navigation.navigate('ManagerGameUser',{userName :userName})
         } catch (error) {
             console.log(error.response.data)
            alert("Quét mã không thành công xin vui lòng thử lại")
@@ -58,7 +58,7 @@ const Buy_Game_to_Id = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId,username])
+    }, [gameId,userName])
     
     return (
         <View style={styles.container}>

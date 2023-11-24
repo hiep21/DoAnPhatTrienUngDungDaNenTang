@@ -11,7 +11,7 @@ import * as FileSystem from 'expo-file-system';
 
 const MainScreen = ({ navigation }) => {
     const lsImageUri = navigation.getParam("listImageUri")
-    const user = navigation.getParam("user")
+    const userName = navigation.getParam("userName")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
@@ -26,7 +26,7 @@ const MainScreen = ({ navigation }) => {
             //console.log(data)
             setListGame(data)
             setReListGame(data)
-            const response = await getImageIcon(user)
+            const response = await getImageIcon(userName)
             const name = response.data[0].imageName
             // console.log(response.data)
             fetchImage(name)
@@ -48,7 +48,7 @@ const MainScreen = ({ navigation }) => {
     }
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(user).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
@@ -86,7 +86,7 @@ const MainScreen = ({ navigation }) => {
     const loadimage = async () => {
         const getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
-        const userName = tokenObject.user;
+        const userName = tokenObject.userName;
         try {
             setRefreshing(true)
             const getImage = await getByUser(userName);
@@ -105,7 +105,7 @@ const MainScreen = ({ navigation }) => {
 
         loadimage()
         loadTasks()
-    }, [user, lsImageUri])
+    }, [userName, lsImageUri])
 
 
     const [checks, setChecks] = useState<boolean>(false)
@@ -137,7 +137,7 @@ const MainScreen = ({ navigation }) => {
     const CheckBuyAndInstall = async (name: string, item: InfoGame, imageGameUri: string) => {
         try {
 
-            const { data } = await getGameManager(user);
+            const { data } = await getGameManager(userName);
             // console.log(data)
             const GameCheck = []
             for (let index = 0; index < data.length; index++) {
@@ -146,7 +146,7 @@ const MainScreen = ({ navigation }) => {
                 }
             }
             if (GameCheck.length == 0) {
-                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user, imageGameUri })
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, userName, imageGameUri })
             }
             else {
                 navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri })
@@ -154,9 +154,9 @@ const MainScreen = ({ navigation }) => {
 
 
         } catch (error) {
-            if (error.response.data == "Tài khoản " + user + " chưa mua với tải game") {
+            if (error.response.data == "Tài khoản " + userName + " chưa mua với tải game") {
 
-                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, user, imageGameUri })
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, userName, imageGameUri })
 
             }
             else {
@@ -343,7 +343,7 @@ const MainScreen = ({ navigation }) => {
                             width: "100%",
                             height: "51%"
                         }}>
-                            <Carousel listImageUri={listImageUri} user={user} navigation={navigation} />
+                            <Carousel listImageUri={listImageUri} userName={userName} navigation={navigation} />
                         </View>
                         <View style={styles.body}>
 
@@ -427,7 +427,7 @@ const MainScreen = ({ navigation }) => {
                 <View style={{
                     flexDirection: "row"
                 }}>
-                    <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { user, lsImageUri }) }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { userName, lsImageUri }) }}>
                         <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
                     </TouchableOpacity>
                     <View style={styles.search}>
@@ -455,7 +455,7 @@ const MainScreen = ({ navigation }) => {
                 )}
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
-                        navigation.navigate("List_NotificationScreen", { user });
+                        navigation.navigate("List_NotificationScreen", { userName });
                     }}>
 
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />

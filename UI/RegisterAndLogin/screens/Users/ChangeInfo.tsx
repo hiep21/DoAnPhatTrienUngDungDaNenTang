@@ -8,13 +8,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Background from './Background';
 const ChangeInfo = ({ navigation }) => {
 
-    const users = navigation.getParam("user")
+    const users = navigation.getParam("userName")
     const textChange = navigation.getParam("textChange")
     const [Users, setUsers] = useState<RegisterData>();
     const [usersUpdateImage, setUsersUpdateImage] = useState<UpdateRegister>();
     const [usersUpdate, setUsersUpdate] = useState<UpdateRegister>(
         {
-            user: "",
+            userName: "",
             password: "",
             newPassword: "",
             name: "",
@@ -82,7 +82,7 @@ const ChangeInfo = ({ navigation }) => {
             setUsers(data[0])
             setUsersUpdate(
                 {
-                    user: users,
+                    userName: users,
                     password: password,
                     newPassword: password,
                     name: data[0].name,
@@ -107,7 +107,7 @@ const ChangeInfo = ({ navigation }) => {
         const tokenObject = JSON.parse(getUser);
         const password = tokenObject.password;
         setUsersUpdateImage({
-            user: users,
+            userName: users,
             password: password,
             newPassword: password,
             name: Users.name,

@@ -39,7 +39,7 @@ export interface GameManager {
     isInstall: boolean
 }
 export interface ImageUri {
-    username: string,
+    namePass: string,
     imageUri: string
 }
 export interface BankAccount {

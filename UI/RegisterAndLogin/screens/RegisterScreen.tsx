@@ -11,8 +11,8 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const AddUserScreen = ({ navigation }) => {
 
-    const [user, setUser] = useState<RegisterData>({
-        user: "",
+    const [userName, setUserName] = useState<RegisterData>({
+        userName: "",
         name: "",
         email: "",
         password: "",
@@ -32,8 +32,8 @@ const AddUserScreen = ({ navigation }) => {
 
     const selectGender = (Gender: string) => {
         setSelectedGender(Gender);
-        setUser({
-            ...user,
+        setUserName({
+            ...userName,
             gender: Gender
         });
         toggleModal();
@@ -73,12 +73,12 @@ const AddUserScreen = ({ navigation }) => {
             alert("Chưa chọn ảnh")
             return
         }
-        user.dateOfBirth = changeDate;
+        userName.dateOfBirth = changeDate;
 
         try {
 
 
-            const { data } = await registerApi(user)
+            const { data } = await registerApi(userName)
 
             Alert.alert("Register complete!")
             await uploadImage()
@@ -132,7 +132,7 @@ const AddUserScreen = ({ navigation }) => {
         }
 
         try {
-            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, user.user)
+            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, userName.userName)
             console.log('Upload Image success:', response.data);
             navigation.navigate("HomeScreen")
         } catch (error) {
@@ -182,38 +182,38 @@ const AddUserScreen = ({ navigation }) => {
                             </TouchableOpacity>
 
                             <Text style={styles.label}>User</Text>
-                            <TextInput value={user.user} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
-                                    user: value
+                            <TextInput value={userName.userName} onChangeText={(value) => {
+                                setUserName({
+                                    ...userName,
+                                    userName: value
                                 })
                             }} style={styles.input} placeholder='User name' />
-                            {userVal != null && user.user.length < 5 ? (
+                            {userVal != null && userName.userName.length < 5 ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.User}</Text>
                                 </View>
 
                             ) : null}
                             <Text style={styles.label}>Email</Text>
-                            <TextInput value={user.email} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
+                            <TextInput value={userName.email} onChangeText={(value) => {
+                                setUserName({
+                                    ...userName,
                                     email: value
                                 })
                             }} style={styles.input} placeholder='...@gmail.com' />
-                            {userVal != null && (!user.email.includes("@") || !user.email.includes(".")) ? (
+                            {userVal != null && (!userName.email.includes("@") || !userName.email.includes(".")) ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Email}</Text>
                                 </View>
                             ) : null}
                             <Text style={styles.label}>Full name</Text>
-                            <TextInput value={user.name} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
+                            <TextInput value={userName.name} onChangeText={(value) => {
+                                setUserName({
+                                    ...userName,
                                     name: value
                                 })
                             }} style={styles.input} placeholder='Nguyễn Văn A' />
-                            {userVal != null && !user.name ? (
+                            {userVal != null && !userName.name ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Name}</Text>
                                 </View>
@@ -260,26 +260,26 @@ const AddUserScreen = ({ navigation }) => {
                                 />
                             )}
                             <Text style={styles.label}>Address</Text>
-                            <TextInput value={user.address} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
+                            <TextInput value={userName.address} onChangeText={(value) => {
+                                setUserName({
+                                    ...userName,
                                     address: value
                                 })
                             }} style={styles.input} placeholder='Address' />
-                            {userVal != null && !user.address ? (
+                            {userVal != null && !userName.address ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Address}</Text>
                                 </View>
 
                             ) : null}
                             <Text style={styles.label}>Number phone</Text>
-                            <TextInput value={user.phone} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
+                            <TextInput value={userName.phone} onChangeText={(value) => {
+                                setUserName({
+                                    ...userName,
                                     phone: value
                                 })
                             }} style={styles.input} placeholder='XXXX-XXX-XXX' />
-                            {userVal != null && !user.phone ? (
+                            {userVal != null && !userName.phone ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Phone}</Text>
                                 </View>
@@ -287,13 +287,13 @@ const AddUserScreen = ({ navigation }) => {
                             ) : null}
 
                             <Text style={styles.label}>Password</Text>
-                            <TextInput value={user.password} onChangeText={(value) => {
-                                setUser({
-                                    ...user,
+                            <TextInput value={userName.password} onChangeText={(value) => {
+                                setUserName({
+                                    ...userName,
                                     password: value
                                 })
                             }} style={styles.input} secureTextEntry />
-                            {userVal != null && !user.password ? (
+                            {userVal != null && !userName.password ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Password}</Text>
                                 </View>
@@ -303,7 +303,7 @@ const AddUserScreen = ({ navigation }) => {
                             } onChangeText={(value) => {
                                 setRePasswords(value)
                             }} style={styles.input} secureTextEntry />
-                            {userVal != null && user.password !== rePasswords ? (
+                            {userVal != null && userName.password !== rePasswords ? (
                                 <View>
                                     <Text style={styles.textError}>Password không khớp</Text>
                                 </View>
