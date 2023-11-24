@@ -109,7 +109,7 @@ const MainScreen = ({ navigation }) => {
 
 
     const [checks, setChecks] = useState<boolean>(false)
-    const [searchResults, setSearchResults] = useState([]);
+    
     const [searchKeyword, setSearchKeyword] = useState('');
     let relist: InfoGame[] = reListGame
     const handleSearch = () => {

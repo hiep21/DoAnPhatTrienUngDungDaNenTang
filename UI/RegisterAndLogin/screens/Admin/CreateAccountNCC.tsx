@@ -13,7 +13,7 @@ import * as DocumentPicker from 'expo-document-picker';
 const CreateAccountNCC = ({ navigation }) => {
     const userName = navigation.getParam("userName")
     const [account, setAcount] = useState<RegisterData>({
-        userName: "",
+        username: "",
         name: "",
         email: "",
         password: "",
@@ -33,8 +33,8 @@ const CreateAccountNCC = ({ navigation }) => {
 
     const selectGender = (Gender: string) => {
         setSelectedGender(Gender);
-        setUser({
-            ...userName,
+        setAcount({
+            ...account,
             gender: Gender
         });
         toggleModal();
@@ -62,15 +62,15 @@ const CreateAccountNCC = ({ navigation }) => {
     };
 
     const validateInputs = () => {
-        if (userName.userName.length < 5 && (userName.userName == null || userName.userName.includes(""))) {
+        if (account.username.length < 5 && (account.username == null || account.username.includes(""))) {
             Alert.alert("Lỗi", "User phải tối thiểu 5 ký tự, không được bỏ trống");
             return false;
         }
-        if (!userName.email.includes("@")) {
+        if (!account.email.includes("@")) {
             Alert.alert("Lỗi", "Email phải chứa ký tự @");
             return false;
         }
-        if (userName.dateOfBirth == null) {
+        if (account.dateOfBirth == null) {
             Alert.alert("Lỗi", "Ngày sinh không được bỏ trống");
             return false;
         }
@@ -92,7 +92,7 @@ const CreateAccountNCC = ({ navigation }) => {
             alert("Chưa chọn ảnh")
             return
         }
-        userName.dateOfBirth = changeDate;
+        account.dateOfBirth = changeDate;
 
         try {
 
@@ -151,7 +151,7 @@ const CreateAccountNCC = ({ navigation }) => {
         }
 
         try {
-            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, userName.userName)
+            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, userName.username)
             console.log('Upload Image success:', response.data);
             Alert.alert("Register complete!")
             navigation.navigate("MainScreenAdmin", { userName: userName })
@@ -196,38 +196,38 @@ const CreateAccountNCC = ({ navigation }) => {
                                 </TouchableOpacity>
 
                                 <Text style={styles.label}>User</Text>
-                                <TextInput value={userName.userName} onChangeText={(value) => {
-                                    setUserName({
-                                        ...userName,
-                                        userName: value
+                                <TextInput value={account.username} onChangeText={(value) => {
+                                    setAcount({
+                                        ...account,
+                                        username: value
                                     })
                                 }} style={styles.input} placeholder='User name' />
-                                {userVal != null && userName.userName.length < 5 ? (
+                                {userVal != null && account.username.length < 5 ? (
                                     <View>
                                         <Text style={styles.textError}>{userVal.User}</Text>
                                     </View>
 
                                 ) : null}
                                 <Text style={styles.label}>Email</Text>
-                                <TextInput value={userName.email} onChangeText={(value) => {
-                                    setUserName({
-                                        ...userName,
+                                <TextInput value={account.email} onChangeText={(value) => {
+                                    setAcount({
+                                        ...account,
                                         email: value
                                     })
                                 }} style={styles.input} placeholder='...@gmail.com' />
-                                {userVal != null && (!userName.email.includes("@") || !userName.email.includes(".")) ? (
+                                {userVal != null && (!account.email.includes("@") || !account.email.includes(".")) ? (
                                     <View>
                                         <Text style={styles.textError}>{userVal.Email}</Text>
                                     </View>
                                 ) : null}
                                 <Text style={styles.label}>Full name</Text>
-                                <TextInput value={userName.name} onChangeText={(value) => {
-                                    setUserName({
-                                        ...userName,
+                                <TextInput value={account.name} onChangeText={(value) => {
+                                    setAcount({
+                                        ...account,
                                         name: value
                                     })
                                 }} style={styles.input} placeholder='Nguyễn Văn A' />
-                                {userVal != null && !userName.name ? (
+                                {userVal != null && !account.name ? (
                                     <View>
                                         <Text style={styles.textError}>{userVal.Name}</Text>
                                     </View>
@@ -274,26 +274,26 @@ const CreateAccountNCC = ({ navigation }) => {
                                     />
                                 )}
                                 <Text style={styles.label}>Address</Text>
-                                <TextInput value={userName.address} onChangeText={(value) => {
-                                    setUserName({
-                                        ...userName,
+                                <TextInput value={account.address} onChangeText={(value) => {
+                                    setAcount({
+                                        ...account,
                                         address: value
                                     })
                                 }} style={styles.input} placeholder='Address' />
-                                {userVal != null && !userName.address ? (
+                                {userVal != null && !account.address ? (
                                     <View>
                                         <Text style={styles.textError}>{userVal.Address}</Text>
                                     </View>
 
                                 ) : null}
                                 <Text style={styles.label}>Number phone</Text>
-                                <TextInput value={userName.phone} onChangeText={(value) => {
-                                    setUserName({
-                                        ...userName,
+                                <TextInput value={account.phone} onChangeText={(value) => {
+                                    setAcount({
+                                        ...account,
                                         phone: value
                                     })
                                 }} style={styles.input} placeholder='XXXX-XXX-XXX' />
-                                {userVal != null && !userName.phone ? (
+                                {userVal != null && !account.phone ? (
                                     <View>
                                         <Text style={styles.textError}>{userVal.Phone}</Text>
                                     </View>
@@ -301,13 +301,13 @@ const CreateAccountNCC = ({ navigation }) => {
                                 ) : null}
 
                                 <Text style={styles.label}>Password</Text>
-                                <TextInput value={userName.password} onChangeText={(value) => {
-                                    setUserName({
-                                        ...userName,
+                                <TextInput value={account.password} onChangeText={(value) => {
+                                    setAcount({
+                                        ...account,
                                         password: value
                                     })
                                 }} style={styles.input} secureTextEntry />
-                                {userVal != null && !userName.password ? (
+                                {userVal != null && !account.password ? (
                                     <View>
                                         <Text style={styles.textError}>{userVal.Password}</Text>
                                     </View>
@@ -317,7 +317,7 @@ const CreateAccountNCC = ({ navigation }) => {
                                 } onChangeText={(value) => {
                                     setRePasswords(value)
                                 }} style={styles.input} secureTextEntry />
-                                {userVal != null && userName.password !== rePasswords ? (
+                                {userVal != null && account.password !== rePasswords ? (
                                     <View>
                                         <Text style={styles.textError}>Password không khớp</Text>
                                     </View>
