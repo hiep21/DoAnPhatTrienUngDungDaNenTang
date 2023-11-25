@@ -9,9 +9,9 @@ import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 
 
-const MainScreen = ({ navigation }) => {
+const MainScreen = ({ navigation }: { navigation: any }) => {
     const lsImageUri = navigation.getParam("listImageUri")
-    const userName = navigation.getParam("userName")
+    const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
@@ -26,7 +26,7 @@ const MainScreen = ({ navigation }) => {
             //console.log(data)
             setListGame(data)
             setReListGame(data)
-            const response = await getImageIcon(userName)
+            const response = await getImageIcon(username)
             const name = response.data[0].imageName
             // console.log(response.data)
             fetchImage(name)
@@ -40,7 +40,7 @@ const MainScreen = ({ navigation }) => {
 
             setListImageUri(checklist)
 
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
@@ -48,12 +48,12 @@ const MainScreen = ({ navigation }) => {
     }
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
 
         }
@@ -79,22 +79,22 @@ const MainScreen = ({ navigation }) => {
             check.imageUri = response.uri
             checklist.push(check)
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
         }
     };
     const loadimage = async () => {
         const getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
-        const userName = tokenObject.userName;
+        const username = tokenObject.username;
         try {
             setRefreshing(true)
-            const getImage = await getByUser(userName);
+            const getImage = await getByUser(username);
 
             setImage(getImage.data[0].image)
 
 
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage.data)
         }
@@ -105,11 +105,11 @@ const MainScreen = ({ navigation }) => {
 
         loadimage()
         loadTasks()
-    }, [userName, lsImageUri])
+    }, [username, lsImageUri])
 
 
     const [checks, setChecks] = useState<boolean>(false)
-    
+
     const [searchKeyword, setSearchKeyword] = useState('');
     let relist: InfoGame[] = reListGame
     const handleSearch = () => {
@@ -135,9 +135,12 @@ const MainScreen = ({ navigation }) => {
 
 
     const CheckBuyAndInstall = async (name: string, item: InfoGame, imageGameUri: string) => {
+        let id: any
+        id = item.id
         try {
 
-            const { data } = await getGameManager(userName);
+            const { data } = await getGameManager(username);
+
             // console.log(data)
             const GameCheck = []
             for (let index = 0; index < data.length; index++) {
@@ -146,17 +149,17 @@ const MainScreen = ({ navigation }) => {
                 }
             }
             if (GameCheck.length == 0) {
-                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, userName, imageGameUri })
+                navigation.navigate("InfoGame_dont_Install", { gameId: id, username, imageGameUri })
             }
             else {
-                navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri })
+                navigation.navigate("InfoGameScreen", { gameId: id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri })
             }
 
 
-        } catch (error) {
-            if (error.response.data == "Tài khoản " + userName + " chưa mua với tải game") {
+        } catch (error: any) {
+            if (error.response.data == "Tài khoản " + username + " chưa mua với tải game") {
 
-                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, userName, imageGameUri })
+                navigation.navigate("InfoGame_dont_Install", { gameId: id, username, imageGameUri })
 
             }
             else {
@@ -343,7 +346,7 @@ const MainScreen = ({ navigation }) => {
                             width: "100%",
                             height: "51%"
                         }}>
-                            <Carousel listImageUri={listImageUri} userName={userName} navigation={navigation} />
+                            <Carousel listImageUri={listImageUri} username={username} navigation={navigation} />
                         </View>
                         <View style={styles.body}>
 
@@ -427,7 +430,7 @@ const MainScreen = ({ navigation }) => {
                 <View style={{
                     flexDirection: "row"
                 }}>
-                    <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { userName, lsImageUri }) }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { username, lsImageUri }) }}>
                         <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
                     </TouchableOpacity>
                     <View style={styles.search}>
@@ -455,7 +458,7 @@ const MainScreen = ({ navigation }) => {
                 )}
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
-                        navigation.navigate("List_NotificationScreen", { userName });
+                        navigation.navigate("List_NotificationScreen", { username });
                     }}>
 
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />

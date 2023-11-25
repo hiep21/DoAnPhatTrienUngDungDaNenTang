@@ -10,14 +10,14 @@ import React from 'react';
 
 
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation }: { navigation: any }) => {
     const listImageUri = navigation.getParam("listImageUri")
-    const [users, setUsers] = useState<LoginData>({
-        userName: "",
+    const [account, setAccount] = useState<LoginData>({
+        username: "",
         password: ""
     })
 
-    const [userName, setUserName] = useState<string>("")
+    const [username, setUserName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +25,8 @@ const LoginScreen = ({ navigation }) => {
 
     const loadToken = async () => {
         // await deleteItemAsync('accessToken');
-        const getUser = await getItemAsync('accessToken');
+        let getUser: any
+        getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
 
         if (tokenObject != null) {
@@ -34,13 +35,13 @@ const LoginScreen = ({ navigation }) => {
             if (token) {
                 configAxiosWithAccessToken(token)
                 if (note == "User") {
-                    navigation.navigate("MainScreenUser", { userName: tokenObject.userName, listImageUri })
+                    navigation.navigate("MainScreenUser", { username: tokenObject.username, listImageUri })
                 }
                 else if (note == "NCC") {
-                    navigation.navigate("MainScreenNCC", { userName: tokenObject.userName })
+                    navigation.navigate("MainScreenNCC", { username: tokenObject.username })
                 }
                 else if (note == "Admin") {
-                    navigation.navigate("MainScreenAdmin", { userName: tokenObject.userName })
+                    navigation.navigate("MainScreenAdmin", { username: tokenObject.username })
                 }
             }
         }
@@ -53,17 +54,13 @@ const LoginScreen = ({ navigation }) => {
 
 
     const login = async () => {
-        // if (!users.user || !users.password) {
-        //     alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
-        //     return;
-        // }
 
         if (!isLoading) {
             setIsLoading(true)
             try {
 
                 const loginResponse = await loginApi({
-                    userName,
+                    username,
                     password
                 })
                 const message = loginResponse.data
@@ -71,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
                 //Lưu token lại
                 const note = loginResponse.data.note
                 const result = await saveTokenToDevice({
-                    userName,
+                    username,
                     email: message.email,
                     image: message.image,
                     note: message.note,
@@ -84,19 +81,19 @@ const LoginScreen = ({ navigation }) => {
                 console.log(note)
 
                 if (note == "User") {
-                    navigation.navigate("MainScreenUser", { userName, listImageUri })
+                    navigation.navigate("MainScreenUser", { username, listImageUri })
                 }
                 else if (note == "NCC") {
-                    navigation.navigate("MainScreenNCC", { userName })
+                    navigation.navigate("MainScreenNCC", { username })
                 }
                 else if (note == "Admin") {
-                    navigation.navigate("MainScreenAdmin", { userName })
+                    navigation.navigate("MainScreenAdmin", { username })
                 }
 
 
                 //Chuyển hướng sang màn home
 
-            } catch (err) {
+            } catch (err: any) {
                 alert(err.response.data)
                 setUserVal(err.response.data.errors)
 
@@ -120,29 +117,29 @@ const LoginScreen = ({ navigation }) => {
                 <View style={styles.content}>
 
                     <Text style={styles.label}>User</Text>
-                    <TextInput value={users.userName} onChangeText={(value) => {
-                        setUsers({
-                            ...users,
-                            userName: value
+                    <TextInput value={account.username} onChangeText={(value) => {
+                        setAccount({
+                            ...account,
+                            username: value
                         }),
 
                             setUserName(value)
                     }} style={styles.input} placeholder="" />
-                    {userVal != null && !users.userName ? (
+                    {userVal != null && !account.username ? (
                         <View>
                             <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
                         </View>
                     ) : null}
                     <Text style={styles.label}>Password</Text>
-                    <TextInput value={users.password} onChangeText={(value) => {
-                        setUsers({
-                            ...users,
+                    <TextInput value={account.password} onChangeText={(value) => {
+                        setAccount({
+                            ...account,
                             password: value
                         }),
 
                             setPassword(value)
                     }} style={styles.input} secureTextEntry />
-                    {userVal != null && !users.password ? (
+                    {userVal != null && !account.password ? (
                         <View>
                             <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin đăng nhập.</Text>
                         </View>

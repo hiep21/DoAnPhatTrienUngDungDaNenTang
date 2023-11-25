@@ -9,7 +9,7 @@ import * as FileSystem from 'expo-file-system';
 import { getByUser } from '../services/todo';
 
 const List_Notification = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+    const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [nameGame, setNameGame] = useState<string[]>([])
     const [listNotification, setListNotification] = useState<NotificationInterface[]>([])
@@ -18,7 +18,7 @@ const List_Notification = ({ navigation }) => {
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            const getAccount = await getByUser(userName)
+            const getAccount = await getByUser(username)
             switch (getAccount.data[0].note) {
                 case "Admin":
                     const responseAdmin = await getInfoFileAdmin()

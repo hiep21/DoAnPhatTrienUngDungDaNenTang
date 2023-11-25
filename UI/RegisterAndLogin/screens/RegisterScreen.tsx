@@ -1,18 +1,17 @@
 
 // screens/Screen1.js
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert, Modal, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert, Modal, ScrollView, Platform } from 'react-native';
 import { RegisterData } from '../services/interfaces/User.interface';
 import * as Yup from 'yup'
 import { postImageAva, registerApi } from '../services/todo';
-import Background from './Users/Background';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
 
-const AddUserScreen = ({ navigation }) => {
+const AddUserScreen = ({ navigation }: { navigation: any }) => {
 
-    const [userName, setUserName] = useState<RegisterData>({
-        userName: "",
+    const [account, setAccount] = useState<RegisterData>({
+        username: "",
         name: "",
         email: "",
         password: "",
@@ -22,7 +21,7 @@ const AddUserScreen = ({ navigation }) => {
         address: "",
         phone: ""
     });
-    const [userVal, setUserVal] = useState(null);
+    const [userVal, setUserVal] = useState<any>(null);
     const [rePasswords, setRePasswords] = useState<string>();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedGender, setSelectedGender] = useState<string>("");
@@ -32,8 +31,8 @@ const AddUserScreen = ({ navigation }) => {
 
     const selectGender = (Gender: string) => {
         setSelectedGender(Gender);
-        setUserName({
-            ...userName,
+        setAccount({
+            ...account,
             gender: Gender
         });
         toggleModal();
@@ -41,9 +40,9 @@ const AddUserScreen = ({ navigation }) => {
 
 
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [changeDate, setChangeDate] = useState<string>();
-    const onChange = (event, selectedDate) => {
+    const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+    const [changeDate, setChangeDate] = useState<any>();
+    const onChange = () => {
         const currentDate = selectedDate || selectedDate;
         console.log(currentDate.toDateString());
         setShowDatePicker(Platform.OS === 'ios');
@@ -51,42 +50,34 @@ const AddUserScreen = ({ navigation }) => {
         const day = currentDate.getDate();
         const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
         const year = currentDate.getFullYear();
+
         // const date = day+month+year;
         // setChangeDate(date);
         // console.log(`Ngày: ${day}, Tháng: ${month}, Năm: ${year}`);
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        const date = currentDate.toLocaleDateString(undefined, options);
+        const date = currentDate.toDateString();
         setChangeDate(date);
 
     };
 
     const addUserAction = async () => {
-
-        // if (!validateInputs()) {
-        //     return;
-        // }
-        // if (user.password != rePasswords) {
-        //     alert("Confirm Password error");
-        //     return;
-        // }
         if (!image) {
             alert("Chưa chọn ảnh")
             return
         }
-        userName.dateOfBirth = changeDate;
-
+        account.dateOfBirth = changeDate;
+        console.log(account)
         try {
 
 
-            const { data } = await registerApi(userName)
-
-            Alert.alert("Register complete!")
+            const { data } = await registerApi(account)
+            alert("Register complete!")
             await uploadImage()
 
-        } catch (err) {
+        } catch (err: any) {
             const message = err.response
             setUserVal(err.response.data.errors)
-            alert("Lỗi :" + err.response.data)
+            console.log("Lỗi :" + err.response.data)
         }
 
 
@@ -110,7 +101,7 @@ const AddUserScreen = ({ navigation }) => {
         );
     };
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<any>();
     const pickImage = async () => {
         try {
             let result = await DocumentPicker.getDocumentAsync({
@@ -132,10 +123,10 @@ const AddUserScreen = ({ navigation }) => {
         }
 
         try {
-            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, userName.userName)
+            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, account.username)
             console.log('Upload Image success:', response.data);
             navigation.navigate("HomeScreen")
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload failed:', error.response.data);
         }
     };
@@ -182,38 +173,38 @@ const AddUserScreen = ({ navigation }) => {
                             </TouchableOpacity>
 
                             <Text style={styles.label}>User</Text>
-                            <TextInput value={userName.userName} onChangeText={(value) => {
-                                setUserName({
-                                    ...userName,
-                                    userName: value
+                            <TextInput value={account.username} onChangeText={(value) => {
+                                setAccount({
+                                    ...account,
+                                    username: value
                                 })
                             }} style={styles.input} placeholder='User name' />
-                            {userVal != null && userName.userName.length < 5 ? (
+                            {userVal != null && account.username.length < 5 ? (
                                 <View>
-                                    <Text style={styles.textError}>{userVal.User}</Text>
+                                    <Text style={styles.textError}>{userVal.username}</Text>
                                 </View>
 
                             ) : null}
                             <Text style={styles.label}>Email</Text>
-                            <TextInput value={userName.email} onChangeText={(value) => {
-                                setUserName({
-                                    ...userName,
+                            <TextInput value={account.email} onChangeText={(value) => {
+                                setAccount({
+                                    ...account,
                                     email: value
                                 })
                             }} style={styles.input} placeholder='...@gmail.com' />
-                            {userVal != null && (!userName.email.includes("@") || !userName.email.includes(".")) ? (
+                            {userVal != null && (!account.email.includes("@") || !account.email.includes(".")) ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Email}</Text>
                                 </View>
                             ) : null}
                             <Text style={styles.label}>Full name</Text>
-                            <TextInput value={userName.name} onChangeText={(value) => {
-                                setUserName({
-                                    ...userName,
+                            <TextInput value={account.name} onChangeText={(value) => {
+                                setAccount({
+                                    ...account,
                                     name: value
                                 })
                             }} style={styles.input} placeholder='Nguyễn Văn A' />
-                            {userVal != null && !userName.name ? (
+                            {userVal != null && !account.name ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Name}</Text>
                                 </View>
@@ -247,9 +238,9 @@ const AddUserScreen = ({ navigation }) => {
 
 
                             <TouchableOpacity style={[styles.dropdownButton, styles.input]} onPress={() => setShowDatePicker(true)}>
-                                <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
+                                <Text style={styles.selectedGenderText}>Selected Date: {changeDate}</Text>
                             </TouchableOpacity>
-                            {showDatePicker && (
+                            {showDatePicker == true ? (
                                 <DateTimePicker
                                     testID="dateTimePicker"
                                     value={selectedDate}
@@ -258,28 +249,30 @@ const AddUserScreen = ({ navigation }) => {
                                     display="default"
                                     onChange={onChange}
                                 />
+                            ) : (
+                                <View></View>
                             )}
                             <Text style={styles.label}>Address</Text>
-                            <TextInput value={userName.address} onChangeText={(value) => {
-                                setUserName({
-                                    ...userName,
+                            <TextInput value={account.address} onChangeText={(value) => {
+                                setAccount({
+                                    ...account,
                                     address: value
                                 })
                             }} style={styles.input} placeholder='Address' />
-                            {userVal != null && !userName.address ? (
+                            {userVal != null && !account.address ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Address}</Text>
                                 </View>
 
                             ) : null}
                             <Text style={styles.label}>Number phone</Text>
-                            <TextInput value={userName.phone} onChangeText={(value) => {
-                                setUserName({
-                                    ...userName,
+                            <TextInput value={account.phone} onChangeText={(value) => {
+                                setAccount({
+                                    ...account,
                                     phone: value
                                 })
                             }} style={styles.input} placeholder='XXXX-XXX-XXX' />
-                            {userVal != null && !userName.phone ? (
+                            {userVal != null && !account.phone ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Phone}</Text>
                                 </View>
@@ -287,13 +280,13 @@ const AddUserScreen = ({ navigation }) => {
                             ) : null}
 
                             <Text style={styles.label}>Password</Text>
-                            <TextInput value={userName.password} onChangeText={(value) => {
-                                setUserName({
-                                    ...userName,
+                            <TextInput value={account.password} onChangeText={(value) => {
+                                setAccount({
+                                    ...account,
                                     password: value
                                 })
                             }} style={styles.input} secureTextEntry />
-                            {userVal != null && !userName.password ? (
+                            {userVal != null && !account.password ? (
                                 <View>
                                     <Text style={styles.textError}>{userVal.Password}</Text>
                                 </View>
@@ -303,7 +296,7 @@ const AddUserScreen = ({ navigation }) => {
                             } onChangeText={(value) => {
                                 setRePasswords(value)
                             }} style={styles.input} secureTextEntry />
-                            {userVal != null && userName.password !== rePasswords ? (
+                            {userVal != null && account.password !== rePasswords ? (
                                 <View>
                                     <Text style={styles.textError}>Password không khớp</Text>
                                 </View>

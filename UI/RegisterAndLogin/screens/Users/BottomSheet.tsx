@@ -21,7 +21,7 @@ class BottomSheet extends React.Component {
     super(props);
     this.state = {
       isPanelVisible: false,
-      userName: "",
+      username: "",
       email: "",
       image: "",
       note: ""
@@ -35,19 +35,19 @@ class BottomSheet extends React.Component {
     try {
       const getUser = await SecureStore.getItemAsync('accessToken');
       const tokenObject = JSON.parse(getUser);
-      const userName = tokenObject.userName;
+      const username = tokenObject.username;
       const email = tokenObject.email;
       const note = tokenObject.note
-      const getAccount = await getByUser(userName);
+      const getAccount = await getByUser(username);
 
-      const response2 = await getImageIcon(userName)
+      const response2 = await getImageIcon(username)
       const name = response2.data[0].imageName
-      const check = await this.fetchImage(userName, name)
+      const check = await this.fetchImage(username, name)
       console.log(check?.uri)
       const image = check?.uri;
       const nameAdmin = getAccount.data[0].name
       this.setState({ email })
-      this.setState({ userName });
+      this.setState({ username });
       this.setState({ image });
       this.setState({ note })
       this.setState({ nameAdmin });
@@ -88,38 +88,38 @@ class BottomSheet extends React.Component {
   navigateToUserScreen = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.userName;
+    const username = tokenObject.username;
     const { navigation } = this.props;
-    navigation.navigate('UserScreen', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('UserScreen', { username: username }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToManageGame = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.userName;
+    const username = tokenObject.username;
     const { navigation } = this.props;
-    navigation.navigate('ManagerGameUser', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('ManagerGameUser', { username: username }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToSettingUser = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.userName;
+    const username = tokenObject.username;
     const { navigation } = this.props;
-    navigation.navigate('SettingUser', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('SettingUser', { username: username }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToSupportUser = async () => {
     const getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
-    const userName = tokenObject.userName;
+    const username = tokenObject.username;
     const { navigation } = this.props;
-    navigation.navigate('SupportUser', { userName: userName }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('SupportUser', { username: username }); // Điều hướng đến màn hình "UserScreen"
   };
   test = async () => { // Đánh dấu hàm test là async
     const getUserToken = async () => {
       try {
         const getUser = await SecureStore.getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
-        const userName = tokenObject;
-        return userName;
+        const username = tokenObject;
+        return username;
       } catch (error) {
         // Xử lý lỗi ở đây nếu cần
       }
@@ -137,13 +137,13 @@ class BottomSheet extends React.Component {
       try {
         const getUser = await SecureStore.getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
-        const userName = tokenObject.userName;
+        const username = tokenObject.username;
         const email = tokenObject.email;
         const image = tokenObject.image;
-        console.log(userName);
+        console.log(username);
         console.log(email);
         console.log(image);
-        await deleteUsers(userName);
+        await deleteUsers(username);
         await SecureStore.deleteItemAsync('accessToken');
         const { navigation } = this.props;
         alert("Đăng xuất thành công");
@@ -156,7 +156,7 @@ class BottomSheet extends React.Component {
         console.log("Lỗi khi đăng xuất", error.response.data);
       }
     };
-    const { userName } = this.state;
+    const { username } = this.state;
     const { email } = this.state;
     const { image } = this.state;
     const { note } = this.state;
@@ -187,7 +187,7 @@ class BottomSheet extends React.Component {
                 )}
               </Animated.View>
               <View style={styles.user}>
-                <Text style={styles.name} onPress={this.navigateToUserScreen}>{userName}</Text>
+                <Text style={styles.name} onPress={this.navigateToUserScreen}>{username}</Text>
                 <Text numberOfLines={1} style={styles.emailUser}>{email}</Text>
               </View>
               {note != "Admin" ?

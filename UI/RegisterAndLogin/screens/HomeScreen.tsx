@@ -5,7 +5,7 @@ import { ImageUri } from '../services/interfaces/User.interface';
 import { BASE_URL_Image, getAllImage } from '../services/Game';
 import * as FileSystem from 'expo-file-system';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation }: { navigation: any }) => {
     const loadToken = async () => {
         try {
             const response = await getAllImage();
@@ -18,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
             }
             setListImageUri(checklist)
             // console.log(checklist)
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data)
         }
     }
@@ -38,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
             check.imageUri = response.uri
             checklist.push(check)
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
         }
     };

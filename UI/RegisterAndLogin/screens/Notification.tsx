@@ -4,7 +4,7 @@ import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } 
 
 
 
-const NotificationScreen = ({ navigation }) => {
+const NotificationScreen = ({ navigation }: { navigation: any }) => {
     const userName = navigation.getParam("userName")
     const notification = navigation.getParam("notification")
     const imageUri = navigation.getParam("imageUri")
