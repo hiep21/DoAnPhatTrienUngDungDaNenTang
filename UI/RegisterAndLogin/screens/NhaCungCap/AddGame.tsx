@@ -78,7 +78,7 @@ const AddGameNCC = ({ navigation }) => {
         );
     };
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<any>(null);
     const pickImage = async () => {
         try {
             let result = await DocumentPicker.getDocumentAsync({
@@ -202,7 +202,7 @@ const AddGameNCC = ({ navigation }) => {
 
                         <Text style={styles.label}>Icon file</Text>
 
-                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20, alignSelf: "center" }} />}
 
 
                         <TouchableOpacity onPress={() => { pickImage(); }}>

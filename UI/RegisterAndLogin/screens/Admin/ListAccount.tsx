@@ -7,8 +7,8 @@ import { ImageUri, RegisterData } from '../../services/interfaces/User.interface
 import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
-const ListAccountScreen = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+const ListAccountScreen = ({ navigation }: any) => {
+    const username = navigation.getParam("username")
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
@@ -22,19 +22,19 @@ const ListAccountScreen = ({ navigation }) => {
             list = data;
             setListAccount(data)
             setReListAccount(data)
-            const response = await getImageIcon("po123lop123")
+            const response = await getImageIcon(username)
             const name = response.data[0].imageName
 
-            fetchImage("po123lop123", name)
+            fetchImage(username, name)
             for (let i = 0; i < data.length; i++) {
-                const response = await getImageIcon(list[i].userName)
+                const response = await getImageIcon(list[i].username)
                 const ImageName = response.data[0].imageName
-                await fetchImage(list[i].userName, ImageName)
+                await fetchImage(list[i].username, ImageName)
 
             }
 
             setListImageUri(checklist)
-        } catch (err) {
+        } catch (err: any) {
 
             console.log(err.TypeError)
 
@@ -55,14 +55,14 @@ const ListAccountScreen = ({ navigation }) => {
             imageUri: ""
         };
 
-        if (namePath == userName) {
+        if (namePath == username) {
             const url = BASE_URL_Image.concat("getImage/").concat(namePath).concat("/").concat(imageName);
 
             try {
                 const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
                 setImageAdminUri(response.uri);
 
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error fetching image:', error.response.data);
 
             }
@@ -76,7 +76,7 @@ const ListAccountScreen = ({ navigation }) => {
                 check.imageUri = response.uri
                 checklist.push(check)
 
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error fetching image:', error.response.data);
 
             }
@@ -86,7 +86,7 @@ const ListAccountScreen = ({ navigation }) => {
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const handleSearch = () => {
         const filteredTasks = listAccount.filter((item) =>
-            item.userName.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            item.username.toLowerCase().includes(searchKeyword.toLowerCase()) ||
             item.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
             item.note.toLowerCase().includes(searchKeyword.toLowerCase())
         );
@@ -104,15 +104,15 @@ const ListAccountScreen = ({ navigation }) => {
         handleSearch()
         loadTasks()
 
-    }, [userName])
-    const goToDetail = (item: RegisterData, imageUri: string) => {
+    }, [username])
+    const goToDetail = (item: RegisterData, imageUri: any) => {
         navigation.navigate("InfoAccount", { item, imageUri })
     }
 
     const renderTask = ({ item }: { item: RegisterData }) => {
         return (
-            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.namePath == item.userName)?.imageUri) }} >
-                {item.userName != userName ? (
+            <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.namePath == item.username)?.imageUri) }} >
+                {item.username != username ? (
                     <View style={{
                         flexDirection: 'row',
                         marginLeft: "5%",
@@ -120,7 +120,7 @@ const ListAccountScreen = ({ navigation }) => {
                     }}>
 
                         {listImageUri.length != 0 ? (
-                            <Image style={{ width: 50, height: 50, marginTop: 7 }} source={{ uri: listImageUri.find(f => f.namePath == item.userName)?.imageUri }} />
+                            <Image style={{ width: 50, height: 50, marginTop: 7 }} source={{ uri: listImageUri.find(f => f.namePath == item.username)?.imageUri }} />
                         ) : (
                             <Image style={{ width: 50, height: 50, marginTop: 7 }} source={require("../../assets/favicon.png")} />
                         )}
@@ -165,7 +165,7 @@ const ListAccountScreen = ({ navigation }) => {
 
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 5 }} onPress={() => {
-                        navigation.navigate("List_NotificationScreen", { userName });
+                        navigation.navigate("List_NotificationScreen", { username });
                     }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>

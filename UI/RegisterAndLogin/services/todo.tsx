@@ -82,13 +82,13 @@ export const CreateBankAccount = ({ account, accountNumber, nameBank }: BankAcco
 }
 
 // API Put
-export const UpdateRegisterApi = (username: string, { user, name, email, password, newPassword, note, gender, dateOfBirth, address, phone }: UpdateRegister) => {
+export const UpdateRegisterApi = ({ username, name, email, password, newPassword, note, gender, dateOfBirth, address, phone }: UpdateRegister) => {
     return axios({
         method: "put",
         url: BASE_URL_REGISTER.concat("updateRegister/").concat(username),
 
         data: {
-            user,
+            username,
             password,
             newPassword,
             name,

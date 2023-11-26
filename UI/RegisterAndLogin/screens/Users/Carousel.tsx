@@ -55,7 +55,7 @@ export default function Carousel({ listImageUri, username, navigation }: { listI
       } else {
         navigation.navigate("InfoGameScreen", { gameId: id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri: imageUri });
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.response.data == "Tài khoản " + username + " chưa mua với tải game") {
         navigation.navigate("InfoGame_dont_Install", { gameId: id, username, imageGameUri: imageUri });
       } else {

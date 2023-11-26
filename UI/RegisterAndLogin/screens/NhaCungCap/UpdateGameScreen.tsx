@@ -7,7 +7,7 @@ import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
 import * as FileSystem from 'expo-file-system';
 
-const UpdateGameNCC = ({ navigation }) => {
+const UpdateGameNCC = ({ navigation }: any) => {
     const userName = navigation.getParam("userName")
     const gameId = navigation.getParam("gameId")
     const textChange = navigation.getParam("textChange")

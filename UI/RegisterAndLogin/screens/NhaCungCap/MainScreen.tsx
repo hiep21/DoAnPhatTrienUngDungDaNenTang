@@ -5,18 +5,18 @@ import { RegisterData } from '../../services/interfaces/User.interface';
 import Background from '../Users/Background';
 
 
-const MainScreenNCC = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+const MainScreenNCC = ({ navigation }: { navigation: any }) => {
+    const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const [userNCC, setUserNCC] = useState<RegisterData>()
+    const [accountNCC, setAccountNCC] = useState<RegisterData>()
 
 
     const loadTasks = async () => {
         setRefreshing(true)
         try {
-            const response = await getByUser(userName)
-            setUserNCC(response.data[0])
-        } catch (err) {
+            const response = await getByUser(username)
+            setAccountNCC(response.data[0])
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
@@ -25,34 +25,36 @@ const MainScreenNCC = ({ navigation }) => {
 
     useEffect(() => {
         loadTasks();
-    }, [userName])
+    }, [username])
 
 
 
     return (
-        <Background>
-            <TouchableOpacity onPress={() => { navigation.navigate("ManagerGameNCC", { userName: userName, nameNCC: userNCC?.name }) }}>
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../../assets/Icon/BG.jpg")} />
+            <TouchableOpacity onPress={() => { navigation.navigate("ManagerGameNCC", { username: username, nameNCC: accountNCC?.name }) }}>
                 <View style={styles.container}>
 
-                    <Text style={[{ fontSize: 20, fontWeight: "900", backgroundColor: "rgba(255, 255, 255, 0.7)", padding: 10, color: "green" }]}>
-                        Chào mừng {userNCC?.name.split(" ")[userNCC.name.split(" ").length - 1].toLowerCase()} quay trở lại
+                    <Text style={[{ fontSize: 20, fontWeight: "900", backgroundColor: "rgba(255, 255, 255, 0.7)", padding: 10, color: "green", borderRadius: 10 }]}>
+                        Chào mừng {accountNCC?.name.split(" ")[accountNCC.name.split(" ").length - 1].toLowerCase()} quay trở lại
                     </Text>
 
                 </View>
             </TouchableOpacity>
-        </Background>
-
-
+        </View>
     );
 };
 const styles = StyleSheet.create({
     container: {
-flex: 1,
+        flex: 1,
         alignItems: "center",
         justifyContent: 'center',
-        width: 300,
-        height: 500,
-        margin: 30,
+        width: "100%",
+        height: "100%",
     }
 });
 

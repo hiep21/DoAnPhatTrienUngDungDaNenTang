@@ -3,7 +3,7 @@ import { View, Text, Alert, StyleSheet, TouchableOpacity, Image, TextInput } fro
 
 import { RegisterData } from '../../services/interfaces/User.interface';
 import { DeleteAccount, deleteImage, deleteUsers, getImageIcon } from '../../services/todo';
-const InfoAccount = ({ navigation }) => {
+const InfoAccount = ({ navigation }: any) => {
 
     const item = navigation.getParam("item")
     const imageUri = navigation.getParam("imageUri")
@@ -13,9 +13,9 @@ const InfoAccount = ({ navigation }) => {
 
 
     const deleteAccount = async () => {
-        const response = await getImageIcon(Account.userName)
+        const response = await getImageIcon(Account.username)
         const imageName = response.data[0].imageName
-       
+
         Alert.alert(
             "Xác nhận",
             "Bạn có chắc chắn muốn xóa không",
@@ -28,12 +28,12 @@ const InfoAccount = ({ navigation }) => {
                     text: "Đồng ý",
                     onPress: async () => {
                         try {
-                            await DeleteAccount(Account.userName)
-                            await deleteImage(Account.userName, imageName)
-                            
+                            await DeleteAccount(Account.username)
+                            await deleteImage(Account.username, imageName)
+
                             alert('Xóa game thành công');
                             navigation.navigate("MainScreenAdmin");
-                        } catch (error) {
+                        } catch (error: any) {
                             console.log(error.response.data)
                         }
 
@@ -57,7 +57,7 @@ const InfoAccount = ({ navigation }) => {
                     fontSize: 17,
                     fontWeight: '600',
 
-                }}>Thông tin tài khoản {Account?.userName}</Text>
+                }}>Thông tin tài khoản {Account?.username}</Text>
                 <View style={styles.describeGame}>
                     <Image style={{
                         height: 50,

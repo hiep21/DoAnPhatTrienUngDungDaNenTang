@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { deleteApi, getById, getByName } from '../../services/Game';
-import BottomSheet from "./BottomSheet";
+import { getById } from '../../services/Game';
 import { BASE_URL_Image, getImageIcon } from '../../services/todo';
 import * as FileSystem from 'expo-file-system';
-const InfoGame_dont_Install = ({ navigation }) => {
+const InfoGame_dont_Install = ({ navigation }: any) => {
 
     const gameId = navigation.getParam("gameId")
     const imageGameUri = navigation.getParam("imageGameUri")
-    const userName = navigation.getParam("userName")
+    const username = navigation.getParam("username")
     const [game, setGame] = useState<InfoGame>()
     const getGameById = async () => {
 
@@ -17,11 +16,11 @@ const InfoGame_dont_Install = ({ navigation }) => {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
-            const response = await getImageIcon(userName)
+            const response = await getImageIcon(username)
             const name = response.data[0].imageName
 
             fetchImage(name)
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
@@ -29,13 +28,13 @@ const InfoGame_dont_Install = ({ navigation }) => {
     const [imageUri, setImageUri] = useState<string>();
     const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
 
         }
@@ -44,7 +43,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, userName, imageGameUri])
+    }, [gameId, username, imageGameUri])
     return (
         <View style={styles.container}>
 
@@ -88,7 +87,7 @@ const InfoGame_dont_Install = ({ navigation }) => {
                             backgroundColor: "#6C9EFF",
                             justifyContent: 'center',
                             borderRadius: 5
-                        }} onPress={() => { navigation.navigate('Buy_Game_to_Id', { gameId, userName }) }}>
+                        }} onPress={() => { navigation.navigate('Buy_Game_to_Id', { gameId, username }) }}>
                             <Text style={{ textAlign: 'center' }}>Mua game</Text>
                         </TouchableOpacity>
 

@@ -8,7 +8,7 @@ import { postImageAva, registerApi } from '../services/todo';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
 
-const AddUserScreen = ({ navigation }: { navigation: any }) => {
+const AddUserScreen = ({ navigation }: any) => {
 
     const [account, setAccount] = useState<RegisterData>({
         username: "",
@@ -42,21 +42,21 @@ const AddUserScreen = ({ navigation }: { navigation: any }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const [changeDate, setChangeDate] = useState<any>();
-    const onChange = () => {
+    const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate || selectedDate;
-        console.log(currentDate.toDateString());
+
         setShowDatePicker(Platform.OS === 'ios');
-        setSelectedDate(currentDate); // Nếu không có ngày nào được chọn, thì sử dụng ngày hiện tại
+        setSelectedDate(currentDate);
         const day = currentDate.getDate();
-        const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
+        const month = currentDate.getMonth() + 1;
         const year = currentDate.getFullYear();
 
-        // const date = day+month+year;
-        // setChangeDate(date);
-        // console.log(`Ngày: ${day}, Tháng: ${month}, Năm: ${year}`);
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        const date = currentDate.toDateString();
-        setChangeDate(date);
+        const date = day + "/" + month + "/" + year
+
+        setAccount({
+            ...account,
+            dateOfBirth: date
+        });
 
     };
 
@@ -66,7 +66,7 @@ const AddUserScreen = ({ navigation }: { navigation: any }) => {
             return
         }
         account.dateOfBirth = changeDate;
-        console.log(account)
+        // console.log(account)
         try {
 
 
@@ -238,7 +238,7 @@ const AddUserScreen = ({ navigation }: { navigation: any }) => {
 
 
                             <TouchableOpacity style={[styles.dropdownButton, styles.input]} onPress={() => setShowDatePicker(true)}>
-                                <Text style={styles.selectedGenderText}>Selected Date: {changeDate}</Text>
+                                <Text style={styles.selectedGenderText}>Selected Date: {account.dateOfBirth}</Text>
                             </TouchableOpacity>
                             {showDatePicker == true ? (
                                 <DateTimePicker

@@ -1,6 +1,6 @@
 
 // screens/Screen1.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView } from 'react-native';
 import { RegisterData } from '../../services/interfaces/User.interface';
 import * as Yup from 'yup'
@@ -10,8 +10,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
 
 
-const CreateAccountNCC = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+const CreateAccountNCC = ({ navigation }: any) => {
+    const username = navigation.getParam("username")
     const [account, setAcount] = useState<RegisterData>({
         username: "",
         name: "",
@@ -23,7 +23,7 @@ const CreateAccountNCC = ({ navigation }) => {
         address: "",
         phone: ""
     });
-    const [userVal, setUserVal] = useState(null);
+    const [userVal, setUserVal] = useState<any>(null);
     const [rePasswords, setRePasswords] = useState<string>();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedGender, setSelectedGender] = useState<string>("");
@@ -44,7 +44,7 @@ const CreateAccountNCC = ({ navigation }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [changeDate, setChangeDate] = useState<string>();
-    const onChange = (event, selectedDate) => {
+    const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate || selectedDate;
         console.log(currentDate.toDateString());
         setShowDatePicker(Platform.OS === 'ios');
@@ -97,7 +97,7 @@ const CreateAccountNCC = ({ navigation }) => {
         try {
 
 
-            const { data } = await registerApi(userName)
+            const { data } = await registerApi(account)
 
 
             await uploadImage()
@@ -129,7 +129,7 @@ const CreateAccountNCC = ({ navigation }) => {
         );
     };
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<any>(null);
     const pickImage = async () => {
         try {
             let result = await DocumentPicker.getDocumentAsync({
@@ -151,14 +151,17 @@ const CreateAccountNCC = ({ navigation }) => {
         }
 
         try {
-            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, userName.username)
+            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, account.username)
             console.log('Upload Image success:', response.data);
             Alert.alert("Register complete!")
-            navigation.navigate("MainScreenAdmin", { userName: userName })
+            navigation.navigate("MainScreenAdmin", { username: username })
         } catch (error) {
             console.error('Upload failed:', error.response.data);
         }
     };
+    useEffect(() => {
+
+    }, [username])
     return (
         <Background>
             <KeyboardAvoidingView>

@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
-import Background from './Background';
+import React from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 
 
-const SettingUser = ({ navigation }) => {
-    const user = navigation.getParam("user")
+const SettingUser = ({ navigation }: any) => {
+    const username = navigation.getParam("username")
 
     return (
-        <Background >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../../assets/Icon/BG.jpg")} />
+            <View style={{
+                backgroundColor: "#fff",
+                width: "70%",
+                height: "30%",
+                padding: "5%",
+                borderRadius: 10
+            }}>
                 <TouchableOpacity style={{
                     marginBottom: 10
                 }}>
@@ -28,19 +38,16 @@ const SettingUser = ({ navigation }) => {
                     <Text style={{ fontSize: 13, color: "#555" }}>20</Text>
                 </TouchableOpacity>
             </View>
-        </Background>
+        </View>
     )
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: 300,
-        backgroundColor: "#fff",
-        height: 400,
-        marginHorizontal: 30,
-        marginTop: 100,
-        paddingLeft: 30,
-        paddingTop: 20
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center"
     },
 })
 

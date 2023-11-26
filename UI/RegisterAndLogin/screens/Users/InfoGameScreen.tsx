@@ -8,7 +8,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import { GameManager } from '../../services/interfaces/User.interface';
 import { BASE_URL_Image, UpdateGameManager, getImageIcon } from '../../services/todo';
-const InfoGameScreen = ({ navigation }) => {
+const InfoGameScreen = ({ navigation }: any) => {
 
     const gameId = navigation.getParam("gameId")
     const installGame = navigation.getParam("installGame")
@@ -27,14 +27,14 @@ const InfoGameScreen = ({ navigation }) => {
             // console.log(response.data)
             fetchImage(name)
             // console.log(gameManager)
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
     }
     const [checkDownload, setCheckDownload] = useState<boolean>()
-    const downloadApk = async (nameGame: string) => {
-        const Url = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame); 
+    const downloadApk = async (nameGame: any) => {
+        const Url = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame);
         setitemGameManager({
             ...itemGameManager,
             isInstall: true
@@ -50,8 +50,10 @@ const InfoGameScreen = ({ navigation }) => {
                         Url,
                         FileSystem.documentDirectory + nameGame
                     );
+                    let uri: any
 
-                    const { uri } = await downloadResumable.downloadAsync();
+                    uri = await downloadResumable.downloadAsync();
+
                     await MediaLibrary.createAssetAsync(uri);
 
                     console.log('Downloaded successfully:', uri);
@@ -62,7 +64,7 @@ const InfoGameScreen = ({ navigation }) => {
                 } else {
                     return
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error downloading :', error.response.data);
             }
         }
@@ -105,7 +107,7 @@ const InfoGameScreen = ({ navigation }) => {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
 
         }
@@ -219,7 +221,6 @@ const InfoGameScreen = ({ navigation }) => {
                     {game?.gioiThieuTroChoi}
                 </Text>
             </View>
-            {/* <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} /> */}
         </View>
 
 

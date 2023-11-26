@@ -10,7 +10,7 @@ const InfoGameNCC = ({ navigation }) => {
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
     const imageUri = navigation.getParam("imageUri")
-    const userName = navigation.getParam("userName")
+    const username = navigation.getParam("username")
     const [game, setGame] = useState<InfoGame>()
     const [acceptGame, setAcceptGame] = useState<InfoGame>({
         tenTroChoi: "",
@@ -31,7 +31,7 @@ const InfoGameNCC = ({ navigation }) => {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
-            const response = await getByUser(userName)
+            const response = await getByUser(username)
 
             setUsers(response.data[0])
             // console.log(data[0])
@@ -65,11 +65,11 @@ const InfoGameNCC = ({ navigation }) => {
                         createNotification.nameGame = tenTroChoi
                         createNotification.forAccount = "Admin"
                         createNotification.result = false;
-                        createNotification.reason = "Nhà cung cấp " + userName + "muốn gỡ trò chơi"
+                        createNotification.reason = "Nhà cung cấp " + username + "muốn gỡ trò chơi"
 
                         try {
                             await CreateNotification(createNotification);
-                            navigation.navigate("ManagerGameNCC", { userName });
+                            navigation.navigate("ManagerGameNCC", { username });
                             alert('Gửi yêu cầu xóa game thành công');
                         } catch (error) {
                             alert(error.response.data)
@@ -94,8 +94,9 @@ const InfoGameNCC = ({ navigation }) => {
 
 
     const denyGame = async (Reason: string) => {
+        const nameGame: any = game?.tenTroChoi
         let notification: NotificationInterface = {
-            nameGame: game?.tenTroChoi,
+            nameGame: nameGame,
             forAccount: 'NCC',
             result: false,
             reason: Reason,
@@ -103,7 +104,7 @@ const InfoGameNCC = ({ navigation }) => {
         try {
             await CreateNotification(notification)
             alert("Gửi thông báo thành công")
-            navigation.navigate("ManagerGameNCC", { userName })
+            navigation.navigate("ManagerGameNCC", { username })
         } catch (error) {
             alert(error.response.data)
         }
@@ -111,7 +112,7 @@ const InfoGameNCC = ({ navigation }) => {
     const [isDeny, setIsDeny] = useState<boolean>(false)
     useEffect(() => {
         getGameById()
-    }, [gameId, tenTroChoi, imageUri, userName])
+    }, [gameId, tenTroChoi, imageUri, username])
     const [reason, setReason] = useState<string>("Trò chơi không đạt yêu cầu")
     return (
         <View style={styles.container}>
@@ -201,7 +202,7 @@ const InfoGameNCC = ({ navigation }) => {
                                         backgroundColor: "#6C9EFF",
                                         justifyContent: 'center',
                                         borderRadius: 5
-                                    }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri, user }) }}>
+                                    }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri, username }) }}>
                                         <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
                                     </TouchableOpacity>
 

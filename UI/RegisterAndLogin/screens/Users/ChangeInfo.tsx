@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal, Platform } from 'react-native';
 import { UpdateRegisterApi, deleteImage, getByUser, getImageIcon, postImageAva } from '../../services/todo';
 import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Background from './Background';
-const ChangeInfo = ({ navigation }) => {
+const ChangeInfo = ({ navigation }: any) => {
 
-    const users = navigation.getParam("userName")
+    const username = navigation.getParam("username")
     const textChange = navigation.getParam("textChange")
-    const [Users, setUsers] = useState<RegisterData>();
-    const [usersUpdateImage, setUsersUpdateImage] = useState<UpdateRegister>();
-    const [usersUpdate, setUsersUpdate] = useState<UpdateRegister>(
+    const [account, setAccount] = useState<RegisterData>();
+    const [accountUpdate, setAccountUpdate] = useState<UpdateRegister>(
         {
-            userName: "",
+            username: "",
             password: "",
             newPassword: "",
             name: "",
@@ -33,22 +31,19 @@ const ChangeInfo = ({ navigation }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [changeDate, setChangeDate] = useState<string>();
 
-    const onChange = (event, selectedDate) => {
+    const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate || selectedDate;
 
         setShowDatePicker(Platform.OS === 'ios');
         setSelectedDate(currentDate);
         const day = currentDate.getDate();
-        const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
+        const month = currentDate.getMonth() + 1;
         const year = currentDate.getFullYear();
-        // const date = day+month+year;
-        // setChangeDate(date);
-        // console.log(`Ngày: ${day}, Tháng: ${month}, Năm: ${year}`);
 
         const date = day + "/" + month + "/" + year
 
-        setUsersUpdate({
-            ...usersUpdate,
+        setAccountUpdate({
+            ...accountUpdate,
             dateOfBirth: date
         });
     };
@@ -63,26 +58,27 @@ const ChangeInfo = ({ navigation }) => {
 
     const selectGender = (Gender: string) => {
         setSelectedGender(Gender);
-        setUsersUpdate({
-            ...usersUpdate,
+        setAccountUpdate({
+            ...accountUpdate,
             gender: Gender
         });
         toggleModal();
     };
 
     const loadTasks = async () => {
-        const getUser = await getItemAsync('accessToken');
+        let getUser: any
+        getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
         const password = tokenObject.password;
 
 
         try {
-            const { data } = await getByUser(users)
+            const { data } = await getByUser(username)
 
-            setUsers(data[0])
-            setUsersUpdate(
+            setAccount(data[0])
+            setAccountUpdate(
                 {
-                    userName: users,
+                    username: username,
                     password: password,
                     newPassword: password,
                     name: data[0].name,
@@ -95,41 +91,13 @@ const ChangeInfo = ({ navigation }) => {
                 }
             )
 
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
-            alert(errorMessage)
+            alert(errorMessage.data)
         }
 
     }
-    const loadImage = async () => {
-
-        const getUser = await getItemAsync('accessToken');
-        const tokenObject = JSON.parse(getUser);
-        const password = tokenObject.password;
-        setUsersUpdateImage({
-            userName: users,
-            password: password,
-            newPassword: password,
-            name: Users.name,
-            email: Users.email,
-            note: Users.note,
-            gender: Users.gender,
-            dateOfBirth: Users.dateOfBirth,
-            address: Users.address,
-            phone: Users.phone,
-            image: image.assets[0].uri
-        })
-        if (usersUpdateImage != undefined) {
-            await uploadImage();
-            setIsLoading(false)
-        } else {
-            setIsLoading(true)
-        }
-
-
-    }
-
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<any>(null);
     const pickImage = async () => {
         try {
             let result = await DocumentPicker.getDocumentAsync({
@@ -151,17 +119,17 @@ const ChangeInfo = ({ navigation }) => {
         }
 
         try {
-            const images = await getImageIcon(users)
+            const images = await getImageIcon(username)
             if (images) {
 
-                await deleteImage(users, images.data[0].imageName)
+                await deleteImage(username, images.data[0].imageName)
             }
-            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, users)
+            const response = await postImageAva(image.assets[0].uri, image.assets[0].name, username)
 
 
-            console.log('Upload Image success:', response.data);
+            Alert.alert('Upload Image success', "Đổi ảnh thành công");
             navigation.navigate("HomeScreen")
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload failed:', error.response.data);
         }
     };
@@ -170,19 +138,19 @@ const ChangeInfo = ({ navigation }) => {
 
         if (!isLoading) {
             setIsLoading(true)
-            console.log(usersUpdate);
+            console.log(accountUpdate);
             if (change == "") {
                 console.error('Chưa chọn hình ảnh.');
                 return;
             }
 
             try {
-                const { data } = await UpdateRegisterApi(users, usersUpdate)
+                const { data } = await UpdateRegisterApi(accountUpdate)
 
-                console.log('Upload success:', data);
+                Alert.alert('Upload success:', "Cập nhật thông tin thành công");
                 navigation.navigate("HomeScreen")
-            } catch (error) {
-                console.log('Upload failed:', error.response.data.errors.Address);
+            } catch (error: any) {
+                Alert.alert('Upload failed:', error.response.data.errors.Address);
 
             }
         }
@@ -192,18 +160,18 @@ const ChangeInfo = ({ navigation }) => {
     useEffect(() => {
 
         loadTasks();
-    }, [users, textChange])
-    const renderInputField = (key) => {
+    }, [username, textChange])
+    const renderInputField = (key: any) => {
         switch (key) {
             case 'name':
                 return (
                     <View>
                         <Text style={styles.textInput}>Sửa tên của bạn</Text>
                         <TextInput
-                            value={usersUpdate.name}
+                            value={accountUpdate.name}
                             onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
+                                setAccountUpdate({
+                                    ...accountUpdate,
                                     name: value
                                 })
                             }}
@@ -220,7 +188,7 @@ const ChangeInfo = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 10,
                             borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.name); }}>
+                        }} onPress={() => { uploadTextChange(accountUpdate.name); }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
@@ -233,17 +201,7 @@ const ChangeInfo = ({ navigation }) => {
                 return (
                     <View>
                         <Text style={styles.textInput}>Sửa ngày sinh của bạn</Text>
-                        {/* <TextInput
-                            value={usersUpdate.dateOfBirth}
-                            onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
-                                    dateOfBirth: value
-                                })
-                            }}
-                            style={styles.input}
-                            placeholder='xx/xx/xxxx'
-                        /> */}
+
                         <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
                             <Text> {selectedDate.toDateString()}</Text>
                         </TouchableOpacity>
@@ -267,7 +225,7 @@ const ChangeInfo = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 10,
                             borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.dateOfBirth); }}>
+                        }} onPress={() => { uploadTextChange(accountUpdate.dateOfBirth); }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
@@ -280,17 +238,7 @@ const ChangeInfo = ({ navigation }) => {
                 return (
                     <View>
                         <Text style={styles.textInput}>Sửa giới tính của bạn</Text>
-                        {/* <TextInput
-                            value={usersUpdate.gender}
-                            onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
-                                    gender: value
-                                })
-                            }}
-                            style={styles.input}
-                            placeholder='Gender'
-                        /> */}
+
                         <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
                             <Text>
                                 {selectedGender ? selectedGender : 'LGBT'}
@@ -325,7 +273,7 @@ const ChangeInfo = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 10,
                             borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.gender); }}>
+                        }} onPress={() => { uploadTextChange(accountUpdate.gender); }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
@@ -339,10 +287,10 @@ const ChangeInfo = ({ navigation }) => {
                     <View>
                         <Text style={styles.textInput}>Sửa email của bạn</Text>
                         <TextInput
-                            value={usersUpdate.email}
+                            value={accountUpdate.email}
                             onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
+                                setAccountUpdate({
+                                    ...accountUpdate,
                                     email: value
                                 })
                             }}
@@ -359,7 +307,7 @@ const ChangeInfo = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 10,
                             borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.email); }}>
+                        }} onPress={() => { uploadTextChange(accountUpdate.email); }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
@@ -373,10 +321,10 @@ const ChangeInfo = ({ navigation }) => {
                     <View >
                         <Text style={styles.textInput}>Sửa số điện thoại của bạn</Text>
                         <TextInput
-                            value={usersUpdate.phone}
+                            value={accountUpdate.phone}
                             onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
+                                setAccountUpdate({
+                                    ...accountUpdate,
                                     phone: value
                                 })
                             }}
@@ -393,7 +341,7 @@ const ChangeInfo = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 10,
                             borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.phone); }}>
+                        }} onPress={() => { uploadTextChange(accountUpdate.phone); }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
@@ -407,10 +355,10 @@ const ChangeInfo = ({ navigation }) => {
                     <View>
                         <Text style={styles.textInput}>Sửa địa chỉ của bạn</Text>
                         <TextInput
-                            value={usersUpdate.address}
+                            value={accountUpdate.address}
                             onChangeText={(value) => {
-                                setUsersUpdate({
-                                    ...usersUpdate,
+                                setAccountUpdate({
+                                    ...accountUpdate,
                                     address: value
                                 })
                             }}
@@ -427,7 +375,7 @@ const ChangeInfo = ({ navigation }) => {
                             alignSelf: 'center',
                             marginTop: 10,
                             borderWidth: 1
-                        }} onPress={() => { uploadTextChange(usersUpdate.address); }}>
+                        }} onPress={() => { uploadTextChange(accountUpdate.address); }}>
                             {isLoading ? (
                                 <ActivityIndicator color="#fff" />
                             ) : (
@@ -440,66 +388,68 @@ const ChangeInfo = ({ navigation }) => {
     };
     return (
 
-        <Background style={styles.container}>
-            <View style={{
-                alignItems: "center",
-                justifyContent: 'center',
-                marginHorizontal: 5,
-                width: 350,
-                height: 500
-            }}>
-                {textChange == "image" ? (
-                    <View style={{
-                        width: 300,
-                        height: 400,
-                        backgroundColor: "#fff",
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 5,
-                        borderWidth: 1
-                    }}>
-                        <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { pickImage(); }}>
-                            <Text style={{ fontWeight: '700' }}>Click chọn ảnh</Text>
+        <View style={{
+            alignItems: "center",
+            justifyContent: 'center',
+            width: "100%",
+            height: "100%"
+        }}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../../assets/Icon/BG.jpg")} />
+            {textChange == "image" ? (
+                <View style={{
+                    width: 300,
+                    height: 400,
+                    backgroundColor: "#fff",
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 5,
+                    borderWidth: 1
+                }}>
+                    <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { pickImage(); }}>
+                        <Text style={{ fontWeight: '700' }}>Click chọn ảnh</Text>
+                    </TouchableOpacity>
+                    {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+                    <Text> </Text>
+                    {image != null ? (
+                        <TouchableOpacity style={{
+                            width: 100,
+                            height: 30,
+                            backgroundColor: "#bbb",
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 10,
+                            borderWidth: 1.25
+                        }} onPress={() => { uploadImage() }}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>UploadFile</Text>
+                            )}
                         </TouchableOpacity>
-                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
-                        <Text> </Text>
-                        {image != null ? (
-                            <TouchableOpacity style={{
-                                width: 100,
-                                height: 30,
-                                backgroundColor: "#bbb",
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: 10,
-                                borderWidth: 1.25
-                            }} onPress={() => { loadImage() }}>
-                                {isLoading ? (
-                                    <ActivityIndicator color="#fff" />
-                                ) : (
-                                    <Text style={styles.textbtn}>UploadFile</Text>
-                                )}
-                            </TouchableOpacity>
-                        ) : (
-                            <Text></Text>
-                        )}
-                    </View>
+                    ) : (
+                        <Text></Text>
+                    )}
+                </View>
 
-                ) : (
-                    <View style={{
-                        width: 300,
-                        height: 150,
-                        backgroundColor: "#fff",
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 5,
-                        borderWidth: 1
-                    }}>
-                        {renderInputField(textChange)}
+            ) : (
+                <View style={{
+                    width: 300,
+                    height: 150,
+                    backgroundColor: "#fff",
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 5,
+                    borderWidth: 1
+                }}>
+                    {renderInputField(textChange)}
 
-                    </View>
-                )}
-            </View>
-        </Background>
+                </View>
+            )}
+        </View>
     )
 }
 const styles = StyleSheet.create({

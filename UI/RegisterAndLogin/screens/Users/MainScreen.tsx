@@ -9,7 +9,7 @@ import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 
 
-const MainScreen = ({ navigation }: { navigation: any }) => {
+const MainScreen = ({ navigation }: any) => {
     const lsImageUri = navigation.getParam("listImageUri")
     const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -42,7 +42,7 @@ const MainScreen = ({ navigation }: { navigation: any }) => {
 
         } catch (err: any) {
             const errorMessage = err.response
-            alert(errorMessage)
+            alert(errorMessage.data)
         }
         setRefreshing(false)
     }
@@ -84,7 +84,8 @@ const MainScreen = ({ navigation }: { navigation: any }) => {
         }
     };
     const loadimage = async () => {
-        const getUser = await getItemAsync('accessToken');
+        let getUser: any
+        getUser = await getItemAsync('accessToken');
         const tokenObject = JSON.parse(getUser);
         const username = tokenObject.username;
         try {

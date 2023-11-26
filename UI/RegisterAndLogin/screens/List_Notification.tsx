@@ -8,7 +8,7 @@ import { ImageUri, RegisterData } from '../services/interfaces/User.interface';
 import * as FileSystem from 'expo-file-system';
 import { getByUser } from '../services/todo';
 
-const List_Notification = ({ navigation }) => {
+const List_Notification = ({ navigation }: any) => {
     const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [nameGame, setNameGame] = useState<string[]>([])
@@ -46,7 +46,7 @@ const List_Notification = ({ navigation }) => {
                     setListImageUri(checklist)
                     break;
                 case "NCC":
-                    const responseNCC = await getInfoFileNCC(userName)
+                    const responseNCC = await getInfoFileNCC(username)
                     // console.log(responseNCC.data[0].note);
                     //lấy thông báo theo quyền
                     const responseNotificationNcc = await GetNotification(getAccount.data[0].note)
@@ -75,7 +75,7 @@ const List_Notification = ({ navigation }) => {
 
             }
 
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             setErr(errorMessage.data)
         }
@@ -100,7 +100,7 @@ const List_Notification = ({ navigation }) => {
             check.imageUri = response.uri
             checklist.push(check)
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
         }
     };
@@ -108,9 +108,9 @@ const List_Notification = ({ navigation }) => {
     useEffect(() => {
 
         loadTasks()
-    }, [userName])
-    const goToDetail = (notification: NotificationInterface, imageUri: string) => {
-        navigation.navigate("NotificationScreen", { userName, notification, imageUri })
+    }, [username])
+    const goToDetail = (notification: NotificationInterface, imageUri: any) => {
+        navigation.navigate("NotificationScreen", { username, notification, imageUri })
     }
     const renderTask = ({ item }: { item: NotificationInterface }) => {
         return (
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         marginLeft: "5%"
 
     },
-    userName: {
+    username: {
         flexDirection: 'row',
         marginLeft: "20%"
     },

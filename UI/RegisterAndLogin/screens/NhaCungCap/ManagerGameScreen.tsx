@@ -10,26 +10,26 @@ import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
 const ManagerGameNCC = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+    const username = navigation.getParam("username")
 
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
     const [listGameAdmin, setListGameAdmin] = useState<InfoGame[]>([])
-    const [userNCC, setUserNCC] = useState<RegisterData>()
+    const [accountNCC, setAccountNCC] = useState<RegisterData>()
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
 
         try {
-            const { data } = await getInfoFileNCC(userName)
+            const { data } = await getInfoFileNCC(username)
             // console.log(data)
             setReListGame(data)
             setListGame(data)
             const responseAdmin = await getInfoFileAdmin()
             setListGameAdmin(responseAdmin.data)
-            const response = await getByUser(userName)
-            setUserNCC(response.data[0])
+            const response = await getByUser(username)
+            setAccountNCC(response.data[0])
 
             if (response.data[0].note == "Admin") {
                 ListGame = responseAdmin.data;
@@ -52,7 +52,7 @@ const ManagerGameNCC = ({ navigation }) => {
 
             setListImageUri(checklist)
 
-            const response2 = await getImageIcon(userName)
+            const response2 = await getImageIcon(username)
             const name = response2.data[0].imageName
             fetchImageUser(name)
 
@@ -88,7 +88,7 @@ const ManagerGameNCC = ({ navigation }) => {
     const [imageUri, setImageUri] = useState<string>();
     const fetchImageUser = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
+        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
@@ -124,16 +124,16 @@ const ManagerGameNCC = ({ navigation }) => {
         return () => {
             loadTasks()
         };
-    }, [userName])
-    const goToDetail = (item: InfoGame, imageUri: string) => {
-        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri, userName })
+    }, [username])
+    const goToDetail = (item: InfoGame, imageUri: any) => {
+        navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri, username })
     }
-
+    
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
             <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.namePath == item.tenTroChoi)?.imageUri) }} >
 
-                {item.nhaCungCap == userNCC?.userName ? (
+                {item.nhaCungCap == accountNCC?.username ? (
                     <View style={{
                         flexDirection: 'row',
                         marginLeft: "5%",
@@ -168,7 +168,7 @@ const ManagerGameNCC = ({ navigation }) => {
                 ) : (
                     <View></View>
                 )}
-                {userNCC?.note == "Admin" ? (
+                {accountNCC?.note == "Admin" ? (
                     <View style={{
                         flexDirection: 'row',
                         marginLeft: "5%",
@@ -218,12 +218,12 @@ const ManagerGameNCC = ({ navigation }) => {
 
                 <View style={styles.user}>
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
-                        if (userNCC?.note == "NCC") {
-                            navigation.navigate("List_NotificationScreen", { userName, imageUri, listImageUri })
+                        if (accountNCC?.note == "NCC") {
+                            navigation.navigate("List_NotificationScreen", { username, imageUri, listImageUri })
                         }
                         else {
 
-                            navigation.navigate("List_NotificationScreen", { userName });
+                            navigation.navigate("List_NotificationScreen", { username });
 
                         }
                     }}>
@@ -243,7 +243,7 @@ const ManagerGameNCC = ({ navigation }) => {
                     fontWeight: '600',
 
                 }}>Danh sách trò chơi</Text>
-                {userNCC?.note != "Admin" ? (
+                {accountNCC?.note != "Admin" ? (
                     <FlatList
                         data={listGame}
                         renderItem={(list) => renderTask(list)}
@@ -276,9 +276,9 @@ const ManagerGameNCC = ({ navigation }) => {
                 )}
             </View>
             <View style={styles.end}>
-                {userNCC?.note != "Admin" ? (
+                {accountNCC?.note != "Admin" ? (
                     <View style={styles.addAndUpdate}>
-                        <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: userNCC?.userName }) }} style={{
+                        <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: accountNCC?.username }) }} style={{
                             backgroundColor: "#DFEEF6",
                             width: 100,
                             height: 30,
@@ -290,7 +290,7 @@ const ManagerGameNCC = ({ navigation }) => {
                         }}>
                             <Text style={{ fontWeight: '700', fontSize: 15 }}>Up Game</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount", { userName }) }} style={{
+                        <TouchableOpacity onPress={() => { navigation.navigate("BankAccount", { username }) }} style={{
                             backgroundColor: "#DFEEF6",
                             width: 100,
                             height: 30,
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     head: {
 
         width: "80%",
-        height: 40,
+        height: "5%",
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingTop: 10
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     },
     end: {
         width: "100%",
-        height: 50,
+        height: "15%",
         justifyContent: 'center',
         alignItems: 'center'
     },

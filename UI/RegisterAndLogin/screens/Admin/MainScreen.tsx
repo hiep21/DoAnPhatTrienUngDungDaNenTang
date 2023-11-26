@@ -1,13 +1,13 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, RefreshControl } from 'react-native';
 import { getByName } from '../../services/Game';
 import BottomSheet from "../Users/BottomSheet";
 import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
 import * as FileSystem from 'expo-file-system';
 
 
-const MainScreenAdmin = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+const MainScreenAdmin = ({ navigation }:any) => {
+    const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
     const [imageUri, setImageUri] = useState<string>();
@@ -19,7 +19,7 @@ const MainScreenAdmin = ({ navigation }) => {
             const { data } = await getByName()
             // console.log(data)
 
-            const response = await getImageIcon(userName)
+            const response = await getImageIcon(username)
             const name = response.data[0].imageName
 
             fetchImage(name)
@@ -30,9 +30,9 @@ const MainScreenAdmin = ({ navigation }) => {
         }
         setRefreshing(false)
     }
-    const fetchImage = async (imageName: string) => {
 
-        const url = BASE_URL_Image.concat("getImage/").concat(userName).concat("/").concat(imageName);
+    const fetchImage = async (imageName: string) => {
+        const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
 
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
@@ -40,106 +40,88 @@ const MainScreenAdmin = ({ navigation }) => {
 
         } catch (error) {
             console.error('Error fetching image:', error.response.data);
-
         }
-
     };
-
+    const handleRefresh = () => {
+        setRefreshing(true);
+        loadTasks();
+    };
     useEffect(() => {
         loadTasks()
     }, [])
-
-    const renderTask = () => {
-        return (
-            <View style={{
-
-            }}>
-                <View style={styles.head}>
-
-
-                    <View style={styles.user}>
-                        <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}
-                            onPress={() => {
-                                navigation.navigate("List_NotificationScreen", { userName });
-                            }}>
-
-                            <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
-                            {imageUri != undefined ? (
-                                <Image style={{ width: 30, height: 30, }} source={{
-                                    uri: imageUri
-                                }} />
-                            ) : (
-                                <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
-                            )}
-
-                        </TouchableOpacity>
-
-                    </View>
-                </View>
-                <View style={{ borderBottomWidth: 1, width: 400 }}></View>
-                <View style={styles.body}>
-                    <TouchableOpacity style={{
-                        paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("ManagerGameNCC", { userName }) }}>
-                        <Text style={{
-                            fontSize: 17,
-                            fontWeight: '700'
-                        }}>
-                            Danh sách trò chơi
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("ListAccountScreen", { userName }) }}>
-                        <Text style={{
-                            fontSize: 17,
-                            fontWeight: '700'
-                        }}>
-                            Danh sách tài khoản
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("CreateAccountNCC", { userName }) }}>
-                        <Text style={{
-                            fontSize: 17,
-                            fontWeight: '700'
-                        }}>
-                            Tạo tài khoản cho nhà cung cấp
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        paddingBottom: 10
-                    }} onPress={() => { navigation.navigate("ChartComponent", { userName }) }}>
-                        <Text style={{
-                            fontSize: 17,
-                            fontWeight: '700'
-                        }}>
-                            Doanh thu
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-
-            </View >
-        )
-    }
-
-
     return (
         <View style={styles.container}>
-            <FlatList
-                data={"1"}
-                renderItem={() => renderTask()}
-                onRefresh={loadTasks}
-                refreshing={refreshing}
-                style={{
-                    marginTop: "5%",
-                    width: "100%",
-                }}
-            />
+
+            <View style={styles.head}>
+                <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}
+                    onPress={handleRefresh}>
+                    <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/refresh.png")} />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }}
+                    onPress={() => {
+                        navigation.navigate("List_NotificationScreen", { username });
+                    }}>
+
+                    <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
+                    {imageUri != undefined ? (
+                        <Image style={{ width: 30, height: 30, }} source={{
+                            uri: imageUri
+                        }} />
+                    ) : (
+                        <Image style={{ width: 30, height: 30, }} source={require("../../assets/favicon.png")} />
+                    )}
+
+                </TouchableOpacity>
+
+            </View>
+            <View style={{ borderBottomWidth: 1, width: "100%" }}></View>
+            <View style={styles.body}>
+                <TouchableOpacity style={{
+                    paddingBottom: 10
+                }} onPress={() => { navigation.navigate("ManagerGameNCC", { username }) }}>
+                    <Text style={{
+                        fontSize: 17,
+                        fontWeight: '700'
+                    }}>
+                        Danh sách trò chơi
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{
+                    paddingBottom: 10
+                }} onPress={() => { navigation.navigate("ListAccountScreen", { username }) }}>
+                    <Text style={{
+                        fontSize: 17,
+                        fontWeight: '700'
+                    }}>
+                        Danh sách tài khoản
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{
+                    paddingBottom: 10
+                }} onPress={() => { navigation.navigate("CreateAccountNCC", { username }) }}>
+                    <Text style={{
+                        fontSize: 17,
+                        fontWeight: '700'
+                    }}>
+                        Tạo tài khoản cho nhà cung cấp
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{
+                    paddingBottom: 10
+                }} onPress={() => { navigation.navigate("ChartComponent", { username }) }}>
+                    <Text style={{
+                        fontSize: 17,
+                        fontWeight: '700'
+                    }}>
+                        Doanh thu
+                    </Text>
+                </TouchableOpacity>
+
+
+            </View>
+
             <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
         </View>
 
@@ -151,74 +133,32 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: 'flex-start',
+        backgroundColor: "#fff",
         width: "100%",
-
-        backgroundColor: "#fff"
-
-    },
-    search: {
-        width: 200,
-        height: 35,
-        backgroundColor: "#bbb",
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        borderRadius: 20,
-
+        height: "100%"
     },
     head: {
 
         width: "100%",
-        height: 40,
+        height: "7%",
         justifyContent: 'center',
         flexDirection: 'row',
-        paddingHorizontal: 20
-    },
-    user: {
-        flexDirection: 'row',
-        width: 100
-    },
-    danhsachtrochoi: {
-        fontSize: 15,
-        fontWeight: "500",
-        marginLeft: 20,
-        paddingTop: 20
-
-    },
-    title: {
-        justifyContent: 'flex-start',
-        width: "100%",
-        marginRight: 100
-    },
-    underlined: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#000",
-        width: 420,
-        fontSize: 15,
-        fontWeight: "500",
-        paddingLeft: 30,
-        paddingTop: 10,
 
 
-    },
-    image: {
-        //borderRadius: 15,
-        //width:'95%',
-        //marginTop:15,
-        padding: 20
     },
     body: {
         backgroundColor: "#eee",
-        width: 325,
-        height: 450,
-        marginTop: 20,
-        marginHorizontal: 15,
+        width: "90%",
+        height: "85%",
+        marginVertical: "5%",
+        marginHorizontal: "5%",
         borderRadius: 5,
         borderWidth: 1,
         padding: 30,
 
 
-    },
 
+    },
 })
 
 export default MainScreenAdmin;

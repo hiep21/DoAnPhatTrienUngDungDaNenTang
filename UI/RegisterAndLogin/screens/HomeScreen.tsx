@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import Background from './Users/Background';
 import { ImageUri } from '../services/interfaces/User.interface';
 import { BASE_URL_Image, getAllImage } from '../services/Game';
 import * as FileSystem from 'expo-file-system';
 
-const HomeScreen = ({ navigation }: { navigation: any }) => {
+const HomeScreen = ({ navigation }: any) => {
     const loadToken = async () => {
         try {
             const response = await getAllImage();

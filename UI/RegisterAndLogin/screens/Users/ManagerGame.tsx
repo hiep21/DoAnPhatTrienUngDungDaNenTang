@@ -1,20 +1,18 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Alert, FlatList } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
 import { getGameManager } from '../../services/todo';
 import { GameManager, ImageUri } from '../../services/interfaces/User.interface';
 import * as FileSystem from 'expo-file-system';
 
-const ManagerGameUser = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+const ManagerGameUser = ({ navigation }: any) => {
+    const username = navigation.getParam("username")
 
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [listGameIsInstall, setListGameIsInstall] = useState<GameManager[]>([])
     const [listGameHaveBuy, setListGameHaveBuy] = useState<GameManager[]>([])
     const [refreshing, setRefreshing] = useState<boolean>(false)
-    const [isBuy, setIsBuy] = useState<boolean>()
-    const [isInstall, setIsInstall] = useState<boolean>()
 
 
     let ListGame: InfoGame[] = []
@@ -23,7 +21,7 @@ const ManagerGameUser = ({ navigation }) => {
         try {
             const { data } = await getByName()
             // console.log(data)
-            const response = await getGameManager(users)
+            const response = await getGameManager(username)
 
             if (!check) {
                 const listGameInstall = []
@@ -70,9 +68,9 @@ const ManagerGameUser = ({ navigation }) => {
             }
 
             setListImageUri(checklist)
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
-            alert("Lỗi: " + errorMessage.data)
+            Alert.alert("Lỗi", errorMessage.data)
         }
         setRefreshing(false)
     }
@@ -86,7 +84,6 @@ const ManagerGameUser = ({ navigation }) => {
             imageUri: ""
         };
 
-
         const url = BASE_URL_Image_Icon.concat("getImage/").concat(namePath).concat("/").concat(imageName);
 
         try {
@@ -95,7 +92,7 @@ const ManagerGameUser = ({ navigation }) => {
             check.imageUri = response.uri
             checklist.push(check)
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
         }
     };
@@ -128,7 +125,6 @@ const ManagerGameUser = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 )
-                break;
             case 1:
                 return (
                     <View style={styles.frameChoseBtn}>
@@ -155,7 +151,6 @@ const ManagerGameUser = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 )
-                break;
 
         }
     }
@@ -181,21 +176,16 @@ const ManagerGameUser = ({ navigation }) => {
                             justifyContent: 'space-between'
                         }}>
                             <Text style={{ fontSize: 10 }}>Giá: {item.gia}</Text>
-                            {/* <Text style={{ fontSize: 10, textAlign: 'right' }}>Trạng thái:{item.trangThai}</Text> */}
                         </View>
-
                     </View>
-
                 </View>
-
-
             </TouchableOpacity >
 
         )
     }
     useEffect(() => {
         loadTasks()
-    }, [userName])
+    }, [username])
     return (
         <View style={styles.container}>
 
@@ -214,9 +204,10 @@ const ManagerGameUser = ({ navigation }) => {
                     width: 300,
                     height: 450,
                     marginTop: 20,
-                    marginHorizontal: 5
+                    marginHorizontal: 5,
+                    alignItems: 'center'
                 }}>
-                    {listGameIsInstall ? (
+                    {listGameIsInstall.length != 0 ? (
                         <FlatList
                             data={listGame}
                             renderItem={(list) => renderListGameInstall(list)}
@@ -245,9 +236,10 @@ const ManagerGameUser = ({ navigation }) => {
                     width: 300,
                     height: 450,
                     marginTop: 20,
-                    marginHorizontal: 5
+                    marginHorizontal: 5,
+                    alignItems: 'center'
                 }}>
-                    {listGameHaveBuy ? (
+                    {listGameHaveBuy.length != 0 ? (
                         <FlatList
                             data={listGame}
                             renderItem={(list) => renderListGameInstall(list)}

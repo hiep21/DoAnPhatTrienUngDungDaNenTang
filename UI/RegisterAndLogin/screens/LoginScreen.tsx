@@ -10,7 +10,7 @@ import React from 'react';
 
 
 
-const LoginScreen = ({ navigation }: { navigation: any }) => {
+const LoginScreen = ({ navigation }: any) => {
     const listImageUri = navigation.getParam("listImageUri")
     const [account, setAccount] = useState<LoginData>({
         username: "",

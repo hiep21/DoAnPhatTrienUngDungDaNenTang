@@ -1,14 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
-import Background from './Background';
+import React from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 
 
-const SupportUser = ({ navigation }) => {
-    const user = navigation.getParam("user")
+const SupportUser = ({ navigation }: any) => {
+    const username = navigation.getParam("username")
 
     return (
-        <Background >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../../assets/Icon/BG.jpg")} />
+            <View style={{
+                backgroundColor: "#fff",
+                alignSelf: "center",
+                height: "50%",
+                width: "80%",
+                borderRadius: 10,
+                padding: 20
+            }}>
                 <TouchableOpacity style={{
                     marginBottom: 30
                 }}>
@@ -37,19 +48,17 @@ const SupportUser = ({ navigation }) => {
 
                 </TouchableOpacity>
             </View>
-        </Background>
+
+
+        </View>
     )
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: 300,
-        backgroundColor: "#fff",
-        height: 400,
-        marginHorizontal: 30,
-        marginTop: 100,
-        paddingLeft: 30,
-        paddingTop: 20
+        width: "100%",
+        height: "100%",
+        justifyContent: "center"
     },
 })
 
