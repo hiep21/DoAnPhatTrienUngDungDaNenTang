@@ -4,31 +4,33 @@ import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, Acti
 import { ImageUri } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { BASE_URL_Image, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
+import { BASE_URL_Image, createGame, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
 import * as FileSystem from 'expo-file-system';
+import { number } from 'yup';
 
 const UpdateGameNCC = ({ navigation }: any) => {
-    const userName = navigation.getParam("userName")
+    const username = navigation.getParam("username")
     const gameId = navigation.getParam("gameId")
     const textChange = navigation.getParam("textChange")
     const imageUri = navigation.getParam("imageUri")
     const tenGame = navigation.getParam("tenGame")
-    const [game, setGame] = useState<InfoGame>();
+    const [game, setGame] = useState<InfoGame | any>();
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
     const [imageGameName, setImageGameName] = useState<string>();
     const [isLoading, setIsLoading] = useState(false);
 
     const validateInputs = () => {
-        if (game.tenTroChoi.length < 5) {
+        let checkGame: any = game
+        if (checkGame.tenTroChoi.length < 5) {
             Alert.alert("Lỗi", "tên phải tối thiểu 5 ký tự");
             return false;
         }
-        if (game.moTaTroChoi.length < 5) {
+        if (checkGame.moTaTroChoi.length < 5) {
             Alert.alert("Lỗi", "mô tả trò chơi phải tối thiểu 5 ký tự");
             return false;
         }
-        if (game.gioiThieuTroChoi.length < 50) {
+        if (checkGame.gioiThieuTroChoi.length < 50) {
             Alert.alert("Lỗi", "Giới thiệu trò chơi phải tối thiểu 50 ký tự");
             return false;
         }
@@ -52,7 +54,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
             letSizeImage(lsImageUri);
             // console.log(checklist)
             setListImageUri(checklist)
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert("lỗi: " + errorMessage.data)
         }
@@ -77,7 +79,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
             check.imageUri = response.uri
             checklist.push(check)
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
         }
     };
@@ -88,7 +90,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
             setGame(response1.data[0])
             const response2 = await getImageIconGame(response1.data[0].tenTroChoi)
             setImageGameName(response2.data[0].imageName)
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             console.log(errorMessage.data)
         }
@@ -96,58 +98,63 @@ const UpdateGameNCC = ({ navigation }: any) => {
     }
 
 
-    const [image, setImage] = useState();
+    const [pickImageUri, setPickImageUri] = useState<string>("");
+    const [pickImageName, setPickImageName] = useState<string>("");
     const pickImage = async () => {
-
         try {
-            let result = await DocumentPicker.getDocumentAsync({
+            let result: any = await DocumentPicker.getDocumentAsync({
                 type: 'image/*',
-                copyToCacheDirectory: false, // Tránh sao chép tệp vào thư mục bộ nhớ cache của ứng dụng
             });
-            setImage(result);
-        } catch (error) {
-            console.error('Lỗi khi chọn hình ảnh:', error);
+            if (result != null) {
+                setPickImageUri(result.assets[0].uri)
+                setPickImageName(result.assets[0].name)
+            } else {
+                Alert.alert("Cảnh báo", 'Chưa chọn ảnh.');
+            }
+        } catch (error: any) {
+            Alert.alert("Cảnh báo", 'Chưa chọn ảnh.');
         }
     };
 
+
     const uploadImageIcon = async () => {
-        if (!image) {
+        if (!pickImageUri) {
             console.error('Chưa chọn hình ảnh.');
             return;
         }
 
         try {
 
-            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi)
+            const response = await postImageIcon(pickImageUri, pickImageName, game?.tenTroChoi)
             alert('Thêm ảnh thành công: ' + response.data.oldFileName);
-            navigation.navigate("ManagerGameNCC", userName)
+            navigation.navigate("ManagerGameNCC", username)
             try {
                 const response = await deleteImageIcon(game?.tenTroChoi, imageGameName)
-            } catch (error) {
+            } catch (error: any) {
 
                 console.log(error.response.data);
                 return;
             }
-        } catch (error) {
+        } catch (error: any) {
             alert(error.response.data);
         }
 
     };
 
     const uploadImage = async () => {
-        if (!image) {
+        if (!pickImageUri) {
             console.error('Chưa chọn hình ảnh.');
             return;
         }
         try {
-            const response = await postImage(image.assets[0].uri, image.assets[0].name, game?.tenTroChoi)
+            const response = await postImage(pickImageUri, pickImageName, game?.tenTroChoi)
 
             Alert.alert("Thành công", "Bạn có muốn thêm ảnh không?",
                 [
                     {
                         text: "Hủy",
                         onPress: async () => {
-                            navigation.navigate("ManagerGameNCC", userName)
+                            navigation.navigate("ManagerGameNCC", username)
                         },
                     },
                     {
@@ -156,7 +163,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
                     },
                 ]
             )
-        } catch (error) {
+        } catch (error: any) {
             alert(error.response.data);
         }
     };
@@ -165,7 +172,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
     const [nameDocumentUri, setNameDocumentUri] = useState<string>();
     const pickApkFile = async () => {
         try {
-            let result = await DocumentPicker.getDocumentAsync({
+            let result: any = await DocumentPicker.getDocumentAsync({
                 type: '*/*',
             });
 
@@ -177,14 +184,14 @@ const UpdateGameNCC = ({ navigation }: any) => {
                     setNameDocumentUri(result.assets[0].name);
                     setGame({
                         ...game,
-                        kichCoFile: ((result.assets[0].size / 1024) / 1024).toFixed(2)
+                        kichCoFile: (result.assets[0].size / (1024 * 1024)).toFixed(2)
                     })
                 }
 
             } else {
                 Alert.alert("Cảnh báo", 'Chưa chọn file.');
             }
-        } catch (error) {
+        } catch (error: any) {
             Alert.alert("Cảnh báo", 'Lỗi khi chọn file:' + error.message);
         }
     };
@@ -197,7 +204,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
                 // Xử lý kết quả từ API nếu cần
                 alert('Cập nhật thành công' + response.data);
                 navigation
-            } catch (err) {
+            } catch (err: any) {
                 alert(err.response.data);
                 // Xử lý lỗi nếu cần
             }
@@ -221,7 +228,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
         width: number;
         height: number;
         imageUri: string;
-    }[]>([]);
+    }[] | any>([]);
 
     const letSizeImage = async (imageUris: string[]) => {
         try {
@@ -250,10 +257,10 @@ const UpdateGameNCC = ({ navigation }: any) => {
                 alignItems: 'center',
                 margin: 5,
             }} onPress={() => setSelectedImageUri(item.imageUri)}>
-                {imageSize.find(f => f.imageUri === item.imageUri) ? (
+                {imageSize.find((f: { imageUri: string; }) => f.imageUri === item.imageUri) ? (
                     <Image style={{
-                        width: selectedImageUri === item.imageUri ? imageSize.find(f => f.imageUri === item.imageUri).width : imageSize.find(f => f.imageUri === item.imageUri).width / 3,
-                        height: selectedImageUri === item.imageUri ? imageSize.find(f => f.imageUri === item.imageUri).height : imageSize.find(f => f.imageUri === item.imageUri).height / 3
+                        width: selectedImageUri === item.imageUri ? imageSize.find((f: { imageUri: string; }) => f.imageUri === item.imageUri).width : imageSize.find((f: { imageUri: string; }) => f.imageUri === item.imageUri).width / 3,
+                        height: selectedImageUri === item.imageUri ? imageSize.find((f: { imageUri: string; }) => f.imageUri === item.imageUri).height : imageSize.find((f: { imageUri: string; }) => f.imageUri === item.imageUri).height / 3
                     }} source={{ uri: item.imageUri }} />
                 ) : null}
             </TouchableOpacity>
@@ -274,7 +281,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
                 alert("Thành công")
                 console.log('Upload success:', response.data);
                 await navigation.navigate("MainScreenNCC")
-            } catch (err) {
+            } catch (err: any) {
 
                 const message = err.response.data
                 console.log(message)
@@ -310,7 +317,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
         }
 
 
-    }, [textChange, gameId, imageUri, userName])
+    }, [textChange, gameId, imageUri, username])
     const renderInputField = (key: string) => {
         switch (key) {
             case '0':
@@ -327,9 +334,9 @@ const UpdateGameNCC = ({ navigation }: any) => {
                         <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { pickImage(); }}>
                             <Text style={{ fontWeight: '700' }}>Click chọn ảnh</Text>
                         </TouchableOpacity>
-                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+                        {pickImageUri && <Image source={{ uri: pickImageUri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
                         <Text> </Text>
-                        {image != null ? (
+                        {pickImageUri != "" ? (
                             <TouchableOpacity style={{
                                 width: 100,
                                 height: 30,
@@ -364,9 +371,9 @@ const UpdateGameNCC = ({ navigation }: any) => {
                         <TouchableOpacity style={{ alignSelf: 'center' }} onPress={() => { pickImage(); }}>
                             <Text style={{ fontWeight: '700' }}>Click chọn ảnh</Text>
                         </TouchableOpacity>
-                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
+                        {pickImageUri && <Image source={{ uri: pickImageUri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
                         <Text> </Text>
-                        {image != null ? (
+                        {pickImageUri != null ? (
                             <TouchableOpacity style={{
                                 width: 100,
                                 height: 30,

@@ -8,7 +8,7 @@ import * as FileSystem from 'expo-file-system';
 
 const ManagerGameUser = ({ navigation }: any) => {
     const username = navigation.getParam("username")
-
+    
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [listGameIsInstall, setListGameIsInstall] = useState<GameManager[]>([])
     const [listGameHaveBuy, setListGameHaveBuy] = useState<GameManager[]>([])

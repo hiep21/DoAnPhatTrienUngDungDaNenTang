@@ -32,7 +32,7 @@ export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaC
 }
 
 export const postFileApk = (documentUri: string, nameDocumentUri: string) => {
-    let formData = new FormData();
+    let formData: any = new FormData();
     formData.append('fileGame', {
         uri: documentUri,
         type: 'application/vnd.android.package-archive',
@@ -47,8 +47,8 @@ export const postFileApk = (documentUri: string, nameDocumentUri: string) => {
         data: formData
     })
 }
-export const updateFileApk = (documentUri: string, nameDocumentUri: string) => {
-    let formData = new FormData();
+export const updateFileApk = (documentUri: string, nameDocumentUri: any) => {
+    let formData: any = new FormData();
     formData.append('fileGame', {
         uri: documentUri,
         type: 'application/vnd.android.package-archive',
@@ -64,8 +64,8 @@ export const updateFileApk = (documentUri: string, nameDocumentUri: string) => {
     })
 }
 
-export const postImage = (imageUri: string, nameImageUri: string, nameGame: string) => {
-    let formData = new FormData();
+export const postImage = (imageUri: string, nameImageUri: string, nameGame: any) => {
+    let formData: any = new FormData();
     formData.append('imageFile', {
         uri: imageUri,
         type: 'image/jpeg', // Hoặc 'image/png', tùy thuộc vào loại hình ảnh bạn chọn
@@ -81,8 +81,8 @@ export const postImage = (imageUri: string, nameImageUri: string, nameGame: stri
 
     })
 }
-export const postImageIcon = (imageUri: string, nameImageUri: string, nameGame: string) => {
-    let formData = new FormData();
+export const postImageIcon = (imageUri: string, nameImageUri: string, nameGame: any) => {
+    let formData: any = new FormData();
     formData.append('imageFile', {
         uri: imageUri,
         type: 'image/jpeg', // Hoặc 'image/png', tùy thuộc vào loại hình ảnh bạn chọn
@@ -216,7 +216,7 @@ export const deleteImage = (tenTroChoi: string, tenHinhAnh: string) => {
         url: BASE_URL_Image.concat("deleteImage/").concat(tenTroChoi).concat("/").concat(tenHinhAnh)
     })
 }
-export const deleteImageIcon = (tenTroChoi: string, tenHinhAnh: string) => {
+export const deleteImageIcon = (tenTroChoi: any, tenHinhAnh: any) => {
     return axios({
         method: "DELETE",
         url: BASE_URL_Image_Icon.concat("deleteImage/").concat(tenTroChoi).concat("/").concat(tenHinhAnh)

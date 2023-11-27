@@ -3,8 +3,8 @@ import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from 'react-n
 import { getById } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 
-const ChoseUpdateGameScreen = ({ navigation }) => {
-    const userName = navigation.getParam("userName")
+const ChoseUpdateGameScreen = ({ navigation }: any) => {
+    const username = navigation.getParam("username")
     const gameId = navigation.getParam("gameId")
     const imageUri = navigation.getParam("imageUri")
     const [game, setGame] = useState<InfoGame>()
@@ -14,7 +14,7 @@ const ChoseUpdateGameScreen = ({ navigation }) => {
             const { data } = await getById(gameId)
             // console.log(data)
             setGame(data[0])
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
@@ -24,7 +24,7 @@ const ChoseUpdateGameScreen = ({ navigation }) => {
 
     useEffect(() => {
         getGameById()
-    }, [gameId, imageUri, userName])
+    }, [gameId, imageUri, username])
 
     return (
         <View style={styles.container}>
@@ -34,27 +34,27 @@ const ChoseUpdateGameScreen = ({ navigation }) => {
             />
             <View style={styles.overlay}>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "0", gameId, imageUri, userName }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "0", gameId, imageUri, username }) }}
                 >
                     <Text style={styles.buttonText}>Cập nhật Icon</Text>
                 </TouchableOpacity >
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "1", gameId, imageUri, userName }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "1", gameId, imageUri, username }) }}
                 >
                     <Text style={styles.buttonText}>Thêm hình ảnh cho trò chơi</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "2", gameId, imageUri, userName, tenGame: game?.tenTroChoi }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "2", gameId, imageUri, username, tenGame: game?.tenTroChoi }) }}
                 >
                     <Text style={styles.buttonText}>Ảnh trò chơi đã tải lên  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "3", gameId, imageUri, userName }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "3", gameId, imageUri, username }) }}
                 >
                     <Text style={styles.buttonText}>Cập nhật file</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}
-                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "4", gameId, imageUri, userName }) }}
+                    onPress={() => { navigation.navigate("UpdateGameNCC", { textChange: "4", gameId, imageUri, username }) }}
                 >
                     <Text style={styles.buttonText}>Cập nhật thông tin trò chơi</Text>
                 </TouchableOpacity>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         height: '100%',
-        
+
     },
     overlay: {
         backgroundColor: 'rgba(255, 255, 255, 0.7)', // Adjust opacity as needed
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        
+
     },
     button: {
         backgroundColor: 'red',
@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         fontSize: 20
     },
-    
+
 });
 export default ChoseUpdateGameScreen;

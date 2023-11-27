@@ -2,7 +2,6 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, Animated } from 'react-native';
 import { getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
-import Background from '../Users/Background';
 
 
 const MainScreenNCC = ({ navigation }: { navigation: any }) => {

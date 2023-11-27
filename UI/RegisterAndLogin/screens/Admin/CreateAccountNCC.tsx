@@ -1,11 +1,10 @@
 
 // screens/Screen1.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView } from 'react-native';
+import { View, Text, Image, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView, Platform } from 'react-native';
 import { RegisterData } from '../../services/interfaces/User.interface';
 import * as Yup from 'yup'
 import { postImageAva, registerApi } from '../../services/todo';
-import Background from '../Users/Background';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -81,18 +80,13 @@ const CreateAccountNCC = ({ navigation }: any) => {
     };
     const addUserAction = async () => {
 
-        // if (!validateInputs()) {
-        //     return;
-        // }
-        // if (user.password != rePasswords) {
-        //     alert("Confirm Password error");
-        //     return;
-        // }
         if (!image) {
             alert("Chưa chọn ảnh")
             return
         }
-        account.dateOfBirth = changeDate;
+        let dateOfBirth: any
+        dateOfBirth = changeDate
+        account.dateOfBirth = dateOfBirth;
 
         try {
 
@@ -102,7 +96,7 @@ const CreateAccountNCC = ({ navigation }: any) => {
 
             await uploadImage()
 
-        } catch (err) {
+        } catch (err: any) {
             const message = err.response
             setUserVal(err.response.data.errors)
             console.log(err.response.data.errors)
@@ -155,7 +149,7 @@ const CreateAccountNCC = ({ navigation }: any) => {
             console.log('Upload Image success:', response.data);
             Alert.alert("Register complete!")
             navigation.navigate("MainScreenAdmin", { username: username })
-        } catch (error) {
+        } catch (error: any) {
             console.error('Upload failed:', error.response.data);
         }
     };

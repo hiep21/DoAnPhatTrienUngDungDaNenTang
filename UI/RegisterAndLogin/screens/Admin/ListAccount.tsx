@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 
@@ -15,6 +15,13 @@ const ListAccountScreen = ({ navigation }: any) => {
     const [listAccount, setListAccount] = useState<RegisterData[]>([])
     const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
     let list: RegisterData[] = [];
+    const bottomSheetRef = useRef<any>(null);
+
+    const showBottomSheetPanel = () => {
+        if (bottomSheetRef.current) {
+            bottomSheetRef.current.showPanel();
+        }
+    };
     const loadTasks = async () => {
         setRefreshing(true)
         try {
@@ -169,7 +176,7 @@ const ListAccountScreen = ({ navigation }: any) => {
                     }}>
                         <Image style={{ width: 30, height: 30, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity onPress={() => { showBottomSheetPanel() }} style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={{ uri: imageAdminUri }} />
                     </TouchableOpacity>
                 </View>
@@ -209,7 +216,7 @@ const ListAccountScreen = ({ navigation }: any) => {
 
                 </TouchableOpacity>
             </View>
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+            <BottomSheet ref={bottomSheetRef} navigation={navigation} />
         </View>
 
     );

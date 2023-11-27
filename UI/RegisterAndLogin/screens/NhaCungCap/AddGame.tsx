@@ -6,7 +6,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { number } from 'yup';
 
 
-const AddGameNCC = ({ navigation }) => {
+const AddGameNCC = ({ navigation }: any) => {
     const nameNCC = navigation.getParam("nameNCC")
     const [checkNameGame, setCheckNameGame] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState(false);
@@ -50,9 +50,9 @@ const AddGameNCC = ({ navigation }) => {
         try {
             const response = await createGame(game)
             alert("Thành công")
-            console.log('Upload success:', response.data);
+            console.log('Upload info game success');
             await navigation.navigate("MainScreenNCC")
-        } catch (err) {
+        } catch (err: any) {
 
             const message = err.response.data
             console.log(message)
@@ -78,40 +78,47 @@ const AddGameNCC = ({ navigation }) => {
         );
     };
 
-    const [image, setImage] = useState<any>(null);
+    const [imageUri, setImageUri] = useState<string>("");
+    const [imageName, setImageName] = useState<string>("");
     const pickImage = async () => {
         try {
-            let result = await DocumentPicker.getDocumentAsync({
+            let result: any = await DocumentPicker.getDocumentAsync({
                 type: 'image/*',
-                copyToCacheDirectory: false, // Tránh sao chép tệp vào thư mục bộ nhớ cache của ứng dụng
             });
-            setImage(result);
-        } catch (error) {
-            console.error('Lỗi khi chọn hình ảnh:', error);
+            if (result != null) {
+                setImageUri(result.assets[0].uri)
+                setImageName(result.assets[0].name)
+            } else {
+                Alert.alert("Cảnh báo", 'Chưa chọn ảnh.');
+            }
+        } catch (error: any) {
+            Alert.alert("Cảnh báo", 'Chưa chọn ảnh.');
         }
     };
 
     const uploadImage = async () => {
-        if (!image) {
+        if (imageUri) {
+            try {
+                const response = await postImageIcon(imageUri, imageName, nameDocumentUri)
+
+                console.log('Upload success Image');
+            } catch (error: any) {
+                await deleteApkFile(nameDocumentUri);
+                console.error('Upload failed:', error.response.data);
+            }
+        }
+        else {
             console.error('Chưa chọn hình ảnh.');
-            return;
         }
 
-        try {
-            const response = await postImageIcon(image.assets[0].uri, image.assets[0].name, nameDocumentUri)
 
-            console.log('Upload success:', response.data);
-        } catch (error) {
-            await deleteApkFile(nameDocumentUri);
-            console.error('Upload failed:', error.response.data);
-        }
     };
 
     const [documentUri, setDocumentUri] = useState<string>("");
     const [nameDocumentUri, setNameDocumentUri] = useState<string>("");
     const pickDocument = async () => {
         try {
-            let result = await DocumentPicker.getDocumentAsync({
+            let result: any = await DocumentPicker.getDocumentAsync({
                 type: '*/*',
             });
 
@@ -125,8 +132,8 @@ const AddGameNCC = ({ navigation }) => {
             } else {
                 Alert.alert("Cảnh báo", 'Chưa chọn file.');
             }
-        } catch (error) {
-            Alert.alert("Cảnh báo", 'Lỗi khi chọn file:' + error.message);
+        } catch (error: any) {
+            Alert.alert("Cảnh báo", 'Chưa chọn file.');
         }
     };
 
@@ -136,8 +143,8 @@ const AddGameNCC = ({ navigation }) => {
                 // Gửi tệp APK lên API endpoint sử dụng Axios
                 const response = await postFileApk(documentUri, nameDocumentUri)
                 // Xử lý kết quả từ API nếu cần
-                console.log('Upload success:', response.data);
-            } catch (err) {
+                console.log('Upload file success ');
+            } catch (err: any) {
                 alert(err.response.data);
                 // Xử lý lỗi nếu cần
             }
@@ -152,21 +159,16 @@ const AddGameNCC = ({ navigation }) => {
             try {
                 await uploadDocument();
 
-            } catch (error) {
+            } catch (error: any) {
 
                 const response = await deleteApkFile(nameDocumentUri)
                 console.log(error.response.data);
             }
             try {
                 await uploadImage();
-            } catch (error) {
-                // const response1 = await deleteImage(nameDocumentUri, image.assets[0].name)
-                try {
-                    const response = await deleteApkFile(nameDocumentUri)
-                } catch (error) {
-                    console.log(error.response.data);
-                }
-                const response2 = await deleteImageIcon(nameDocumentUri, image.assets[0].name)
+            } catch (error: any) {
+                const response = await deleteApkFile(nameDocumentUri)
+                const response2 = await deleteImageIcon(nameDocumentUri, imageName)
 
                 console.log(error.response.data);
             }
@@ -202,7 +204,7 @@ const AddGameNCC = ({ navigation }) => {
 
                         <Text style={styles.label}>Icon file</Text>
 
-                        {image && <Image source={{ uri: image.assets[0].uri }} style={{ width: 200, height: 200, marginTop: 20, alignSelf: "center" }} />}
+                        {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200, marginTop: 20, alignSelf: "center" }} />}
 
 
                         <TouchableOpacity onPress={() => { pickImage(); }}>

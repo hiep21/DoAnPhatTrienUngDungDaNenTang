@@ -65,7 +65,7 @@ const AddUserScreen = ({ navigation }: any) => {
             alert("Chưa chọn ảnh")
             return
         }
-        account.dateOfBirth = changeDate;
+        // account.dateOfBirth = changeDate;
         // console.log(account)
         try {
 

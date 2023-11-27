@@ -51,7 +51,7 @@ export const CreateGameManager = ({ username, nameGame, isBuy, isInstall }: Game
     })
 }
 export const postImageAva = (imageUri: string, nameImageUri: string, username: string) => {
-    let formData = new FormData();
+    let formData: any = new FormData();
     formData.append('imageFile', {
         uri: imageUri,
         type: 'image/jpeg', // Hoặc 'image/png', tùy thuộc vào loại hình ảnh bạn chọn

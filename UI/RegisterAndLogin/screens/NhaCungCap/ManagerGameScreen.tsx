@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
@@ -9,9 +9,15 @@ import { ImageUri, RegisterData } from '../../services/interfaces/User.interface
 import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
-const ManagerGameNCC = ({ navigation }) => {
+const ManagerGameNCC = ({ navigation }: any) => {
     const username = navigation.getParam("username")
+    const bottomSheetRef = useRef<any>(null);
 
+    const showBottomSheetPanel = () => {
+        if (bottomSheetRef.current) {
+            bottomSheetRef.current.showPanel();
+        }
+    };
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
@@ -56,7 +62,7 @@ const ManagerGameNCC = ({ navigation }) => {
             const name = response2.data[0].imageName
             fetchImageUser(name)
 
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
@@ -81,7 +87,7 @@ const ManagerGameNCC = ({ navigation }) => {
             check.imageUri = response.uri
             checklist.push(check)
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
         }
     };
@@ -94,7 +100,7 @@ const ManagerGameNCC = ({ navigation }) => {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
 
         }
@@ -103,12 +109,14 @@ const ManagerGameNCC = ({ navigation }) => {
     };
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const handleSearch = () => {
-        const filteredTasks = listGame.filter((item) =>
+
+
+        const filteredTasks = listGame.filter((item: any) =>
             item.tenTroChoi.toLowerCase().includes(searchKeyword.toLowerCase()) ||
             item.gia.toLowerCase().includes(searchKeyword.toLowerCase())
         );
 
-        if (filteredTasks != "" && filteredTasks != null) {
+        if (filteredTasks != null) {
 
             setListGame(filteredTasks);
 
@@ -128,7 +136,7 @@ const ManagerGameNCC = ({ navigation }) => {
     const goToDetail = (item: InfoGame, imageUri: any) => {
         navigation.navigate("InfoGameNCC", { gameId: item.id, tenTroChoi: item.tenTroChoi, imageUri, username })
     }
-    
+
     const renderTask = ({ item }: { item: InfoGame }) => {
         return (
             <TouchableOpacity onPress={() => { goToDetail(item, listImageUri.find(f => f.namePath == item.tenTroChoi)?.imageUri) }} >
@@ -229,7 +237,7 @@ const ManagerGameNCC = ({ navigation }) => {
                     }}>
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity onPress={showBottomSheetPanel} style={{ paddingRight: 10, paddingTop: 5 }}>
                         <Image style={{ width: 30, height: 30, }} source={{ uri: imageUri }} />
                     </TouchableOpacity>
                 </View>
@@ -309,7 +317,7 @@ const ManagerGameNCC = ({ navigation }) => {
                     <View></View>
                 )}
             </View>
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+            <BottomSheet ref={bottomSheetRef} navigation={navigation} />
         </View>
 
     );

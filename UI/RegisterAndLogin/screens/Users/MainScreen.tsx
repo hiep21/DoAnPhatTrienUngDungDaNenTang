@@ -10,6 +10,13 @@ import * as FileSystem from 'expo-file-system';
 
 
 const MainScreen = ({ navigation }: any) => {
+    const bottomSheetRef = useRef<any>(null);
+
+    const showBottomSheetPanel = () => {
+        if (bottomSheetRef.current) {
+            bottomSheetRef.current.showPanel();
+        }
+    };
     const lsImageUri = navigation.getParam("listImageUri")
     const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -135,14 +142,11 @@ const MainScreen = ({ navigation }: any) => {
     };
 
 
-    const CheckBuyAndInstall = async (name: string, item: InfoGame, imageGameUri: string) => {
-        let id: any
-        id = item.id
+    const CheckBuyAndInstall = async (name: string, item: InfoGame, imageGameUri: any) => {
+
         try {
 
             const { data } = await getGameManager(username);
-
-            // console.log(data)
             const GameCheck = []
             for (let index = 0; index < data.length; index++) {
                 if (data[index].nameGame == name) {
@@ -150,17 +154,17 @@ const MainScreen = ({ navigation }: any) => {
                 }
             }
             if (GameCheck.length == 0) {
-                navigation.navigate("InfoGame_dont_Install", { gameId: id, username, imageGameUri })
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, username, imageGameUri })
             }
             else {
-                navigation.navigate("InfoGameScreen", { gameId: id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri })
+                navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri })
             }
 
 
         } catch (error: any) {
             if (error.response.data == "Tài khoản " + username + " chưa mua với tải game") {
 
-                navigation.navigate("InfoGame_dont_Install", { gameId: id, username, imageGameUri })
+                navigation.navigate("InfoGame_dont_Install", { gameId: item.id, username, imageGameUri })
 
             }
             else {
@@ -214,7 +218,7 @@ const MainScreen = ({ navigation }: any) => {
             });
         }
     };
-    const scrollViewRef = useRef(null);
+    const scrollViewRef = useRef<any>(null);
     const [choseTitle, setChoseTitle] = useState<number>(1)
     const choseScrollView = () => {
         return (
@@ -464,7 +468,7 @@ const MainScreen = ({ navigation }: any) => {
 
                         <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
+                    <TouchableOpacity onPress={showBottomSheetPanel} style={{ paddingRight: 10, paddingTop: 5 }}>
                         {imageUri ? (
                             <Image style={{ width: 30, height: 30, }} source={{
                                 uri: imageUri
@@ -505,7 +509,7 @@ const MainScreen = ({ navigation }: any) => {
                         }}
                     />
                 )}
-                <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+                <BottomSheet ref={bottomSheetRef} navigation={navigation} />
             </View>
 
         </View>

@@ -8,8 +8,12 @@ import { BASE_URL_Image, deleteUsers, getByUser, getImageIcon } from "../../serv
 import * as FileSystem from 'expo-file-system';
 const { height } = Dimensions.get("window");
 
+interface BottomSheetProps {
+  navigation: any;
+  // Các prop khác nếu cần
+}
 
-class BottomSheet extends React.Component {
+class BottomSheet extends React.Component<BottomSheetProps> {
   static defaultProps = {
     draggableRange: { top: height + 180 - 64, bottom: 180 }
   };
@@ -91,15 +95,18 @@ class BottomSheet extends React.Component {
     const tokenObject = JSON.parse(getUser);
     const username = tokenObject.username;
     const { navigation }: any = this.props;
-    navigation.navigate('UserScreen', { username: username }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('UserScreen', { username }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToManageGame = async () => {
     let getUser: any
     getUser = await SecureStore.getItemAsync('accessToken');
     const tokenObject = JSON.parse(getUser);
     const username = tokenObject.username;
+    const note = tokenObject.note;
     const { navigation }: any = this.props;
-    navigation.navigate('ManagerGameUser', { username: username }); // Điều hướng đến màn hình "UserScreen"
+    if (note != "NCC") {
+      navigation.navigate('ManagerGameUser', { username });
+    }
   };
   navigateToSettingUser = async () => {
     let getUser: any
@@ -107,7 +114,7 @@ class BottomSheet extends React.Component {
     const tokenObject = JSON.parse(getUser);
     const username = tokenObject.username;
     const { navigation }: any = this.props;
-    navigation.navigate('SettingUser', { username: username }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('SettingUser', { username }); // Điều hướng đến màn hình "UserScreen"
   };
   navigateToSupportUser = async () => {
     let getUser: any
@@ -115,7 +122,7 @@ class BottomSheet extends React.Component {
     const tokenObject = JSON.parse(getUser);
     const username = tokenObject.username;
     const { navigation }: any = this.props;
-    navigation.navigate('SupportUser', { username: username }); // Điều hướng đến màn hình "UserScreen"
+    navigation.navigate('SupportUser', { username }); // Điều hướng đến màn hình "UserScreen"
   };
   test = async () => { // Đánh dấu hàm test là async
     const getUserToken = async () => {

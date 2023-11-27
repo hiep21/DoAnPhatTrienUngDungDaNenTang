@@ -1,16 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal, ScrollView } from 'react-native';
-import { useState, useEffect, useCallback } from 'react';
-
-import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../../services/todo";
-import Background from '../Users/Background';
+import { useState, useEffect } from 'react';
 import { LoginData, BankAccount } from '../../services/interfaces/User.interface';
-import { CreateBankAccount,GetAccountByUser,UpdateBankAccount } from '../../services/todo';
+import { CreateBankAccount, GetAccountByUser, UpdateBankAccount } from '../../services/todo';
+import React from 'react';
 
 
 
-const BankAccounts = ({ navigation }) => {
-    const [check ,setCheck] = useState<boolean>(false)
+const BankAccounts = ({ navigation }: any) => {
+    const [check, setCheck] = useState<boolean>(false)
     const [banks, setBanks] = useState<BankAccount>()
     const [bank, setBank] = useState<BankAccount>({
         account: "",
@@ -35,7 +32,7 @@ const BankAccounts = ({ navigation }) => {
         setNameBank(Name);
         toggleModal();
     };
-    const bankImages = {
+    const bankImages: any = {
         'Bank': require("../../assets/ImageBank/Bank.jpg"),
         'Agribank': require("../../assets/ImageBank/Agribank.png"),
         'ACBBank': require("../../assets/ImageBank/ACBBank.png"),
@@ -63,68 +60,68 @@ const BankAccounts = ({ navigation }) => {
         //     alert("Vui lòng điền đầy đủ thông tin đăng nhập.");
         //     return;
         // }
-        
+
 
         if (!isLoading) {
             setIsLoading(true)
-            if (check == true ) {
+            if (check == true) {
                 try {
 
                     const bankResponse = await UpdateBankAccount({
-                        account :user,
+                        account: username,
                         accountNumber,
-                        nameBank:nameBanks
+                        nameBank: nameBanks
                     })
                     const message = bankResponse.data
                     alert("Update thành công");
-                    
+
                     navigation.navigate("ManagerGameNCC")
                     //Chuyển hướng sang màn home
-    
+
                 } catch (err) {
                     // alert(err.response.data)
                     // setUserVal(err.response.data.errors)
                     // console.log(err.response.data)
-                    console.log(account+"/"+accountNumber+"/"+nameBanks)
+                    console.log(account + "/" + accountNumber + "/" + nameBanks)
                 }
             }
-            else{
+            else {
                 try {
 
                     const bankResponse = await CreateBankAccount({
-                        account :user,
+                        account: username,
                         accountNumber,
-                        nameBank:nameBanks
+                        nameBank: nameBanks
                     })
                     const message = bankResponse.data
                     alert("Tạo hành công");
-                    
+
                     navigation.navigate("ManagerGameNCC")
                     //Chuyển hướng sang màn home
-    
-                } catch (err) {
+
+                } catch (err: any) {
                     // alert(err.response.data)
                     // setUserVal(err.response.data.errors)
-                    // console.log(err.response.data)
-                    console.log(account+"/"+accountNumber+"/"+nameBanks)
+                    console.log(err.response.data)
+                    // console.log(account + "/" + accountNumber + "/" + nameBanks)
                 }
             }
-            
+
             setIsLoading(false)
 
         }
 
     }
-    const userName = navigation.getParam("userName")
+    const username = navigation.getParam("username")
     const loadTasks = async () => {
         setBank({
             ...bank,
-            account: userName
+            account: username
         }),
-        setAccount(userName)
+            setAccount(username)
         try {
 
-            const { data } = await GetAccountByUser(userName)
+            const { data } = await GetAccountByUser(username)
             if (data.length > 0) {
                 // Tài khoản ngân hàng đã tồn tại, bạn có thể hiển thị thông tin và chọn cập nhật hoặc không.
                 setBank(data[0]);
@@ -133,160 +130,164 @@ const BankAccounts = ({ navigation }) => {
                 // Tài khoản ngân hàng chưa tồn tại, bạn có thể hiển thị giao diện để tạo tài khoản ngân hàng.
                 setCheck(false);
             }
-           
 
-        } catch (err) {
+
+        } catch (err: any) {
             const errorMessage = err.response
-          
+
         }
 
     }
     useEffect(() => {
         loadTasks()
-    }, [userName])
+    }, [username])
     return (
-        <Background>
-            <View style={styles.container}>
-                <Text style={styles.mainText}>Banking</Text>
-                <View style={styles.mainContainer}>
-                    <View style={styles.content}>
 
-                        <Text style={styles.label}>Account</Text>
-                        <TextInput value={bank.account} style={styles.input} placeholder={userName} />
-                        {userVal != null && !bank.account ? (
-                            <View>
-                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../../assets/Icon/BG.jpg")} />
+            <Text style={styles.mainText}>Banking</Text>
+            <View style={styles.mainContainer}>
+                <View style={styles.content}>
+
+                    <Text style={styles.label}>Account</Text>
+                    <TextInput value={bank.account} style={styles.input} placeholder={username} />
+                    {userVal != null && !bank.account ? (
+                        <View>
+                            <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
+                        </View>
+                    ) : null}
+                    <Text style={styles.label}>AccountNumber</Text>
+                    <TextInput value={bank.accountNumber} onChangeText={(value) => {
+                        if (/^\d+$/.test(value) || value === "") {
+                            setBank({
+                                ...bank,
+                                accountNumber: value
+                            });
+                        }
+
+                        setAccountNumber(value)
+                    }} style={styles.input} />
+                    {userVal != null && !bank.accountNumber ? (
+                        <View>
+                            <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
+                        </View>
+                    ) : null}
+                    <Text style={styles.label}>Name Bank</Text>
+                    <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
+                        <Text style={styles.selectedGenderText}>
+                            {selectedGender ? selectedGender : 'Bank'}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <ScrollView style={{
+                                    width: "85%",
+                                    height: "55%",
+                                    marginLeft: 20,
+
+                                }}>
+                                    <TouchableOpacity onPress={() => selectGender('Agribank')} style={styles.modalItem}>
+                                        <Text>Agribank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('ACBBank')} style={styles.modalItem}>
+                                        <Text>ACBBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('BIDV')} style={styles.modalItem}>
+                                        <Text>BIDV</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('Co-opbank')} style={styles.modalItem}>
+                                        <Text>Co-opBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('Eximbank')} style={styles.modalItem}>
+                                        <Text>Eximbank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('LienVietPostBank')} style={styles.modalItem}>
+                                        <Text>LienVietPostBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('MBBank')} style={styles.modalItem}>
+                                        <Text>MBBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('NCBBank')} style={styles.modalItem}>
+                                        <Text>NCBBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('PVComBank')} style={styles.modalItem}>
+                                        <Text>PVComBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('SacomBank')} style={styles.modalItem}>
+                                        <Text>SacomBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('SCBBank')} style={styles.modalItem}>
+                                        <Text>SCBBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('SeABank')} style={styles.modalItem}>
+                                        <Text>SeABank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('SHBBank')} style={styles.modalItem}>
+                                        <Text>SHBBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('TechcomBank')} style={styles.modalItem}>
+                                        <Text>TechcomBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('TPBank')} style={styles.modalItem}>
+                                        <Text>TPBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('VIBBank')} style={styles.modalItem}>
+                                        <Text>VIBBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('VietcomBank')} style={styles.modalItem}>
+                                        <Text>VietcomBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('VietinBank')} style={styles.modalItem}>
+                                        <Text>VietinBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('VPBank')} style={styles.modalItem}>
+                                        <Text>VPBank</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                        <Text>Close</Text>
+                                    </TouchableOpacity>
+                                </ScrollView>
                             </View>
-                        ) : null}
-                        <Text style={styles.label}>AccountNumber</Text>
-                        <TextInput value={bank.accountNumber} onChangeText={(value) => {
-                            if (/^\d+$/.test(value) || value === "") {
-                                setBank({
-                                  ...bank,
-                                  accountNumber: value
-                                });
-                            }
+                        </View>
+                    </Modal>
 
-                                setAccountNumber(value)
-                        }} style={styles.input}  />
-                        {userVal != null && !bank.accountNumber ? (
-                            <View>
-                                <Text style={styles.textError}>Vui lòng điền đầy đủ thông tin account.</Text>
-                            </View>
-                        ) : null}
-                        <Text style={styles.label}>Name Bank</Text>
-                        <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
-                            <Text style={styles.selectedGenderText}>
-                                {selectedGender ? selectedGender : 'Bank'}
-                            </Text>
-                        </TouchableOpacity>
-
-                        <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
-                            <View style={styles.modalContainer}>
-                                <View style={styles.modalContent}>
-                                    <ScrollView style={{
-                                        width: "85%",
-                                        height: "55%",
-                                        marginLeft: 20,
-
-                                        }}>
-                                        <TouchableOpacity onPress={() => selectGender('Agribank')} style={styles.modalItem}>
-                                            <Text>Agribank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('ACBBank')} style={styles.modalItem}>
-                                            <Text>ACBBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('BIDV')} style={styles.modalItem}>
-                                            <Text>BIDV</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('Co-opbank')} style={styles.modalItem}>
-                                            <Text>Co-opBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('Eximbank')} style={styles.modalItem}>
-                                            <Text>Eximbank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('LienVietPostBank')} style={styles.modalItem}>
-                                            <Text>LienVietPostBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('MBBank')} style={styles.modalItem}>
-                                            <Text>MBBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('NCBBank')} style={styles.modalItem}>
-                                            <Text>NCBBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('PVComBank')} style={styles.modalItem}>
-                                            <Text>PVComBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('SacomBank')} style={styles.modalItem}>
-                                            <Text>SacomBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('SCBBank')} style={styles.modalItem}>
-                                            <Text>SCBBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('SeABank')} style={styles.modalItem}>
-                                            <Text>SeABank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('SHBBank')} style={styles.modalItem}>
-                                            <Text>SHBBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('TechcomBank')} style={styles.modalItem}>
-                                            <Text>TechcomBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('TPBank')} style={styles.modalItem}>
-                                            <Text>TPBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('VIBBank')} style={styles.modalItem}>
-                                            <Text>VIBBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('VietcomBank')} style={styles.modalItem}>
-                                            <Text>VietcomBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('VietinBank')} style={styles.modalItem}>
-                                            <Text>VietinBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => selectGender('VPBank')} style={styles.modalItem}>
-                                            <Text>VPBank</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                            <Text>Close</Text>
-                                        </TouchableOpacity>
-                                    </ScrollView>
-                                </View>
-                            </View>
-                        </Modal>
-
-                    </View>
-                    <View style={styles.buttons}>
-                        {check ?(
-                            <TouchableOpacity style={styles.button} onPress={UpBank}>
-                                {isLoading ? (
-                                    <ActivityIndicator color="#fff" />
-                                ) : (
-                                    <Text style={styles.textbtn}>Update</Text>
-                                )}
-                            </TouchableOpacity>
-                        ):(
-                            <TouchableOpacity style={styles.button} onPress={UpBank}>
-                                {isLoading ? (
-                                    <ActivityIndicator color="#fff" />
-                                ) : (
-                                    <Text style={styles.textbtn}>Create</Text>
-                                )}
-                            </TouchableOpacity>
-                        )}
-                        
-                        
-                    </View>
-                    <View>
-                        <Image
-                            source={selectedGender ? bankImages[selectedGender] : require("../../assets/ImageBank/Bank.jpg")}
-                            style={styles.image}
-                            />
-                    </View>
                 </View>
+                <View style={styles.buttons}>
+                    {check ? (
+                        <TouchableOpacity style={styles.button} onPress={UpBank}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>Update</Text>
+                            )}
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={styles.button} onPress={UpBank}>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={styles.textbtn}>Create</Text>
+                            )}
+                        </TouchableOpacity>
+                    )}
 
+
+                </View>
+                <View>
+                    <Image
+                        source={selectedGender ? bankImages[selectedGender] : require("../../assets/ImageBank/Bank.jpg")}
+                        style={styles.image}
+                    />
+                </View>
             </View>
-        </Background>
+
+        </View>
     )
 }
 const styles = StyleSheet.create({
@@ -298,8 +299,8 @@ const styles = StyleSheet.create({
     mainContainer: {
         marginVertical: 10,
         backgroundColor: "#fff",
-        height: 700,
-        width: 390,
+        height: "100%",
+        width: "100%",
         borderTopLeftRadius: 130,
         paddingTop: 35,
         alignItems: "center"

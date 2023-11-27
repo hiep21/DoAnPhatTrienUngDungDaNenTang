@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, RefreshControl } from 'react-native';
 import { getByName } from '../../services/Game';
 import BottomSheet from "../Users/BottomSheet";
@@ -6,12 +6,18 @@ import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../s
 import * as FileSystem from 'expo-file-system';
 
 
-const MainScreenAdmin = ({ navigation }:any) => {
+const MainScreenAdmin = ({ navigation }: any) => {
     const username = navigation.getParam("username")
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
     const [imageUri, setImageUri] = useState<string>();
+    const bottomSheetRef = useRef<any>(null);
 
+    const showBottomSheetPanel = () => {
+        if (bottomSheetRef.current) {
+            bottomSheetRef.current.showPanel();
+        }
+    };
     const loadTasks = async () => {
 
         setRefreshing(true)
@@ -24,7 +30,7 @@ const MainScreenAdmin = ({ navigation }:any) => {
 
             fetchImage(name)
 
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
@@ -38,7 +44,7 @@ const MainScreenAdmin = ({ navigation }:any) => {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
         }
     };
@@ -64,7 +70,7 @@ const MainScreenAdmin = ({ navigation }:any) => {
 
                     <Image style={{ width: 20, height: 20, }} source={require("../../assets/Icon/bell-jar-1096279_1280.png")} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.bottomSheet.showPanel()} style={{ paddingRight: 10, paddingTop: 5 }}>
+                <TouchableOpacity onPress={showBottomSheetPanel} style={{ paddingRight: 10, paddingTop: 5 }}>
                     {imageUri != undefined ? (
                         <Image style={{ width: 30, height: 30, }} source={{
                             uri: imageUri
@@ -122,7 +128,7 @@ const MainScreenAdmin = ({ navigation }:any) => {
 
             </View>
 
-            <BottomSheet ref={ref => (this.bottomSheet = ref)} navigation={navigation} />
+            <BottomSheet ref={bottomSheetRef} navigation={navigation} />
         </View>
 
 

@@ -5,7 +5,7 @@ import { CreateNotification, UpdateGame, deleteApi, deleteFolder, getById, getBy
 import { InfoGame, NotificationInterface } from '../../services/interfaces/GameService';
 import { getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
-const InfoGameNCC = ({ navigation }) => {
+const InfoGameNCC = ({ navigation }: any) => {
 
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
@@ -38,7 +38,7 @@ const InfoGameNCC = ({ navigation }) => {
 
             setAcceptGame(data[0])
 
-        } catch (err) {
+        } catch (err: any) {
             const errorMessage = err.response
             alert(errorMessage)
         }
@@ -71,7 +71,7 @@ const InfoGameNCC = ({ navigation }) => {
                             await CreateNotification(createNotification);
                             navigation.navigate("ManagerGameNCC", { username });
                             alert('Gửi yêu cầu xóa game thành công');
-                        } catch (error) {
+                        } catch (error: any) {
                             alert(error.response.data)
                         }
                     },
@@ -87,7 +87,7 @@ const InfoGameNCC = ({ navigation }) => {
             // console.log(getAcceptGame)
             const { data } = await UpdateGame(getAcceptGame);
             alert("Cập nhật thành công")
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.response.data)
         }
     }
@@ -105,7 +105,7 @@ const InfoGameNCC = ({ navigation }) => {
             await CreateNotification(notification)
             alert("Gửi thông báo thành công")
             navigation.navigate("ManagerGameNCC", { username })
-        } catch (error) {
+        } catch (error: any) {
             alert(error.response.data)
         }
     };
