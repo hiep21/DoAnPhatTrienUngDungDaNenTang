@@ -31,7 +31,7 @@ const InfoAccount = ({ navigation }: any) => {
                             await DeleteAccount(Account.username)
                             await deleteImage(Account.username, imageName)
 
-                            alert('Xóa game thành công');
+                            alert('Xóa tài khoản thành công');
                             navigation.navigate("MainScreenAdmin");
                         } catch (error: any) {
                             console.log(error.response.data)
@@ -42,7 +42,21 @@ const InfoAccount = ({ navigation }: any) => {
             ]
         );
     }
-
+    const [colorOnl, setColorOnl] = useState<string>("red")
+    const ColorAva = () => {
+        return (
+            <View style={{ position: 'absolute', width: '100%', height: '100%', }}>
+                <View style={{ flex: 1, backgroundColor: '#FFFF00', borderTopLeftRadius: 10, borderTopRightRadius: 10 }} />
+                <View style={{ flex: 1, backgroundColor: '#CCFF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#99FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#99FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#99FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#00FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#33CC00' }} />
+                <View style={{ flex: 1, backgroundColor: '#00CC66', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }} />
+            </View>
+        )
+    }
     useEffect(() => {
 
     }, [item, imageUri])
@@ -59,19 +73,20 @@ const InfoAccount = ({ navigation }: any) => {
 
                 }}>Thông tin tài khoản {Account?.username}</Text>
                 <View style={styles.describeGame}>
-                    <Image style={{
-                        height: 50,
-                        width: 50,
-                        borderRadius: 5,
-                        marginTop: 10
-                    }} source={{ uri: imageUri }} />
+                    <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: "center", width: 55, height: 55, marginTop: 5 }}>
+                        {ColorAva()}
+                        <Image
+                            style={{ width: 50, height: 50, borderRadius: 5 }}
+                            source={{ uri: imageUri }}
+                        />
+
+                    </View>
                     <View style={{
-
                         justifyContent: 'center',
-
                         width: "50%"
                     }}>
                         <Text style={{ fontSize: 15 }}>{Account?.name}</Text>
+                        <Text style={{ fontSize: 10 }}>Trạng thái hoạt động:</Text>
                         <Text style={{ fontSize: 10 }}>{Account.email}</Text>
                         <Text style={{ fontSize: 10 }}>Quyền hạn: {Account?.note}</Text>
                     </View>
@@ -104,20 +119,20 @@ const InfoAccount = ({ navigation }: any) => {
                 </View>
                 <View style={{
                     width: "100%",
-                    height: 350,
+                    height: "100%",
                     marginTop: 10,
                     borderTopWidth: 1,
-                    borderBottomWidth: 1,
-                    padding: 30,
+                    paddingHorizontal: 30,
+                    paddingTop: 30,
 
                 }}>
                     <View style={{
                         backgroundColor: "#eee",
                         width: "100%",
-                        height: 270,
+                        height: "80%",
                         borderWidth: 1,
                         borderRadius: 10,
-                        paddingTop: 10
+                        padding: "5%"
                     }}>
                         <View style={[styles.itemInfo, { width: 250 }]}>
                             <Text>Ngày sinh: {Account?.dateOfBirth}</Text>
@@ -145,40 +160,19 @@ const InfoAccount = ({ navigation }: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        width: "100%",
+        height: "100%"
 
-    },
-    head: {
-
-        width: "80%",
-        height: 40,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        paddingTop: 10
-    },
-    search: {
-        width: 200,
-        height: 35,
-        backgroundColor: "#bbb",
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        borderRadius: 20,
-        marginLeft: "5%"
-
-    },
-    user: {
-        flexDirection: 'row',
-        marginLeft: "20%"
     },
     body: {
         backgroundColor: "white",
         width: "100%",
-        height: "40%",
+        height: "90%",
         marginTop: 20,
 
     },
     describeGame: {
-
         height: 70,
         width: "85%",
         alignSelf: 'center',
@@ -192,13 +186,6 @@ const styles = StyleSheet.create({
         marginLeft: 10,
 
     },
-    end: {
-        width: "100%",
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
-
 
 })
 

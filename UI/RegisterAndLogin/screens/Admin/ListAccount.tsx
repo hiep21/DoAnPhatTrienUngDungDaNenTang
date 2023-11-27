@@ -108,10 +108,33 @@ const ListAccountScreen = ({ navigation }: any) => {
         }
 
     }
+    const ColorAva = () => {
+        return (
+            <View style={{ position: 'absolute', width: '100%', height: '100%', }}>
+                <View style={{ flex: 1, backgroundColor: '#FFFF00', borderTopLeftRadius: 10, borderTopRightRadius: 10 }} />
+                <View style={{ flex: 1, backgroundColor: '#CCFF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#99FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#99FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#99FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#00FF00' }} />
+                <View style={{ flex: 1, backgroundColor: '#33CC00' }} />
+                <View style={{ flex: 1, backgroundColor: '#00CC66', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }} />
+            </View>
+        )
+    }
+    const [colorOnl, setColorOnl] = useState<string>("red")
+    const onl = () => {
+        if (true) {
+            setColorOnl("green")
+        }
+        else {
+            setColorOnl("red")
+        }
+    }
     useEffect(() => {
         handleSearch()
         loadTasks()
-
+        onl()
     }, [username])
     const goToDetail = (item: RegisterData, imageUri: any) => {
         navigation.navigate("InfoAccount", { item, imageUri })
@@ -124,11 +147,33 @@ const ListAccountScreen = ({ navigation }: any) => {
                     <View style={{
                         flexDirection: 'row',
                         marginLeft: "5%",
-                        marginTop: 20
+                        marginVertical: "3%",
                     }}>
 
                         {listImageUri.length != 0 ? (
-                            <Image style={{ width: 50, height: 50, marginTop: 7 }} source={{ uri: listImageUri.find(f => f.namePath == item.username)?.imageUri }} />
+
+                            <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: "center", width: 55, height: 55 }}>
+                                {ColorAva()}
+                                <Image
+                                    style={{ width: 50, height: 50, borderRadius: 5 }}
+                                    source={{ uri: listImageUri.find(f => f.namePath == item.username)?.imageUri }}
+                                />
+                                <View style={{
+                                    backgroundColor: colorOnl,
+                                    width: 20,
+                                    height: 20,
+                                    position: "absolute",
+                                    opacity: 1,
+                                    borderRadius: 100,
+                                    end: -5,
+                                    alignSelf: "flex-end",
+                                    bottom: -5
+                                }}>
+
+                                </View>
+                            </View>
+
+
                         ) : (
                             <Image style={{ width: 50, height: 50, marginTop: 7 }} source={require("../../assets/favicon.png")} />
                         )}
@@ -202,21 +247,11 @@ const ListAccountScreen = ({ navigation }: any) => {
                         width: "95%",
                         alignSelf: 'center',
                         borderRadius: 5,
-                        borderColor: "#bbb"
+                        borderColor: "#bbb",
                     }}
                 />
             </View>
-            <View style={styles.end}>
-                <TouchableOpacity style={{
-                    width: "90%",
-                    height: 30,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 5,
-                }}>
 
-                </TouchableOpacity>
-            </View>
             <BottomSheet ref={bottomSheetRef} navigation={navigation} />
         </View>
 
@@ -225,16 +260,19 @@ const ListAccountScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#fff",
 
     },
     head: {
-
-        width: "80%",
-        height: 40,
+        width: "100%",
+        height: "7%",
         justifyContent: 'space-between',
         flexDirection: 'row',
-        paddingTop: 10
+        alignItems: "center",
+        backgroundColor: "#fff",
+
     },
     search: {
         width: 200,
@@ -251,11 +289,9 @@ const styles = StyleSheet.create({
         marginLeft: "20%"
     },
     body: {
-        backgroundColor: "white",
         width: "100%",
-        height: "80%",
-        marginTop: 20,
-
+        height: "95%",
+        paddingBottom: "10%"
     },
     end: {
         width: "100%",

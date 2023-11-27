@@ -222,7 +222,7 @@ export const deleteImageIcon = (tenTroChoi: any, tenHinhAnh: any) => {
         url: BASE_URL_Image_Icon.concat("deleteImage/").concat(tenTroChoi).concat("/").concat(tenHinhAnh)
     })
 }
-export const deleteFolder = (tenTroChoi: string) => {
+export const deleteFolder = (tenTroChoi: any) => {
     return axios({
         method: "DELETE",
         url: BASE_URL_APK_FILE.concat("deleteFolderFile/").concat(tenTroChoi)

@@ -13,6 +13,7 @@ const InfoGameNCC = ({ navigation }: any) => {
     const username = navigation.getParam("username")
     const [game, setGame] = useState<InfoGame>()
     const [acceptGame, setAcceptGame] = useState<InfoGame>({
+        id: "",
         tenTroChoi: "",
         moTaTroChoi: "",
         doTuoi: 0,
@@ -110,6 +111,15 @@ const InfoGameNCC = ({ navigation }: any) => {
         }
     };
     const [isDeny, setIsDeny] = useState<boolean>(false)
+    const DeleteGame = async () => {
+        console.log("Đang xóa")
+        try {
+            await deleteFolder(game?.tenTroChoi)
+            alert("Delete success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
     useEffect(() => {
         getGameById()
     }, [gameId, tenTroChoi, imageUri, username])
@@ -267,7 +277,7 @@ const InfoGameNCC = ({ navigation }: any) => {
                                         justifyContent: 'center',
                                         borderRadius: 5,
                                         alignSelf: 'center'
-                                    }} onPress={() => { }}>
+                                    }} onPress={() => { DeleteGame() }}>
                                         <Text style={{ textAlign: 'center' }}>Gỡ trò chơi</Text>
                                     </TouchableOpacity>
                                 </View>
