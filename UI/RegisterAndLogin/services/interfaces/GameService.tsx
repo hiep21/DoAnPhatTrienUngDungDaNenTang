@@ -10,6 +10,7 @@ export interface CreateGame {
     trangThai: string
 }
 export interface InfoGame {
+    id: string,
     tenTroChoi: string,
     moTaTroChoi: string,
     trangThai: string,

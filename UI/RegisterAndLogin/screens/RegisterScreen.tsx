@@ -41,7 +41,7 @@ const AddUserScreen = ({ navigation }: any) => {
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-    const [changeDate, setChangeDate] = useState<any>();
+    
     const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate || selectedDate;
 

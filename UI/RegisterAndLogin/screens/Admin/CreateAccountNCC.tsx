@@ -11,7 +11,7 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const CreateAccountNCC = ({ navigation }: any) => {
     const username = navigation.getParam("username")
-    const [account, setAcount] = useState<RegisterData>({
+    const [account, setAccount] = useState<RegisterData>({
         username: "",
         name: "",
         email: "",
@@ -32,7 +32,7 @@ const CreateAccountNCC = ({ navigation }: any) => {
 
     const selectGender = (Gender: string) => {
         setSelectedGender(Gender);
-        setAcount({
+        setAccount({
             ...account,
             gender: Gender
         });
@@ -41,22 +41,22 @@ const CreateAccountNCC = ({ navigation }: any) => {
 
 
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [changeDate, setChangeDate] = useState<string>();
+    const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
     const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate || selectedDate;
-        console.log(currentDate.toDateString());
+
         setShowDatePicker(Platform.OS === 'ios');
-        setSelectedDate(currentDate); // Nếu không có ngày nào được chọn, thì sử dụng ngày hiện tại
+        setSelectedDate(currentDate);
         const day = currentDate.getDate();
-        const month = currentDate.getMonth() + 1; // Lưu ý rằng tháng bắt đầu từ 0, nên cần cộng thêm 1
+        const month = currentDate.getMonth() + 1;
         const year = currentDate.getFullYear();
-        // const date = day+month+year;
-        // setChangeDate(date);
-        // console.log(`Ngày: ${day}, Tháng: ${month}, Năm: ${year}`);
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        const date = currentDate.toLocaleDateString(undefined, options);
-        setChangeDate(date);
+
+        const date = day + "/" + month + "/" + year
+
+        setAccount({
+            ...account,
+            dateOfBirth: date
+        });
 
     };
 
@@ -84,9 +84,7 @@ const CreateAccountNCC = ({ navigation }: any) => {
             alert("Chưa chọn ảnh")
             return
         }
-        let dateOfBirth: any
-        dateOfBirth = changeDate
-        account.dateOfBirth = dateOfBirth;
+
 
         try {
 
@@ -157,183 +155,184 @@ const CreateAccountNCC = ({ navigation }: any) => {
 
     }, [username])
     return (
-        <Background>
-            <KeyboardAvoidingView>
-                <View style={styles.container}>
-                    <Text style={styles.mainText}>Register For NCC</Text>
-                    <View style={styles.mainContainer}>
-                        <View style={styles.content}>
-                            <ScrollView style={{
+        <View style={styles.container}>
+            <Image style={{
+                width: "100%",
+                height: "100%",
+                position: "absolute"
+            }} source={require("../../assets/Icon/BG.jpg")} />
+            <Text style={styles.mainText}>Register For NCC</Text>
+            <View style={styles.mainContainer}>
+                <View style={styles.content}>
+                    <ScrollView style={{
 
-                                width: "85%",
-                                height: "55%",
-                                marginLeft: 20,
+                        width: "85%",
+                        height: "73%",
+                        marginLeft: 20,
 
+                    }}>
+                        <Text style={styles.label}>Avatar</Text>
+
+                        {image != null ? (
+                            <Image source={{ uri: image.assets[0].uri }} style={{ width: 100, height: 100, marginVertical: 20, alignSelf: 'center' }} />
+                        ) : (
+                            <Text style={{
+                                paddingLeft: 10,
+                                paddingVertical: 5,
+                                color: "red"
                             }}>
-                                <Text style={styles.label}>Avatar</Text>
-
-                                {image != null ? (
-                                    <Image source={{ uri: image.assets[0].uri }} style={{ width: 100, height: 100, marginVertical: 20, alignSelf: 'center' }} />
-                                ) : (
-                                    <Text style={{
-                                        paddingLeft: 10,
-                                        paddingVertical: 5,
-                                        color: "red"
-                                    }}>
-                                        Chưa chọn ảnh
-                                    </Text>
-                                )}
+                                Chưa chọn ảnh
+                            </Text>
+                        )}
 
 
-                                <TouchableOpacity style={[styles.input, { height: 35, justifyContent: 'center' }]} onPress={() => { pickImage(); }}>
-                                    <Text  >
-                                        Chọn ảnh
-                                    </Text>
+                        <TouchableOpacity style={[styles.input, { height: 35, justifyContent: 'center' }]} onPress={() => { pickImage(); }}>
+                            <Text  >
+                                Chọn ảnh
+                            </Text>
 
-                                </TouchableOpacity>
+                        </TouchableOpacity>
 
-                                <Text style={styles.label}>User</Text>
-                                <TextInput value={account.username} onChangeText={(value) => {
-                                    setAcount({
-                                        ...account,
-                                        username: value
-                                    })
-                                }} style={styles.input} placeholder='User name' />
-                                {userVal != null && account.username.length < 5 ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.User}</Text>
-                                    </View>
-
-                                ) : null}
-                                <Text style={styles.label}>Email</Text>
-                                <TextInput value={account.email} onChangeText={(value) => {
-                                    setAcount({
-                                        ...account,
-                                        email: value
-                                    })
-                                }} style={styles.input} placeholder='...@gmail.com' />
-                                {userVal != null && (!account.email.includes("@") || !account.email.includes(".")) ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Email}</Text>
-                                    </View>
-                                ) : null}
-                                <Text style={styles.label}>Full name</Text>
-                                <TextInput value={account.name} onChangeText={(value) => {
-                                    setAcount({
-                                        ...account,
-                                        name: value
-                                    })
-                                }} style={styles.input} placeholder='Nguyễn Văn A' />
-                                {userVal != null && !account.name ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Name}</Text>
-                                    </View>
-                                ) : null}
-                                <Text style={styles.label}>Gender</Text>
-                                <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
-                                    <Text style={styles.selectedGenderText}>
-                                        {selectedGender ? selectedGender : 'LGBT'}
-                                    </Text>
-                                </TouchableOpacity>
-
-                                <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
-                                    <View style={styles.modalContainer}>
-                                        <View style={styles.modalContent}>
-                                            <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
-                                                <Text>Male</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
-                                                <Text>Female</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
-                                                <Text>Other</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                                <Text>Close</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </Modal>
-                                <Text style={styles.label}>Date Of Birth</Text>
-
-
-                                <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
-                                    <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
-                                </TouchableOpacity>
-                                {showDatePicker && (
-                                    <DateTimePicker
-                                        testID="dateTimePicker"
-                                        value={selectedDate}
-                                        mode="date"
-                                        is24Hour={true}
-                                        display="default"
-                                        onChange={onChange}
-                                    />
-                                )}
-                                <Text style={styles.label}>Address</Text>
-                                <TextInput value={account.address} onChangeText={(value) => {
-                                    setAcount({
-                                        ...account,
-                                        address: value
-                                    })
-                                }} style={styles.input} placeholder='Address' />
-                                {userVal != null && !account.address ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Address}</Text>
-                                    </View>
-
-                                ) : null}
-                                <Text style={styles.label}>Number phone</Text>
-                                <TextInput value={account.phone} onChangeText={(value) => {
-                                    setAcount({
-                                        ...account,
-                                        phone: value
-                                    })
-                                }} style={styles.input} placeholder='XXXX-XXX-XXX' />
-                                {userVal != null && !account.phone ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Phone}</Text>
-                                    </View>
-
-                                ) : null}
-
-                                <Text style={styles.label}>Password</Text>
-                                <TextInput value={account.password} onChangeText={(value) => {
-                                    setAcount({
-                                        ...account,
-                                        password: value
-                                    })
-                                }} style={styles.input} secureTextEntry />
-                                {userVal != null && !account.password ? (
-                                    <View>
-                                        <Text style={styles.textError}>{userVal.Password}</Text>
-                                    </View>
-                                ) : null}
-                                <Text style={styles.label}>Confirm Password</Text>
-                                <TextInput value={rePasswords
-                                } onChangeText={(value) => {
-                                    setRePasswords(value)
-                                }} style={styles.input} secureTextEntry />
-                                {userVal != null && account.password !== rePasswords ? (
-                                    <View>
-                                        <Text style={styles.textError}>Password không khớp</Text>
-                                    </View>
-                                ) : null}
-
-                            </ScrollView>
-                            <View style={styles.buttons}>
-
-                                <TouchableOpacity style={styles.button} onPress={addUserAction}>
-                                    <Text style={styles.textbtn}>Signup</Text>
-                                </TouchableOpacity>
-
+                        <Text style={styles.label}>User</Text>
+                        <TextInput value={account.username} onChangeText={(value) => {
+                            setAccount({
+                                ...account,
+                                username: value
+                            })
+                        }} style={styles.input} placeholder='User name' />
+                        {userVal != null && account.username.length < 5 ? (
+                            <View>
+                                <Text style={styles.textError}>{userVal.User}</Text>
                             </View>
-                        </View>
+
+                        ) : null}
+                        <Text style={styles.label}>Email</Text>
+                        <TextInput value={account.email} onChangeText={(value) => {
+                            setAccount({
+                                ...account,
+                                email: value
+                            })
+                        }} style={styles.input} placeholder='...@gmail.com' />
+                        {userVal != null && (!account.email.includes("@") || !account.email.includes(".")) ? (
+                            <View>
+                                <Text style={styles.textError}>{userVal.Email}</Text>
+                            </View>
+                        ) : null}
+                        <Text style={styles.label}>Full name</Text>
+                        <TextInput value={account.name} onChangeText={(value) => {
+                            setAccount({
+                                ...account,
+                                name: value
+                            })
+                        }} style={styles.input} placeholder='Nguyễn Văn A' />
+                        {userVal != null && !account.name ? (
+                            <View>
+                                <Text style={styles.textError}>{userVal.Name}</Text>
+                            </View>
+                        ) : null}
+                        <Text style={styles.label}>Gender</Text>
+                        <TouchableOpacity onPress={toggleModal} style={styles.dropdownButton}>
+                            <Text style={styles.selectedGenderText}>
+                                {selectedGender ? selectedGender : 'LGBT'}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalContent}>
+                                    <TouchableOpacity onPress={() => selectGender('Male')} style={styles.modalItem}>
+                                        <Text>Male</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('Female')} style={styles.modalItem}>
+                                        <Text>Female</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => selectGender('Other')} style={styles.modalItem}>
+                                        <Text>Other</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                        <Text>Close</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
+                        <Text style={styles.label}>Date Of Birth</Text>
+
+
+                        <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
+                            <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
+                        </TouchableOpacity>
+                        {showDatePicker && (
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={selectedDate}
+                                mode="date"
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChange}
+                            />
+                        )}
+                        <Text style={styles.label}>Address</Text>
+                        <TextInput value={account.address} onChangeText={(value) => {
+                            setAccount({
+                                ...account,
+                                address: value
+                            })
+                        }} style={styles.input} placeholder='Address' />
+                        {userVal != null && !account.address ? (
+                            <View>
+                                <Text style={styles.textError}>{userVal.Address}</Text>
+                            </View>
+
+                        ) : null}
+                        <Text style={styles.label}>Number phone</Text>
+                        <TextInput value={account.phone} onChangeText={(value) => {
+                            setAccount({
+                                ...account,
+                                phone: value
+                            })
+                        }} style={styles.input} placeholder='XXXX-XXX-XXX' />
+                        {userVal != null && !account.phone ? (
+                            <View>
+                                <Text style={styles.textError}>{userVal.Phone}</Text>
+                            </View>
+
+                        ) : null}
+
+                        <Text style={styles.label}>Password</Text>
+                        <TextInput value={account.password} onChangeText={(value) => {
+                            setAccount({
+                                ...account,
+                                password: value
+                            })
+                        }} style={styles.input} secureTextEntry />
+                        {userVal != null && !account.password ? (
+                            <View>
+                                <Text style={styles.textError}>{userVal.Password}</Text>
+                            </View>
+                        ) : null}
+                        <Text style={styles.label}>Confirm Password</Text>
+                        <TextInput value={rePasswords
+                        } onChangeText={(value) => {
+                            setRePasswords(value)
+                        }} style={styles.input} secureTextEntry />
+                        {userVal != null && account.password !== rePasswords ? (
+                            <View>
+                                <Text style={styles.textError}>Password không khớp</Text>
+                            </View>
+                        ) : null}
+
+                    </ScrollView>
+                    <View style={styles.buttons}>
+
+                        <TouchableOpacity style={styles.button} onPress={addUserAction}>
+                            <Text style={styles.textbtn}>Signup</Text>
+                        </TouchableOpacity>
 
                     </View>
                 </View>
-            </KeyboardAvoidingView>
-        </Background>
+
+            </View>
+        </View>
 
 
     );
@@ -348,8 +347,8 @@ const styles = StyleSheet.create({
     mainContainer: {
         marginVertical: 10,
         backgroundColor: "#fff",
-        height: 700,
-        width: 390,
+        height: "100%",
+        width: "100%",
         borderTopLeftRadius: 130,
         paddingTop: 35,
         alignItems: "center"
@@ -386,10 +385,10 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     buttons: {
-        justifyContent: "space-between",
-        width: 320,
+        width: "80%",
         marginTop: 20,
         alignItems: "center",
+        alignSelf: "center"
 
     },
 

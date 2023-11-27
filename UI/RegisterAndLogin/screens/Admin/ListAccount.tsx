@@ -8,13 +8,6 @@ import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
 const ListAccountScreen = ({ navigation }: any) => {
-    const username = navigation.getParam("username")
-
-    const [refreshing, setRefreshing] = useState<boolean>(false)
-
-    const [listAccount, setListAccount] = useState<RegisterData[]>([])
-    const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
-    let list: RegisterData[] = [];
     const bottomSheetRef = useRef<any>(null);
 
     const showBottomSheetPanel = () => {
@@ -22,6 +15,14 @@ const ListAccountScreen = ({ navigation }: any) => {
             bottomSheetRef.current.showPanel();
         }
     };
+    const username = navigation.getParam("username")
+
+    const [refreshing, setRefreshing] = useState<boolean>(false)
+
+    const [listAccount, setListAccount] = useState<RegisterData[]>([])
+    const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
+    let list: RegisterData[] = [];
+
     const loadTasks = async () => {
         setRefreshing(true)
         try {
