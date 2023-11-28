@@ -50,11 +50,13 @@ const ListAccountScreen = ({ navigation }: any) => {
                     let checkOnline: checkonl
                     try {
                         const Response = await GetStateAccount(name)
-
-
-
                         if (Response.data != 0) {
-                            checkOnline = { username: name, colorOnl: "green" }
+                            if (Response.data.checkonl) {
+                                checkOnline = { username: name, colorOnl: "green" }
+                            }
+                            else {
+                                checkOnline = { username: name, colorOnl: "red" }
+                            }
                         }
                         else {
                             checkOnline = { username: name, colorOnl: "red" }
@@ -163,7 +165,7 @@ const ListAccountScreen = ({ navigation }: any) => {
         }
     }
     const handleAppStateChange = (AppState: any) => {
-        if (AppState === 'background') {
+        if (AppState === 'background' || AppState === 'inactive') {
             updateState(false)
         }
         else {

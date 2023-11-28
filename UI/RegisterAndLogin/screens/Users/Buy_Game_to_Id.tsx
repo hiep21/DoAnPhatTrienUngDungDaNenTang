@@ -67,7 +67,7 @@ const Buy_Game_to_Id = ({ navigation }: any) => {
         }
     }
     const handleAppStateChange = (AppState: any) => {
-        if (AppState === 'background') {
+        if (AppState === 'background' || AppState === 'inactive') {
             updateState(false)
         }
         else {

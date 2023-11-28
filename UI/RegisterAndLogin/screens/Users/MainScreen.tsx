@@ -122,7 +122,7 @@ const MainScreen = ({ navigation }: any) => {
         }
     }
     const handleAppStateChange = (AppState: any) => {
-        if (AppState === 'background') {
+        if (AppState === 'background' || AppState === 'inactive') {
             updateState(false)
         }
         else {
@@ -130,7 +130,7 @@ const MainScreen = ({ navigation }: any) => {
         }
     };
     useEffect(() => {
-
+        updateState(true)
         loadimage()
         loadTasks()
 

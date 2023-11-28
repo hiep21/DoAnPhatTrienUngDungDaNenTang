@@ -107,7 +107,7 @@ const InfoGameScreen = ({ navigation }: any) => {
         }
     }
     const handleAppStateChange = (AppState: any) => {
-        if (AppState === 'background') {
+        if (AppState === 'background' || AppState === 'inactive') {
             updateState(false)
         }
         else {

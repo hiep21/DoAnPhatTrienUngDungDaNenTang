@@ -66,7 +66,7 @@ const MainScreenAdmin = ({ navigation }: any) => {
         }
     }
     const handleAppStateChange = (AppState: any) => {
-        if (AppState === 'background') {
+        if (AppState === 'background' || AppState === 'inactive') {
             updateState(false)
         }
         else {
@@ -74,6 +74,7 @@ const MainScreenAdmin = ({ navigation }: any) => {
         }
     };
     useEffect(() => {
+        updateState(true)
         AppState.addEventListener('change', handleAppStateChange);
         loadTasks()
     }, [username])

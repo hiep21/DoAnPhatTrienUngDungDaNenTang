@@ -22,7 +22,7 @@ const MainScreenNCC = ({ navigation }: { navigation: any }) => {
         setRefreshing(false)
     }
     const updateState = async (result: boolean) => {
-        
+
         try {
             await UpdateStateLogin({
                 username: username,
@@ -35,14 +35,16 @@ const MainScreenNCC = ({ navigation }: { navigation: any }) => {
         }
     }
     const handleAppStateChange = (AppState: any) => {
-        if (AppState === 'background') {
+        if (AppState === 'background' || AppState === 'inactive') {
             updateState(false)
         }
         else {
             updateState(true)
         }
     };
-    useEffect(() => {AppState.addEventListener('change', handleAppStateChange);
+    useEffect(() => {
+        updateState(true)
+        AppState.addEventListener('change', handleAppStateChange);
         loadTasks();
     }, [username])
 
