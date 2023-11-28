@@ -1,14 +1,14 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Alert, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Alert, FlatList, AppState } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
-import { getGameManager } from '../../services/todo';
+import { UpdateStateLogin, getGameManager } from '../../services/todo';
 import { GameManager, ImageUri } from '../../services/interfaces/User.interface';
 import * as FileSystem from 'expo-file-system';
 
 const ManagerGameUser = ({ navigation }: any) => {
     const username = navigation.getParam("username")
-    
+
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [listGameIsInstall, setListGameIsInstall] = useState<GameManager[]>([])
     const [listGameHaveBuy, setListGameHaveBuy] = useState<GameManager[]>([])
@@ -183,7 +183,28 @@ const ManagerGameUser = ({ navigation }: any) => {
 
         )
     }
+    const updateState = async (result: boolean) => {
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         loadTasks()
     }, [username])
     return (

@@ -1,10 +1,34 @@
-import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image, AppState } from 'react-native';
+import { UpdateStateLogin } from '../../services/todo';
 
 
 const SupportUser = ({ navigation }: any) => {
     const username = navigation.getParam("username")
-
+    const updateState = async (result: boolean) => {
+        
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
+    }, [username])
     return (
         <View style={styles.container}>
             <Image style={{

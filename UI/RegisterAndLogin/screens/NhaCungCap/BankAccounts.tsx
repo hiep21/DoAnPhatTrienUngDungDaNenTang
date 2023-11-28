@@ -1,7 +1,7 @@
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal, ScrollView, AppState } from 'react-native';
 import { useState, useEffect } from 'react';
 import { LoginData, BankAccount } from '../../services/interfaces/User.interface';
-import { CreateBankAccount, GetAccountByUser, UpdateBankAccount } from '../../services/todo';
+import { CreateBankAccount, GetAccountByUser, UpdateBankAccount, UpdateStateLogin } from '../../services/todo';
 import React from 'react';
 
 
@@ -138,7 +138,28 @@ const BankAccounts = ({ navigation }: any) => {
         }
 
     }
-    useEffect(() => {
+    const updateState = async (result: boolean) => {
+        
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {AppState.addEventListener('change', handleAppStateChange);
         loadTasks()
     }, [username])
     return (

@@ -1,8 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, RefreshControl } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, RefreshControl, AppState } from 'react-native';
 import { getByName } from '../../services/Game';
 import BottomSheet from "../Users/BottomSheet";
-import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
+import { BASE_URL_Image, UpdateStateLogin, getByUser, getGameManager, getImageIcon } from '../../services/todo';
 import * as FileSystem from 'expo-file-system';
 
 
@@ -52,9 +52,31 @@ const MainScreenAdmin = ({ navigation }: any) => {
         setRefreshing(true);
         loadTasks();
     };
+    const updateState = async (result: boolean) => {
+
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         loadTasks()
-    }, [])
+    }, [username])
     return (
         <View style={styles.container}>
 

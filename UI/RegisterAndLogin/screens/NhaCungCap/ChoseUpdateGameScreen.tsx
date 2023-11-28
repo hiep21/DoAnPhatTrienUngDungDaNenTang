@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, AppState } from 'react-native';
 import { getById } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
+import { UpdateStateLogin } from '../../services/todo';
 
 const ChoseUpdateGameScreen = ({ navigation }: any) => {
     const username = navigation.getParam("username")
@@ -20,9 +21,29 @@ const ChoseUpdateGameScreen = ({ navigation }: any) => {
         }
     }
 
+    const updateState = async (result: boolean) => {
+        
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
 
-
-    useEffect(() => {
+    useEffect(() => {AppState.addEventListener('change', handleAppStateChange);
         getGameById()
     }, [gameId, imageUri, username])
 

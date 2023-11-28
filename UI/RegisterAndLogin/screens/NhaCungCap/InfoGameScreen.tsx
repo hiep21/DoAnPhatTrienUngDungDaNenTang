@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 
 import { CreateNotification, UpdateGame, deleteApi, deleteFolder, getById, getByName } from '../../services/Game';
 import { InfoGame, NotificationInterface } from '../../services/interfaces/GameService';
-import { getByUser } from '../../services/todo';
+import { UpdateStateLogin, getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
 const InfoGameNCC = ({ navigation }: any) => {
 
@@ -120,7 +120,28 @@ const InfoGameNCC = ({ navigation }: any) => {
             console.log(error.response.data)
         }
     }
-    useEffect(() => {
+    const updateState = async (result: boolean) => {
+        
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {AppState.addEventListener('change', handleAppStateChange);
         getGameById()
     }, [gameId, tenTroChoi, imageUri, username])
     const [reason, setReason] = useState<string>("Trò chơi không đạt yêu cầu")

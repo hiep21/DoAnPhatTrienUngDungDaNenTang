@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { deleteApi, getById, getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
-import { CreateGameManager } from '../../services/todo';
+import { CreateGameManager, UpdateStateLogin } from '../../services/todo';
 import { GameManager } from '../../services/interfaces/User.interface';
 
 const Buy_Game_to_Id = ({ navigation }: any) => {
@@ -53,9 +53,30 @@ const Buy_Game_to_Id = ({ navigation }: any) => {
         }
 
     }
-
+    const updateState = async (result: boolean) => {
+        
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
         getGameById()
+        AppState.addEventListener('change', handleAppStateChange);
     }, [gameId, username])
 
     return (

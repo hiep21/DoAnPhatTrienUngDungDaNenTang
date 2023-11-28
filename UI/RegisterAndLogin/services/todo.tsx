@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
-import { BankAccount, GameManager, LoginData, LoginDataToken, RegisterData, UpdateRegister } from "./interfaces/User.interface";
+import { BankAccount, GameManager, LoginData, LoginDataToken, RegisterData, UpdateLogin, UpdateRegister } from "./interfaces/User.interface";
 
 export const BASE_URL_REGISTER = 'http://10.147.17.52:5026/Register/'
 export const BASE_URL_LOGIN = 'http://10.147.17.52:5026/Login/'
@@ -129,8 +129,31 @@ export const UpdateBankAccount = ({ account, accountNumber, nameBank }: BankAcco
         }
     })
 }
+export const UpdateStateLogin = ({ username, password, checkOnline }: UpdateLogin) => {
+    return axios({
+        method: "put",
+        url: BASE_URL_LOGIN.concat('updateLogin'),
+        data: {
+            username,
+            password,
+            checkOnline
+
+        }
+    })
+}
+
 
 // API Get
+
+export const GetStateAccount = (username: string) => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_LOGIN.concat("getStateAccount/").concat(username)
+
+    })
+
+}
 export const GetAccountByUser = (username: string) => {
 
     return axios({

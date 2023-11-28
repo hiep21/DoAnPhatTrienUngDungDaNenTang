@@ -47,3 +47,12 @@ export interface BankAccount {
     accountNumber: string,
     nameBank: string
 }
+export interface UpdateLogin {
+    username: string
+    password: string
+    checkOnline: boolean
+}
+export interface checkonl {
+    username: string,
+    colorOnl: string
+}

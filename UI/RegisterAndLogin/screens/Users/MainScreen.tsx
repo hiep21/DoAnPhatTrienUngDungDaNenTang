@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, AppState } from 'react-native';
 import Carousel from './Carousel';
 import { ImageGameUri, InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
-import { BASE_URL_Image, getByUser, getGameManager, getImageIcon } from '../../services/todo';
+import { BASE_URL_Image, UpdateStateLogin, getByUser, getGameManager, getImageIcon } from '../../services/todo';
 import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 
@@ -108,11 +108,33 @@ const MainScreen = ({ navigation }: any) => {
         }
         setRefreshing(false)
     }
+    const updateState = async (result: boolean) => {
 
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
 
         loadimage()
         loadTasks()
+
+        AppState.addEventListener('change', handleAppStateChange);
     }, [username, lsImageUri])
 
 
@@ -157,7 +179,7 @@ const MainScreen = ({ navigation }: any) => {
                 navigation.navigate("InfoGame_dont_Install", { gameId: item.id, username, imageGameUri })
             }
             else {
-                navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri })
+                navigation.navigate("InfoGameScreen", { gameId: item.id, gameManager: GameCheck[0], installGame: GameCheck[0].isInstall, imageGameUri, username })
             }
 
 

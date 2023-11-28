@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, FlatList, ScrollView, AppState } from 'react-native';
 
 import { ImageUri } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
@@ -7,6 +7,7 @@ import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_Image, createGame, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
 import * as FileSystem from 'expo-file-system';
 import { number } from 'yup';
+import { UpdateStateLogin } from '../../services/todo';
 
 const UpdateGameNCC = ({ navigation }: any) => {
     const username = navigation.getParam("username")
@@ -309,8 +310,29 @@ const UpdateGameNCC = ({ navigation }: any) => {
             ]
         );
     };
+    const updateState = async (result: boolean) => {
 
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         loadTasks();
         if (textChange == "2") {
             loadImage();

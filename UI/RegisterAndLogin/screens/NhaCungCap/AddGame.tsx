@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button, ActivityIndicator } from 'react-native';
+import { Alert, View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Button, ActivityIndicator, AppState } from 'react-native';
 import { CreateGame } from '../../services/interfaces/GameService';
 import { createGame, deleteApkFile, deleteFolder, deleteImage, deleteImageIcon, getByName, postFileApk, postImage, postImageIcon } from '../../services/Game';
 import * as DocumentPicker from 'expo-document-picker';
 import { number } from 'yup';
+import { UpdateStateLogin } from '../../services/todo';
 
 
 const AddGameNCC = ({ navigation }: any) => {
     const nameNCC = navigation.getParam("nameNCC")
+    const username = navigation.getParam("username")
     const [checkNameGame, setCheckNameGame] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState(false);
     const [game, setgame] = useState<CreateGame>({
@@ -180,8 +182,30 @@ const AddGameNCC = ({ navigation }: any) => {
 
 
     };
+    const updateState = async (result: boolean) => {
+
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
-    }, [nameNCC])
+        AppState.addEventListener('change', handleAppStateChange);
+    }, [nameNCC, username])
     return (
 
         <View style={{ height: "100%" }}>

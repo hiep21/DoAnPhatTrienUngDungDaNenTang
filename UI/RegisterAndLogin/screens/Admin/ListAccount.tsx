@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, Alert, AppState } from 'react-native';
 
-import { BASE_URL_Image, getAllAccount, getByUser, getImageIcon } from '../../services/todo';
-import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
+import { BASE_URL_Image, GetStateAccount, UpdateStateLogin, getAllAccount, getByUser, getImageIcon } from '../../services/todo';
+import { ImageUri, RegisterData, checkonl } from '../../services/interfaces/User.interface';
 import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
+import { InfoGame } from '../../services/interfaces/GameService';
 
 const ListAccountScreen = ({ navigation }: any) => {
     const bottomSheetRef = useRef<any>(null);
@@ -22,7 +23,7 @@ const ListAccountScreen = ({ navigation }: any) => {
     const [listAccount, setListAccount] = useState<RegisterData[]>([])
     const [reListAccount, setReListAccount] = useState<RegisterData[]>([])
     let list: RegisterData[] = [];
-
+    const [colorOnl, setColorOnl] = useState<checkonl[]>([])
     const loadTasks = async () => {
         setRefreshing(true)
         try {
@@ -42,6 +43,29 @@ const ListAccountScreen = ({ navigation }: any) => {
             }
 
             setListImageUri(checklist)
+            let lsCheckColor: checkonl[] = []
+            if (data.length != 0) {
+                for (let i = 0; i < data.length; i++) {
+                    let name: string = data[i].username
+                    let checkOnline: checkonl
+                    try {
+                        const Response = await GetStateAccount(name)
+
+
+
+                        if (Response.data != 0) {
+                            checkOnline = { username: name, colorOnl: "green" }
+                        }
+                        else {
+                            checkOnline = { username: name, colorOnl: "red" }
+                        }
+                        lsCheckColor.push(checkOnline)
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            }
+            setColorOnl(lsCheckColor)
         } catch (err: any) {
 
             console.log(err.TypeError)
@@ -122,19 +146,34 @@ const ListAccountScreen = ({ navigation }: any) => {
             </View>
         )
     }
-    const [colorOnl, setColorOnl] = useState<string>("red")
-    const onl = () => {
-        if (true) {
-            setColorOnl("green")
-        }
-        else {
-            setColorOnl("red")
+
+
+
+    const updateState = async (result: boolean) => {
+
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
         }
     }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         handleSearch()
         loadTasks()
-        onl()
     }, [username])
     const goToDetail = (item: RegisterData, imageUri: any) => {
         navigation.navigate("InfoAccount", { item, imageUri })
@@ -159,15 +198,14 @@ const ListAccountScreen = ({ navigation }: any) => {
                                     source={{ uri: listImageUri.find(f => f.namePath == item.username)?.imageUri }}
                                 />
                                 <View style={{
-                                    backgroundColor: colorOnl,
                                     width: 20,
                                     height: 20,
                                     position: "absolute",
-                                    opacity: 1,
                                     borderRadius: 100,
                                     end: -5,
                                     alignSelf: "flex-end",
-                                    bottom: -5
+                                    bottom: -5,
+                                    backgroundColor: colorOnl.find(f => f.username == item.username)?.colorOnl,
                                 }}>
 
                                 </View>

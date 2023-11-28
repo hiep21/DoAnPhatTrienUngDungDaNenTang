@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
-import Background from './Background';
-import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, AppState } from 'react-native';
+import { BASE_URL_Image, UpdateStateLogin, getByUser, getImageIcon } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
 import * as FileSystem from 'expo-file-system';
 const UserScreen = ({ navigation }: any) => {
@@ -43,7 +42,29 @@ const UserScreen = ({ navigation }: any) => {
 
         navigation.navigate("ChangeInfo", { username: namePath, textChange: textChange });
     }
+    const updateState = async (result: boolean) => {
+
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         loadTasks()
     }, [username])
     return (

@@ -1,9 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, AppState } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 
 import { loginApi, configAxiosWithAccessToken, saveTokenToDevice, getAccessToken } from "../services/todo";
-import Background from './Users/Background';
 import { LoginData, LoginDataToken } from '../services/interfaces/User.interface';
 import { deleteItemAsync, getItemAsync } from 'expo-secure-store';
 import React from 'react';
@@ -46,10 +45,12 @@ const LoginScreen = ({ navigation }: any) => {
             }
         }
     }
-
+    
     useEffect(() => {
         console.log("Load token called!");
         loadToken()
+        
+
     }, [listImageUri])
 
 

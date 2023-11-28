@@ -1,10 +1,10 @@
 
 // screens/Screen1.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView, Platform } from 'react-native';
+import { View, Text, Image, Button, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Modal, ScrollView, Platform, AppState } from 'react-native';
 import { RegisterData } from '../../services/interfaces/User.interface';
 import * as Yup from 'yup'
-import { postImageAva, registerApi } from '../../services/todo';
+import { UpdateStateLogin, postImageAva, registerApi } from '../../services/todo';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -151,8 +151,29 @@ const CreateAccountNCC = ({ navigation }: any) => {
             console.error('Upload failed:', error.response.data);
         }
     };
-    useEffect(() => {
+    const updateState = async (result: boolean) => {
 
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
     }, [username])
     return (
         <View style={styles.container}>

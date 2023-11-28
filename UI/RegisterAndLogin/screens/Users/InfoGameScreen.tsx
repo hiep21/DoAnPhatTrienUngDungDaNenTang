@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { BASE_URL_APK_FILE, deleteApi, getById, getByName } from '../../services/Game';
-import BottomSheet from "./BottomSheet";
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import * as Permissions from 'expo-permissions';
 import { GameManager } from '../../services/interfaces/User.interface';
-import { BASE_URL_Image, UpdateGameManager, getImageIcon } from '../../services/todo';
+import { BASE_URL_Image, UpdateGameManager, UpdateStateLogin, getImageIcon } from '../../services/todo';
 const InfoGameScreen = ({ navigation }: any) => {
-
+    const username = navigation.getParam("username")
     const gameId = navigation.getParam("gameId")
     const installGame = navigation.getParam("installGame")
     const gameManager = navigation.getParam("gameManager")
@@ -94,8 +93,29 @@ const InfoGameScreen = ({ navigation }: any) => {
             ]
         );
     }
-    useEffect(() => {
+    const updateState = async (result: boolean) => {
 
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         getGameById()
     }, [gameId, gameManager, installGame, imageGameUri])
     const [imageUri, setImageUri] = useState<string>();

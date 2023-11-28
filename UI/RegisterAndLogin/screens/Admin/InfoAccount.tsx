@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, Alert, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 
 import { RegisterData } from '../../services/interfaces/User.interface';
-import { DeleteAccount, deleteImage, deleteUsers, getImageIcon } from '../../services/todo';
+import { DeleteAccount, UpdateStateLogin, deleteImage, deleteUsers, getImageIcon } from '../../services/todo';
 const InfoAccount = ({ navigation }: any) => {
-
+    const username = navigation.getParam("username")
     const item = navigation.getParam("item")
     const imageUri = navigation.getParam("imageUri")
     const [Account, setAccount] = useState<RegisterData>(item)
@@ -57,9 +57,30 @@ const InfoAccount = ({ navigation }: any) => {
             </View>
         )
     }
-    useEffect(() => {
+    const updateState = async (result: boolean) => {
 
-    }, [item, imageUri])
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
+    }, [item, imageUri,username])
     return (
         <View style={styles.container}>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, Animated } from 'react-native';
-import { getByUser } from '../../services/todo';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, Animated, AppState } from 'react-native';
+import { UpdateStateLogin, getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
 
 
@@ -21,8 +21,28 @@ const MainScreenNCC = ({ navigation }: { navigation: any }) => {
         }
         setRefreshing(false)
     }
-
-    useEffect(() => {
+    const updateState = async (result: boolean) => {
+        
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {AppState.addEventListener('change', handleAppStateChange);
         loadTasks();
     }, [username])
 

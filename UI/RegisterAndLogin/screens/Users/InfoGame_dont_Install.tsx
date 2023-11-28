@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, AppState } from 'react-native';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { getById } from '../../services/Game';
-import { BASE_URL_Image, getImageIcon } from '../../services/todo';
+import { BASE_URL_Image, UpdateStateLogin, getImageIcon } from '../../services/todo';
 import * as FileSystem from 'expo-file-system';
 const InfoGame_dont_Install = ({ navigation }: any) => {
 
@@ -40,8 +40,30 @@ const InfoGame_dont_Install = ({ navigation }: any) => {
         }
 
     };
+    const updateState = async (result: boolean) => {
+
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
 
     useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         getGameById()
     }, [gameId, username, imageGameUri])
     return (

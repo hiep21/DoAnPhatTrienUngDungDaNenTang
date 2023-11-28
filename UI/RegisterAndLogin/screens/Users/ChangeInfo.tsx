@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal, Platform } from 'react-native';
-import { UpdateRegisterApi, deleteImage, getByUser, getImageIcon, postImageAva } from '../../services/todo';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, ActivityIndicator, Modal, Platform, AppState } from 'react-native';
+import { UpdateRegisterApi, UpdateStateLogin, deleteImage, getByUser, getImageIcon, postImageAva } from '../../services/todo';
 import { RegisterData, UpdateRegister } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { getItemAsync } from 'expo-secure-store';
@@ -157,8 +157,29 @@ const ChangeInfo = ({ navigation }: any) => {
         setIsLoading(false)
 
     }
-    useEffect(() => {
+    const updateState = async (result: boolean) => {
 
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         loadTasks();
     }, [username, textChange])
     const renderInputField = (key: any) => {

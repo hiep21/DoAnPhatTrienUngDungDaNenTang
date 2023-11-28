@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TextInput, StyleSheet, TouchableOpacity, Image, AppState } from 'react-native';
 
 import { BASE_URL_Image_Icon, getByName, getImageIconGame, getInfoFileAdmin, getInfoFileNCC } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { BASE_URL_Image, getByUser, getImageIcon } from '../../services/todo';
+import { BASE_URL_Image, UpdateStateLogin, getByUser, getImageIcon } from '../../services/todo';
 import { ImageUri, RegisterData } from '../../services/interfaces/User.interface';
 import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
@@ -126,8 +126,29 @@ const ManagerGameNCC = ({ navigation }: any) => {
             setListGame(reListGame);
         }
     }
+    const updateState = async (result: boolean) => {
+        
+        try {
+            await UpdateStateLogin({
+                username: username,
+                password: "......",
+                checkOnline: result
+            })
+            console.log("Success")
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
+    const handleAppStateChange = (AppState: any) => {
+        if (AppState === 'background') {
+            updateState(false)
+        }
+        else {
+            updateState(true)
+        }
+    };
     useEffect(() => {
-
+        AppState.addEventListener('change', handleAppStateChange);
         loadTasks()
         return () => {
             loadTasks()
