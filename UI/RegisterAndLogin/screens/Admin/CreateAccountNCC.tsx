@@ -39,9 +39,9 @@ const CreateAccountNCC = ({ navigation }: any) => {
         toggleModal();
     };
 
-
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+
     const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate || selectedDate;
 
@@ -59,6 +59,7 @@ const CreateAccountNCC = ({ navigation }: any) => {
         });
 
     };
+
 
     const validateInputs = () => {
         if (account.username.length < 5 && (account.username == null || account.username.includes(""))) {
@@ -280,7 +281,7 @@ const CreateAccountNCC = ({ navigation }: any) => {
 
 
                         <TouchableOpacity style={styles.dropdownButton} onPress={() => setShowDatePicker(true)}>
-                            <Text style={styles.selectedGenderText}>Selected Date: {selectedDate.toDateString()}</Text>
+                            <Text style={styles.selectedGenderText}>Selected Date: {account.dateOfBirth}</Text>
                         </TouchableOpacity>
                         {showDatePicker && (
                             <DateTimePicker

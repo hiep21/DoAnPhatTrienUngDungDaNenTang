@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { UpdateStateLogin } from '../../services/todo';
-const ChartComponent = (navigation: any) => {
+const ChartComponent = ({ navigation }: any) => {
   const username = navigation.getParam("username")
   const data = {
     labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],

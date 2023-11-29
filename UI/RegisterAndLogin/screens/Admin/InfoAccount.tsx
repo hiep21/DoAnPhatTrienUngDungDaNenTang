@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 
 import { RegisterData } from '../../services/interfaces/User.interface';
-import { DeleteAccount, UpdateStateLogin, deleteImage, deleteUsers, getImageIcon } from '../../services/todo';
+import { DeleteAccount, GetStateAccount, UpdateStateLogin, deleteImage, deleteUsers, getImageIcon } from '../../services/todo';
 const InfoAccount = ({ navigation }: any) => {
     const username = navigation.getParam("username")
     const item = navigation.getParam("item")
@@ -78,9 +78,21 @@ const InfoAccount = ({ navigation }: any) => {
             updateState(true)
         }
     };
+    const [checkOnl, setCheckOnl] = useState<boolean>(false)
+    const getCheckOnl = async () => {
+        try {
+            const Response = await GetStateAccount(username)
+            if (Response.data != 0) {
+                setCheckOnl(Response.data[0].checkOnline)
+            }
+        } catch (error: any) {
+            console.log(error.response.data)
+        }
+    }
     useEffect(() => {
+        getCheckOnl()
         AppState.addEventListener('change', handleAppStateChange);
-    }, [item, imageUri,username])
+    }, [item, imageUri, username])
     return (
         <View style={styles.container}>
 
@@ -107,7 +119,7 @@ const InfoAccount = ({ navigation }: any) => {
                         width: "50%"
                     }}>
                         <Text style={{ fontSize: 15 }}>{Account?.name}</Text>
-                        <Text style={{ fontSize: 10 }}>Trạng thái hoạt động:</Text>
+                        <Text style={{ fontSize: 10 }}>Trạng thái hoạt động: {checkOnl ? (<Text>có</Text>) : (<Text>không</Text>)}</Text>
                         <Text style={{ fontSize: 10 }}>{Account.email}</Text>
                         <Text style={{ fontSize: 10 }}>Quyền hạn: {Account?.note}</Text>
                     </View>

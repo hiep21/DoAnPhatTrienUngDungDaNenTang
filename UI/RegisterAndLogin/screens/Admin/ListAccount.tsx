@@ -51,7 +51,7 @@ const ListAccountScreen = ({ navigation }: any) => {
                     try {
                         const Response = await GetStateAccount(name)
                         if (Response.data != 0) {
-                            if (Response.data.checkonl) {
+                            if (Response.data[0].checkOnline) {
                                 checkOnline = { username: name, colorOnl: "green" }
                             }
                             else {
@@ -178,7 +178,7 @@ const ListAccountScreen = ({ navigation }: any) => {
         loadTasks()
     }, [username])
     const goToDetail = (item: RegisterData, imageUri: any) => {
-        navigation.navigate("InfoAccount", { item, imageUri })
+        navigation.navigate("InfoAccount", { item, imageUri, username: item.username })
     }
 
     const renderTask = ({ item }: { item: RegisterData }) => {
@@ -200,14 +200,15 @@ const ListAccountScreen = ({ navigation }: any) => {
                                     source={{ uri: listImageUri.find(f => f.namePath == item.username)?.imageUri }}
                                 />
                                 <View style={{
-                                    width: 20,
-                                    height: 20,
+                                    width: 15,
+                                    height: 15,
                                     position: "absolute",
-                                    borderRadius: 100,
                                     end: -5,
                                     alignSelf: "flex-end",
                                     bottom: -5,
                                     backgroundColor: colorOnl.find(f => f.username == item.username)?.colorOnl,
+                                    borderRadius: 100,
+                                    borderWidth: 0.2
                                 }}>
 
                                 </View>
@@ -326,7 +327,6 @@ const styles = StyleSheet.create({
     },
     user: {
         flexDirection: 'row',
-        marginLeft: "20%"
     },
     body: {
         width: "100%",

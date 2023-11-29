@@ -3,7 +3,7 @@ import { Text, View, Dimensions, Animated, StyleSheet, Image, TouchableOpacity, 
 
 import SlidingUpPanel from "rn-sliding-up-panel";
 import * as SecureStore from 'expo-secure-store';
-import { BASE_URL_Image, deleteUsers, getByUser, getImageIcon } from "../../services/todo";
+import { BASE_URL_Image, UpdateStateLogin, deleteUsers, getByUser, getImageIcon } from "../../services/todo";
 
 import * as FileSystem from 'expo-file-system';
 const { height } = Dimensions.get("window");
@@ -47,7 +47,7 @@ class BottomSheet extends React.Component<BottomSheetProps> {
       const response2 = await getImageIcon(username)
       const name = response2.data[0].imageName
       const check = await this.fetchImage(username, name)
-      console.log(check?.uri)
+      // console.log(check?.uri)
       const image = check?.uri;
       const nameAdmin = getAccount.data[0].name
       this.setState({ email })
@@ -137,7 +137,7 @@ class BottomSheet extends React.Component<BottomSheetProps> {
       }
     };
     const getData = await getUserToken();
-    console.log(getData);
+    // console.log(getData);
 
   }
 
@@ -153,11 +153,12 @@ class BottomSheet extends React.Component<BottomSheetProps> {
         const username = tokenObject.username;
         const email = tokenObject.email;
         const image = tokenObject.image;
-        console.log(username);
-        console.log(email);
-        console.log(image);
+        // console.log(username);
+        // console.log(email);
+        // console.log(image);
         await deleteUsers(username);
-        await SecureStore.deleteItemAsync('accessToken');
+        await SecureStore.deleteItemAsync('accessToken')
+
         const { navigation }: any = this.props;
         alert("Đăng xuất thành công");
         navigation.navigate("HomeScreen");
