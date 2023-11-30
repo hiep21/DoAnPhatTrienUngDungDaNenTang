@@ -350,8 +350,7 @@ const styles = StyleSheet.create({
 
     },
     head: {
-
-        width: "80%",
+        width: "100%",
         height: "5%",
         justifyContent: 'space-between',
         flexDirection: 'row',
@@ -369,7 +368,6 @@ const styles = StyleSheet.create({
     },
     user: {
         flexDirection: 'row',
-        marginLeft: "20%"
     },
     body: {
         backgroundColor: "white",

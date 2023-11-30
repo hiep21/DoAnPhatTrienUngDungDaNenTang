@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CreateGame, NotificationInterface } from "./interfaces/GameService";
+import { BuyGameForAccount, CreateGame, NotificationInterface } from "./interfaces/GameService";
 
 export const BASE_URL = 'http://10.147.17.52:5221/InfoFile/'
 
@@ -11,6 +11,7 @@ export const BASE_URL_Image_Icon = "http://10.147.17.52:5221/ImageIcon/"
 
 export const BASE_URL_Notification = "http://10.147.17.52:5221/Notification/"
 
+export const BASE_URL_UserBuyGame = "http://10.147.17.52:5221/UserBuyGame/"
 
 // API Post
 export const createGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi, kichCoFile, trangThai }: CreateGame) => {
@@ -110,6 +111,18 @@ export const CreateNotification = ({ nameGame, forAccount, result, reason }: Not
         }
     })
 }
+export const CreateUserBuyGame = ({ nameGame, forAccount, cost }: BuyGameForAccount) => {
+    return axios({
+        method: "POST",
+        url: BASE_URL_UserBuyGame.concat('createUserBuyGame'),
+        data: {
+            nameGame,
+            forAccount,
+            cost
+        }
+    })
+}
+
 // API Put
 export const UpdateGame = ({ tenTroChoi, moTaTroChoi, doTuoi, theLoai, gia, nhaCungCap, gioiThieuTroChoi, kichCoFile, trangThai }: CreateGame) => {
     return axios({
@@ -186,7 +199,6 @@ export const getImageIconGame = (fileName: string) => {
 
 }
 export const GetNotification = (forAccount: string) => {
-
     return axios({
         method: "GET",
         url: BASE_URL_Notification.concat("getNotification/").concat(forAccount)
@@ -194,7 +206,20 @@ export const GetNotification = (forAccount: string) => {
     })
 
 }
+export const GetUserBuyGame = (nameGame: string) => {
+    return axios({
+        method: "GET",
+        url: BASE_URL_UserBuyGame.concat("getUserBuyGame/").concat(nameGame)
+    })
 
+}
+export const GetUserBuyGameByDayAndMonth = (month: string, year: string) => {
+    return axios({
+        method: "GET",
+        url: BASE_URL_UserBuyGame.concat("getUserBuyGameByDayAndMonth/").concat(month).concat("/").concat(year)
+    })
+
+}
 
 //API Delete
 export const deleteApi = (tenTroChoi: string) => {

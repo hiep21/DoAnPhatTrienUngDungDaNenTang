@@ -41,13 +41,13 @@ const AddGameNCC = ({ navigation }: any) => {
             Alert.alert("Lỗi", "Giới thiệu trò chơi phải tối thiểu 50 ký tự");
             return false;
         }
+        if (game.theLoai.length < 1) {
+            Alert.alert("Lỗi", "Thể loại không được bỏ trống");
+            return false;
+        }
         return true;
     };
     const addgameAction = async () => {
-
-        if (!validateInputs()) {
-            return;
-        }
 
         try {
             const response = await createGame(game)
@@ -127,9 +127,14 @@ const AddGameNCC = ({ navigation }: any) => {
             if (result != null) {
                 setDocumentUri(result.assets[0].uri);
                 setNameDocumentUri(result.assets[0].name);
+                console.log(parseFloat(((result.assets[0].size / 1024) / 1024).toFixed(2)))
                 setgame({
                     ...game,
                     kichCoFile: parseFloat(((result.assets[0].size / 1024) / 1024).toFixed(2))
+                })
+                setgame({
+                    ...game,
+                    tenTroChoi: result.assets[0].name
                 })
             } else {
                 Alert.alert("Cảnh báo", 'Chưa chọn file.');
@@ -156,7 +161,11 @@ const AddGameNCC = ({ navigation }: any) => {
     };
     const uploadData = async () => {
         // console.log(nameDocumentUri)
+        if (!validateInputs()) {
+            return;
+        }
         if (!isLoading) {
+
             setIsLoading(true)
             try {
                 await uploadDocument();

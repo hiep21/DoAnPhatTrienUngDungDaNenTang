@@ -5,13 +5,20 @@ import { CreateNotification, UpdateGame, deleteApi, deleteFolder, getById, getBy
 import { InfoGame, NotificationInterface } from '../../services/interfaces/GameService';
 import { UpdateStateLogin, getByUser } from '../../services/todo';
 import { RegisterData } from '../../services/interfaces/User.interface';
+
+const colorBtn: string = "white"
+
 const InfoGameNCC = ({ navigation }: any) => {
 
     const gameId = navigation.getParam("gameId")
     const tenTroChoi = navigation.getParam("tenTroChoi")
     const imageUri = navigation.getParam("imageUri")
     const username = navigation.getParam("username")
+
+
+
     const [game, setGame] = useState<InfoGame>()
+
     const [acceptGame, setAcceptGame] = useState<InfoGame>({
         id: "",
         tenTroChoi: "",
@@ -87,6 +94,7 @@ const InfoGameNCC = ({ navigation }: any) => {
         try {
             // console.log(getAcceptGame)
             const { data } = await UpdateGame(getAcceptGame);
+            navigation.navigate("ManagerGameNCC", { username })
             alert("Cập nhật thành công")
         } catch (error: any) {
             console.log(error.response.data)
@@ -121,7 +129,7 @@ const InfoGameNCC = ({ navigation }: any) => {
         }
     }
     const updateState = async (result: boolean) => {
-        
+
         try {
             await UpdateStateLogin({
                 username: username,
@@ -141,7 +149,8 @@ const InfoGameNCC = ({ navigation }: any) => {
             updateState(true)
         }
     };
-    useEffect(() => {AppState.addEventListener('change', handleAppStateChange);
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         getGameById()
     }, [gameId, tenTroChoi, imageUri, username])
     const [reason, setReason] = useState<string>("Trò chơi không đạt yêu cầu")
@@ -234,7 +243,7 @@ const InfoGameNCC = ({ navigation }: any) => {
                                         justifyContent: 'center',
                                         borderRadius: 5
                                     }} onPress={() => { navigation.navigate("ChoseUpdateGameScreen", { gameId, imageUri, username }) }}>
-                                        <Text style={{ textAlign: 'center' }}>Cập nhật</Text>
+                                        <Text style={{ textAlign: 'center', color: colorBtn, fontWeight: "600" }}>Cập nhật</Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity style={{
@@ -245,7 +254,7 @@ const InfoGameNCC = ({ navigation }: any) => {
                                         justifyContent: 'center',
                                         borderRadius: 5
                                     }} onPress={() => { NotificationDeleteGame() }}>
-                                        <Text style={{ textAlign: 'center' }}>Gỡ Khỏi kệ</Text>
+                                        <Text style={{ textAlign: 'center', color: colorBtn, fontWeight: "600" }}>Gỡ Khỏi kệ</Text>
                                     </TouchableOpacity>
                                 </View>
 

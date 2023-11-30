@@ -32,3 +32,8 @@ export interface ImageGameUri {
     nameFile: string,
     imageUri: string
 }
+export interface BuyGameForAccount {
+    nameGame: string,
+    forAccount: string,
+    cost: number
+}

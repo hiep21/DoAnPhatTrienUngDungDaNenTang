@@ -3,12 +3,14 @@ import { View, Text, Button, StyleSheet, TouchableOpacity, Image, AppState } fro
 import { getById } from '../../services/Game';
 import { InfoGame } from '../../services/interfaces/GameService';
 import { UpdateStateLogin } from '../../services/todo';
+const colorBtn: string = "white"
 
 const ChoseUpdateGameScreen = ({ navigation }: any) => {
     const username = navigation.getParam("username")
     const gameId = navigation.getParam("gameId")
     const imageUri = navigation.getParam("imageUri")
     const [game, setGame] = useState<InfoGame>()
+
 
     const getGameById = async () => {
         try {
@@ -22,7 +24,7 @@ const ChoseUpdateGameScreen = ({ navigation }: any) => {
     }
 
     const updateState = async (result: boolean) => {
-        
+
         try {
             await UpdateStateLogin({
                 username: username,
@@ -43,7 +45,8 @@ const ChoseUpdateGameScreen = ({ navigation }: any) => {
         }
     };
 
-    useEffect(() => {AppState.addEventListener('change', handleAppStateChange);
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
         getGameById()
     }, [gameId, imageUri, username])
 
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     buttonText: {
-        color: 'white',
+        color: colorBtn,
         fontWeight: '900',
         fontSize: 20
     },

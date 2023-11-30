@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, Image, Acti
 import { ImageUri } from '../../services/interfaces/User.interface';
 import * as DocumentPicker from 'expo-document-picker';
 import { InfoGame } from '../../services/interfaces/GameService';
-import { BASE_URL_Image, createGame, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
+import { BASE_URL_Image, UpdateGame, createGame, deleteImage, deleteImageIcon, getById, getImageGame, getImageIconGame, postFileApk, postImage, postImageIcon, updateFileApk } from '../../services/Game';
 import * as FileSystem from 'expo-file-system';
 import { number } from 'yup';
 import { UpdateStateLogin } from '../../services/todo';
@@ -20,7 +20,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
 
     const [imageGameName, setImageGameName] = useState<string>();
     const [isLoading, setIsLoading] = useState(false);
-
+    
     const validateInputs = () => {
         let checkGame: any = game
         if (checkGame.tenTroChoi.length < 5) {
@@ -147,25 +147,29 @@ const UpdateGameNCC = ({ navigation }: any) => {
             console.error('Chưa chọn hình ảnh.');
             return;
         }
-        try {
-            const response = await postImage(pickImageUri, pickImageName, game?.tenTroChoi)
+        if (!isLoading) {
+            setIsLoading(true)
+            try {
+                const response = await postImage(pickImageUri, pickImageName, game?.tenTroChoi)
 
-            Alert.alert("Thành công", "Bạn có muốn thêm ảnh không?",
-                [
-                    {
-                        text: "Hủy",
-                        onPress: async () => {
-                            navigation.navigate("ManagerGameNCC", username)
+                Alert.alert("Thành công", "Bạn có muốn thêm ảnh không?",
+                    [
+                        {
+                            text: "Hủy",
+                            onPress: async () => {
+                                navigation.navigate("ManagerGameNCC", username)
+                            },
                         },
-                    },
-                    {
-                        text: "Đồng ý",
-                        style: "cancel",
-                    },
-                ]
-            )
-        } catch (error: any) {
-            alert(error.response.data);
+                        {
+                            text: "Đồng ý",
+                            style: "cancel",
+                        },
+                    ]
+                )
+            } catch (error: any) {
+                alert(error.response.data);
+            }
+            setIsLoading(false)
         }
     };
 
@@ -203,8 +207,8 @@ const UpdateGameNCC = ({ navigation }: any) => {
                 // Gửi tệp APK lên API endpoint sử dụng Axios
                 const response = await updateFileApk(documentUri, nameDocumentUri)
                 // Xử lý kết quả từ API nếu cần
-                alert('Cập nhật thành công' + response.data);
-                navigation
+                alert('Cập nhật file thành công');
+                navigation.navigate("ManagerGameNCC", { username })
             } catch (err: any) {
                 alert(err.response.data);
                 // Xử lý lỗi nếu cần
@@ -270,23 +274,23 @@ const UpdateGameNCC = ({ navigation }: any) => {
     }
 
     const uploadData = async () => {
-        console.log(nameDocumentUri)
         if (!isLoading) {
-
+            setIsLoading(true)
             if (!validateInputs()) {
                 return;
             }
 
             try {
-                const response = await createGame(game)
+                const response = await UpdateGame(game)
                 alert("Thành công")
                 console.log('Upload success:', response.data);
-                await navigation.navigate("MainScreenNCC")
+                await navigation.navigate("ManagerGameNCC", { username })
             } catch (err: any) {
 
                 const message = err.response.data
                 console.log(message)
             }
+            setIsLoading(false)
         }
 
 
@@ -371,7 +375,7 @@ const UpdateGameNCC = ({ navigation }: any) => {
                                 {isLoading ? (
                                     <ActivityIndicator color="#fff" />
                                 ) : (
-                                    <Text style={styles.textbtn}>UploadFile</Text>
+                                    <Text style={[styles.buttonSave, { backgroundColor: "green" }]}>UploadFile</Text>
                                 )}
                             </TouchableOpacity>
                         ) : (
@@ -395,20 +399,17 @@ const UpdateGameNCC = ({ navigation }: any) => {
                         </TouchableOpacity>
                         {pickImageUri && <Image source={{ uri: pickImageUri }} style={{ width: 200, height: 200, marginTop: 20 }} />}
                         <Text> </Text>
-                        {pickImageUri != null ? (
+                        {pickImageUri != "" && pickImageUri != null ? (
                             <TouchableOpacity style={{
-                                width: 100,
-                                height: 30,
                                 backgroundColor: "#bbb",
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 borderRadius: 10,
-                                borderWidth: 1.25
                             }} onPress={() => { uploadImage() }}>
                                 {isLoading ? (
                                     <ActivityIndicator color="#fff" />
                                 ) : (
-                                    <Text style={styles.textbtn}>UploadFile</Text>
+                                    <Text style={[styles.buttonSave, { backgroundColor: "green", color: "white", fontWeight: "700" }]}>UploadFile</Text>
                                 )}
                             </TouchableOpacity>
                         ) : (
@@ -461,18 +462,15 @@ const UpdateGameNCC = ({ navigation }: any) => {
                         <Text> </Text>
                         {documentUri != null ? (
                             <TouchableOpacity style={{
-                                width: 100,
-                                height: 30,
                                 backgroundColor: "#bbb",
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 borderRadius: 10,
-                                borderWidth: 1.25
                             }} onPress={() => { uploadApkFile() }}>
                                 {isLoading ? (
                                     <ActivityIndicator color="#fff" />
                                 ) : (
-                                    <Text style={styles.textbtn}>Cập nhật</Text>
+                                    <Text style={[styles.buttonSave, { backgroundColor: "green" }]}>Cập nhật</Text>
                                 )}
                             </TouchableOpacity>
                         ) : (
@@ -484,13 +482,64 @@ const UpdateGameNCC = ({ navigation }: any) => {
                 return (
                     <View style={{
                         backgroundColor: "white",
-                        width: "80%",
-                        height: "80%",
+                        width: "100%",
+                        height: "105%",
                         borderRadius: 10
 
                     }}>
                         <Text style={styles.mainText}>Cập nhật thông tin trò chơi</Text>
+                        <ScrollView style={{
+                            width: "100%",
+                            height: "50%"
+                        }}>
+                            <Text style={styles.label}>Tên trò chơi</Text>
+                            <TextInput value={game?.tenTroChoi} onChangeText={(value) => {
+                            }} style={[styles.input, { width: "90%", alignSelf: "center", paddingHorizontal: 10 }]} placeholder='Tên trò chơi' />
 
+                            <Text style={styles.label}>Mô tả trò chơi</Text>
+                            <TextInput value={game?.moTaTroChoi} onChangeText={(value) => {
+                                setGame({
+                                    ...game,
+                                    moTaTroChoi: value
+                                })
+                            }} style={[styles.input, { width: "90%", alignSelf: "center", paddingHorizontal: 10 }]} placeholder='Mô tả trò chơi' />
+
+                            <Text style={styles.label}>Độ tuổi</Text>
+                            <TextInput value={game?.doTuoi.toString()} onChangeText={(value) => {
+                                if (value != "") {
+                                    setGame({
+                                        ...game,
+                                        doTuoi: parseInt(value)
+                                    })
+                                }
+                            }} style={[styles.input, { width: "90%", alignSelf: "center", paddingHorizontal: 10 }]} placeholder='Độ tuổi' />
+
+                            <Text style={styles.label}>Thể loại</Text>
+                            <TextInput value={game?.theLoai} onChangeText={(value) => {
+                                setGame({
+                                    ...game,
+                                    theLoai: value
+                                })
+                            }} style={[styles.input, { width: "90%", alignSelf: "center", paddingHorizontal: 10 }]} placeholder='Thể loại' />
+
+                            <Text style={styles.label}>Giá</Text>
+                            <TextInput value={game?.gia.toString()} onChangeText={(value) => {
+                                if (value != "") {
+                                    setGame({
+                                        ...game,
+                                        gia: parseInt(value)
+                                    })
+                                }
+                            }} style={[styles.input, { width: "90%", alignSelf: "center", paddingHorizontal: 10 }]} placeholder='Giá' />
+                            <Text style={styles.label}>Giới thiệu trò chơi</Text>
+                            <TextInput numberOfLines={4} multiline value={game?.gioiThieuTroChoi} onChangeText={(value) => {
+                                setGame({
+                                    ...game,
+                                    gioiThieuTroChoi: value
+                                })
+                            }} style={[styles.inputAdd, { width: "90%", alignSelf: "center", borderRadius: 10 }]} />
+
+                        </ScrollView>
 
 
                         <View style={styles.buttons}>
@@ -553,7 +602,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#7777",
         borderColor: '#555',
         paddingHorizontal: 15,
-        marginTop: 10
+        marginVertical: 5
     },
     textInput: {
         paddingHorizontal: 5
@@ -570,9 +619,6 @@ const styles = StyleSheet.create({
         height: 30,
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    textbtn: {
-
     },
     modalContainer: {
         flex: 1,
@@ -606,6 +652,7 @@ const styles = StyleSheet.create({
     buttons: {
         flexDirection: "row",
         justifyContent: "space-between",
+        padding: 10
 
     },
     buttonSave: {
@@ -613,8 +660,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 5
+    },
+    label: {
+        marginHorizontal: 20,
+    },
+    inputAdd: {
+        borderWidth: 0.5,
+        height: 90,
+        width: '100%',
+        padding: 10,
+        backgroundColor: "#7777",
+        marginVertical: 10
     }
-
 })
 
 export default UpdateGameNCC;

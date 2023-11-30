@@ -417,7 +417,9 @@ const MainScreen = ({ navigation }: any) => {
                         backgroundColor: "red",
                         width: "100%",
                         height: "95%"
-                    }}></View>
+                    }}>
+
+                    </View>
                 )
                 break;
             case 3:
@@ -441,10 +443,27 @@ const MainScreen = ({ navigation }: any) => {
             case 5:
                 return (
                     <View style={{
-                        backgroundColor: "gray",
                         width: "100%",
-                        height: "96%"
-                    }}></View>
+                        height: "96%",
+                        paddingTop: "10%"
+                    }}>
+                        <TouchableOpacity style={styles.TypeBtn}>
+                            <Text style={styles.TextTypeBtn}>Câu đố</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.TypeBtn}>
+                            <Text style={styles.TextTypeBtn}>Chiến thuật</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.TypeBtn}>
+                            <Text style={styles.TextTypeBtn}>Trí tuệ</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.TypeBtn}>
+                            <Text style={styles.TextTypeBtn}>Hành động</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.TypeBtn}>
+                            <Text style={styles.TextTypeBtn}>Giáo dục</Text>
+                        </TouchableOpacity>
+
+                    </View>
                 )
                 break;
         }
@@ -455,7 +474,8 @@ const MainScreen = ({ navigation }: any) => {
 
             <View style={styles.head}>
                 <View style={{
-                    flexDirection: "row"
+                    flexDirection: "row",
+                    width:"70%"
                 }}>
                     <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { username, lsImageUri }) }}>
                         <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
@@ -477,13 +497,14 @@ const MainScreen = ({ navigation }: any) => {
                     </View>
                 </View>
                 {checks ? (
-                    <TouchableOpacity style={{ justifyContent: 'center' }} onPress={() => { setChecks(false) }}>
+                    <TouchableOpacity style={{ marginRight: 10, justifyContent: "center" }} onPress={() => { setChecks(false) }}>
                         <Text>Back</Text>
                     </TouchableOpacity>
                 ) : (
                     <View></View>
                 )}
                 <View style={styles.user}>
+
                     <TouchableOpacity style={{ paddingRight: 10, paddingTop: 7 }} onPress={() => {
                         navigation.navigate("List_NotificationScreen", { username });
                     }}>
@@ -567,6 +588,7 @@ const styles = StyleSheet.create({
     },
     user: {
         flexDirection: 'row',
+
     },
     bottom: {
         backgroundColor: "#fff",
@@ -593,6 +615,21 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderRadius: 10,
     },
+    TypeBtn: {
+        backgroundColor: "#45A0D2",
+        width: "50%",
+        height: "5%",
+        marginTop: 20,
+        justifyContent: "center",
+        alignSelf: "center",
+        borderRadius: 10,
+
+    },
+    TextTypeBtn: {
+        textAlign: "center",
+        color: "white",
+        fontWeight: "700"
+    }
 })
 
 export default MainScreen;

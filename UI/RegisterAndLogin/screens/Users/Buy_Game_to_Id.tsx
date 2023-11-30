@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
-import { InfoGame } from '../../services/interfaces/GameService';
-import { deleteApi, getById, getByName } from '../../services/Game';
+import { BuyGameForAccount, InfoGame } from '../../services/interfaces/GameService';
+import { CreateUserBuyGame, deleteApi, getById, getByName } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
 import { CreateGameManager, UpdateStateLogin } from '../../services/todo';
 import { GameManager } from '../../services/interfaces/User.interface';
@@ -12,12 +12,16 @@ const Buy_Game_to_Id = ({ navigation }: any) => {
     const username = navigation.getParam("username")
     const [game, setGame] = useState<InfoGame>()
     const [checks, setChecks] = useState<boolean>(false)
-    const [selectedAmount, setSelectedAmount] = useState(null);
     const [create, setCreate] = useState<GameManager>({
         username: "",
         nameGame: "",
         isBuy: false,
         isInstall: false
+    });
+    const [createBuyGame, setCreateBuyGame] = useState<BuyGameForAccount>({
+        nameGame: "",
+        forAccount: "",
+        cost: 0
     });
     const getGameById = async () => {
         try {
@@ -35,16 +39,22 @@ const Buy_Game_to_Id = ({ navigation }: any) => {
         setChecks(false)
         let nameGame: any
         nameGame = game?.tenTroChoi
-        await setCreate({
-            username: username,
-            nameGame: nameGame,
-            isBuy: true,
-            isInstall: false
-        })
-        console.log(create)
+        let gia: any = game?.gia
+
         try {
 
-            await CreateGameManager(create)
+            await CreateGameManager({
+                username: username,
+                nameGame: nameGame,
+                isBuy: true,
+                isInstall: false
+            })
+            await CreateUserBuyGame({
+                nameGame: nameGame,
+                forAccount: username,
+                cost: gia
+            })
+
             alert("Mua thành công")
             navigation.navigate('ManagerGameUser', { username: username })
         } catch (error: any) {
@@ -54,7 +64,7 @@ const Buy_Game_to_Id = ({ navigation }: any) => {
 
     }
     const updateState = async (result: boolean) => {
-        
+
         try {
             await UpdateStateLogin({
                 username: username,
