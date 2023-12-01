@@ -1,19 +1,62 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { UpdateStateLogin } from '../../services/todo';
+import { GetUserBuyGameByDayAndMonth } from '../../services/Game';
+import { string } from 'yup';
 const ChartComponent = ({ navigation }: any) => {
   const username = navigation.getParam("username")
+  const [refreshing, setRefreshing] = useState<boolean>(false)
+  const month = "12"; // Replace with the actual month
+  const year = "2023";
+  const [allMonthsData, setAllMonthsData] = useState<any[]>();
+  
+  const loadTasks = async () => {
+
+    setRefreshing(true)
+    try {
+      const dataForAllMonths = [];
+      for (let i = 0; i <= 12; i++)
+      {
+        const response = await GetUserBuyGameByDayAndMonth(i.toString(), year)
+        const apiData = response.data;
+        const dataLength = apiData.length;
+        //console.log(dataLength)
+        dataForAllMonths.push(dataLength);
+      }
+      console.log(dataForAllMonths)
+      setAllMonthsData(dataForAllMonths);
+        
+
+    } catch (err: any) {
+        const errorMessage = err.response
+        alert(errorMessage)
+    }
+    setRefreshing(false)
+  }
+  // const loadAllMonthsData = async () => {
+  //   const dataForAllMonths = [];
+
+  //   for (let month = 1; month <= 12; month++) {
+  //     const monthData = await loadTasks(month, 2023); // Change the year if needed
+
+  //     if (monthData != null) {
+  //       dataForAllMonths.push(monthData);
+  //     }
+  //     console.log(allMonthsData)
+  //   }
+  // };
   const data = {
     labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
     datasets: [
       {
-        data: [20, 40, 60, 80, 100, 39, 94, 47, 28, 65, 93, 65], // Dữ liệu doanh thu (ví dụ)
+        //data: [0, 4, 1, 5, 0, 3, 3, 2, 3, 1, 0, 4], // Dữ liệu doanh thu (ví dụ)
+        data: allMonthsData,
         color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Màu của cột (màu xanh)
         label: 'Doanh thu',
       },
       {
-        data: [20, 25, 18, 30, 35, 73, 38, 93, 53, 19, 48, 70], // Dữ liệu số lượng khách hàng (ví dụ)
+        data: [0, 2, 1, 0, 3, 3, 3, 3, 3, 1, 4, 0], // Dữ liệu số lượng khách hàng (ví dụ)
         color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Màu của cột (màu đỏ)
         label: 'Số lượng khách hàng',
       },
@@ -41,6 +84,7 @@ const ChartComponent = ({ navigation }: any) => {
     }
   };
   useEffect(() => {
+    loadTasks();
     AppState.addEventListener('change', handleAppStateChange);
   }, [username])
   return (
