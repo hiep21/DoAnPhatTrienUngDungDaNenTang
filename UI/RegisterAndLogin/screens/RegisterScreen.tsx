@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert, Modal, ScrollView, Platform } from 'react-native';
 import { RegisterData } from '../services/interfaces/User.interface';
-import * as Yup from 'yup'
 import { postImageAva, registerApi } from '../services/todo';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
@@ -85,7 +84,7 @@ const AddUserScreen = ({ navigation }: any) => {
     const onCancel = () => {
         Alert.alert(
             "Confirm",
-            "Do you definitely want to cancel new?",
+            "Bạn có muốn thoát đăng ký?",
             [
                 {
                     text: "Cancel",

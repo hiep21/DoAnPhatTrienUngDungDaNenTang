@@ -9,6 +9,10 @@ import { ImageUri, RegisterData } from '../../services/interfaces/User.interface
 import BottomSheet from '../Users/BottomSheet';
 import * as FileSystem from 'expo-file-system';
 
+interface GetTimeForUsername {
+    tenTroChoi: String,
+    timeUpGame: string
+}
 const ManagerGameNCC = ({ navigation }: any) => {
     const username = navigation.getParam("username")
     const bottomSheetRef = useRef<any>(null);
@@ -23,16 +27,18 @@ const ManagerGameNCC = ({ navigation }: any) => {
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
     const [listGameAdmin, setListGameAdmin] = useState<InfoGame[]>([])
     const [accountNCC, setAccountNCC] = useState<RegisterData>()
+    const [timeCreateGame, setTimeCreateGame] = useState<GetTimeForUsername[]>([])
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
 
         try {
             const { data } = await getInfoFileNCC(username)
-            // console.log(data)
+           
             setReListGame(data)
             setListGame(data)
             const responseAdmin = await getInfoFileAdmin()
+            setTimeCreateGame(responseAdmin.data)
             setListGameAdmin(responseAdmin.data)
             const response = await getByUser(username)
             setAccountNCC(response.data[0])
@@ -69,7 +75,6 @@ const ManagerGameNCC = ({ navigation }: any) => {
         setRefreshing(false)
     }
     const [listImageUri, setListImageUri] = useState<ImageUri[]>([])
-    const [imageAdminUri, setImageAdminUri] = useState<string>();
     let checklist: ImageUri[] = [];
     const fetchImage = async (namePath: string, imageName: string) => {
 
@@ -127,7 +132,7 @@ const ManagerGameNCC = ({ navigation }: any) => {
         }
     }
     const updateState = async (result: boolean) => {
-        
+
         try {
             await UpdateStateLogin({
                 username: username,
@@ -209,6 +214,7 @@ const ManagerGameNCC = ({ navigation }: any) => {
                             width: "70%"
                         }}>
                             <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.tenTroChoi}</Text>
+                            <Text style={{ fontSize: 10, width: 115 }}>Thời gian: {timeCreateGame?.find(f => f.tenTroChoi == item.tenTroChoi)?.timeUpGame.split('T')[0]}</Text>
                             <View style={{ flexDirection: "row", width: 250, paddingTop: 5 }}>
                                 <Text style={{ fontSize: 10, width: 115 }}>Thể Loại: {item.theLoai}</Text>
                                 <Text style={{ fontSize: 10 }}>Nhà cung cấp: {item.nhaCungCap}</Text>
@@ -264,14 +270,16 @@ const ManagerGameNCC = ({ navigation }: any) => {
                 </View>
             </View>
             <View style={styles.body}>
-                <Text style={{
-                    textAlign: 'left',
-                    paddingLeft: 30,
-                    borderBottomWidth: 1.5,
-                    fontSize: 17,
-                    fontWeight: '600',
+                <TouchableOpacity onPress={() => { console.log(timeCreateGame); }}>
+                    <Text style={{
+                        textAlign: 'left',
+                        paddingLeft: 30,
+                        borderBottomWidth: 1.5,
+                        fontSize: 17,
+                        fontWeight: '600',
 
-                }}>Danh sách trò chơi</Text>
+                    }}>Danh sách trò chơi</Text>
+                </TouchableOpacity>
                 {accountNCC?.note != "Admin" ? (
                     <FlatList
                         data={listGame}
