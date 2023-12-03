@@ -220,7 +220,13 @@ export const GetUserBuyGameByDayAndMonth = (month: string, year: string) => {
     })
 
 }
+export const GetGameByDayAndMonth = (month: string, year: string) => {
+    return axios({
+        method: "GET",
+        url: BASE_URL_APK_FILE.concat("getGameByDayAndMonth/").concat(month).concat("/").concat(year)
+    })
 
+}
 //API Delete
 export const deleteApi = (tenTroChoi: string) => {
     return axios({

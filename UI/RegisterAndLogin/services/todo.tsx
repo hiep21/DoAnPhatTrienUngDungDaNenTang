@@ -200,6 +200,14 @@ export const getImageIcon = (username: string) => {
     })
 
 }
+export const getAccountByDayAndMonth = (month: string, year: string) => {
+
+    return axios({
+        method: "GET",
+        url: BASE_URL_REGISTER.concat("getAccountByDayAndMonth/").concat(month).concat("/").concat(year)
+    })
+}
+
 
 // API Delete
 export const deleteUsers = (user: string) => {
