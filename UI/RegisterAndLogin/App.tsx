@@ -177,7 +177,7 @@ const StackNAvigator = createStackNavigator({
   ChartComponent: {
     screen: ChartComponent,
     navigationOptions: {
-      title: 'Doanh thu',
+      title: 'Thống kê',
     },
   },
   NotificationScreen: {

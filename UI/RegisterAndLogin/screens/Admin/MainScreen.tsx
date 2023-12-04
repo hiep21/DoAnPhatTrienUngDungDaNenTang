@@ -144,7 +144,7 @@ const MainScreenAdmin = ({ navigation }: any) => {
                         fontSize: 17,
                         fontWeight: '700'
                     }}>
-                        Doanh thu
+                        Thống kê
                     </Text>
                 </TouchableOpacity>
 
