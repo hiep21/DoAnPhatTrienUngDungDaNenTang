@@ -2,31 +2,56 @@ import React, { useEffect,useState } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { UpdateStateLogin } from '../../services/todo';
-import { GetUserBuyGameByDayAndMonth } from '../../services/Game';
+import { GetUserBuyGameByDayAndMonth, GetGameByDayAndMonth } from '../../services/Game';
+import { getAccountByDayAndMonth } from '../../services/todo';
 import { string } from 'yup';
 const ChartComponent = ({ navigation }: any) => {
   const username = navigation.getParam("username")
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const month = "12"; // Replace with the actual month
   const year = "2023";
-  const [allMonthsData, setAllMonthsData] = useState<number[]>();
-  
+  const [allMonthsDataUserBuyGame, setAllMonthsDataUserBuyGame] = useState<number[]>();
+  const [allMonthsDataGame, setAllMonthsDataGame] = useState<number[]>();
+  const [allMonthsDataAccount, setAllMonthsDataAccount] = useState<number[]>();
   const loadTasks = async () => {
 
     setRefreshing(true)
     try {
-      const dataForAllMonths = [];
+      const dataForAllMonthsUserBuyGame = [];
       for (let i = 1; i <= 12; i++)
       {
-        const response = await GetUserBuyGameByDayAndMonth(i.toString(), year)
-        const apiData = response.data;
-        const dataLength = apiData ? apiData.length : 0;
+        const response0 = await GetUserBuyGameByDayAndMonth(i.toString(), year)
+        const apiData0 = response0.data;
+        const dataLength0 = apiData0 ? apiData0.length : 0;
         //console.log(apiData)
-        dataForAllMonths.push(dataLength);
+        dataForAllMonthsUserBuyGame.push(dataLength0);
       }
-      console.log(dataForAllMonths)
-      setAllMonthsData(dataForAllMonths);
+      console.log(dataForAllMonthsUserBuyGame)
+      setAllMonthsDataUserBuyGame(dataForAllMonthsUserBuyGame);
+
+      const dataForAllMonthsAccount = [];
+      for (let i = 1; i <= 12; i++)
+      {
+        const response1 = await getAccountByDayAndMonth(i.toString(), year)
+        const apiData1 = response1.data;
+        const dataLength1 = apiData1 ? apiData1.length : 0;
+        //console.log(apiData)
+        dataForAllMonthsAccount.push(dataLength1);
+      }
+      console.log(dataForAllMonthsAccount)
+      setAllMonthsDataAccount(dataForAllMonthsAccount);
         
+      const dataForAllMonthsGame = [];
+      for (let i = 1; i <= 12; i++)
+      {
+        const response2 = await GetGameByDayAndMonth(i.toString(), year)
+        const apiData2 = response2.data;
+        const dataLength2 = apiData2 ? apiData2.length : 0;
+        //console.log(apiData)
+        dataForAllMonthsGame.push(dataLength2);
+      }
+      console.log(dataForAllMonthsGame)
+      setAllMonthsDataGame(dataForAllMonthsGame);
 
     } catch (err: any) {
         const errorMessage = err.response
@@ -51,13 +76,18 @@ const ChartComponent = ({ navigation }: any) => {
     datasets: [
       {
         //data: [0, 4, 1, 5, 0, 3, 3, 2, 3, 1, 0, 4], // Dữ liệu doanh thu (ví dụ)
-        data: allMonthsData || new Array(12).fill(0),
+        data: allMonthsDataUserBuyGame || new Array(12).fill(0),
         color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Màu của cột (màu xanh)
         label: 'Doanh thu',
       },
       {
-        data: [0, 2, 1, 0, 3, 3, 3, 3, 3, 1, 4, 0], // Dữ liệu số lượng khách hàng (ví dụ)
-        color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Màu của cột (màu đỏ)
+        data: allMonthsDataAccount || new Array(12).fill(0), // Dữ liệu số lượng khách hàng (ví dụ)
+        color: (opacity = 2) => `rgba(255, 0, 0, ${opacity})`, // Màu của cột (màu đỏ)
+        label: 'Số lượng khách hàng',
+      },
+      {
+        data: allMonthsDataGame || new Array(12).fill(0), // Dữ liệu số lượng khách hàng (ví dụ)
+        color: (opacity = 3) => `rgba(0, 255, 0, ${opacity})`, // Màu của cột (màu xanh lá cây)
         label: 'Số lượng khách hàng',
       },
     ],
@@ -105,11 +135,15 @@ const ChartComponent = ({ navigation }: any) => {
         }}>Tổng doanh thu và số lượng khách hàng trong năm 2023</Text>
         <View style={styles.describeGame}>
           <TouchableOpacity style={styles.button1}></TouchableOpacity>
-          <Text style={styles.text}>Doanh thu</Text>
+          <Text style={styles.text}>Số lượng khách hàng </Text>
         </View>
         <View style={styles.describeGame}>
           <TouchableOpacity style={styles.button2}></TouchableOpacity>
-          <Text style={styles.text}>Số lượng khách hàng</Text>
+          <Text style={styles.text}>Số lượng khách hàng mua Game</Text>
+        </View>
+        <View style={styles.describeGame}>
+          <TouchableOpacity style={styles.button3}></TouchableOpacity>
+          <Text style={styles.text}>Số lượng Game</Text>
         </View>
 
       </View>
@@ -119,7 +153,7 @@ const ChartComponent = ({ navigation }: any) => {
           width={350}
           height={200}
           yAxisLabel=""
-          yAxisSuffix="$"
+          yAxisSuffix=""
           fromZero
           chartConfig={{
             backgroundGradientFrom: 'white',
@@ -180,6 +214,11 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     backgroundColor: "blue"
+  },
+  button3: {
+    width: 20,
+    height: 20,
+    backgroundColor: "#7FFF00"
   },
   chartTitle: {
     fontSize: 18,
