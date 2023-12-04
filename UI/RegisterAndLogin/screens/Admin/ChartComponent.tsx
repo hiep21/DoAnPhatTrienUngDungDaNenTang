@@ -9,19 +9,19 @@ const ChartComponent = ({ navigation }: any) => {
   const [refreshing, setRefreshing] = useState<boolean>(false)
   const month = "12"; // Replace with the actual month
   const year = "2023";
-  const [allMonthsData, setAllMonthsData] = useState<any[]>();
+  const [allMonthsData, setAllMonthsData] = useState<number[]>();
   
   const loadTasks = async () => {
 
     setRefreshing(true)
     try {
       const dataForAllMonths = [];
-      for (let i = 0; i <= 12; i++)
+      for (let i = 1; i <= 12; i++)
       {
         const response = await GetUserBuyGameByDayAndMonth(i.toString(), year)
         const apiData = response.data;
-        const dataLength = apiData.length;
-        //console.log(dataLength)
+        const dataLength = apiData ? apiData.length : 0;
+        //console.log(apiData)
         dataForAllMonths.push(dataLength);
       }
       console.log(dataForAllMonths)
@@ -51,7 +51,7 @@ const ChartComponent = ({ navigation }: any) => {
     datasets: [
       {
         //data: [0, 4, 1, 5, 0, 3, 3, 2, 3, 1, 0, 4], // Dữ liệu doanh thu (ví dụ)
-        data: allMonthsData,
+        data: allMonthsData || new Array(12).fill(0),
         color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Màu của cột (màu xanh)
         label: 'Doanh thu',
       },
