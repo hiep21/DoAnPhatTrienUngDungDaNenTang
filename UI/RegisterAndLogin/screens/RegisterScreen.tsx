@@ -21,6 +21,7 @@ const AddUserScreen = ({ navigation }: any) => {
         phone: ""
     });
     const [userVal, setUserVal] = useState<any>(null);
+    const [userValDate, setUserValDate] = useState<any>(null);
     const [rePasswords, setRePasswords] = useState<string>();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedGender, setSelectedGender] = useState<string>("");
@@ -40,8 +41,9 @@ const AddUserScreen = ({ navigation }: any) => {
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-    
+
     const onChange = (event: any, selectedDate: any) => {
+        
         const currentDate = selectedDate || selectedDate;
 
         setShowDatePicker(Platform.OS === 'ios');
@@ -51,11 +53,20 @@ const AddUserScreen = ({ navigation }: any) => {
         const year = currentDate.getFullYear();
 
         const date = day + "/" + month + "/" + year
-
-        setAccount({
-            ...account,
-            dateOfBirth: date
-        });
+        const dateNow = new Date()
+        if (dateNow.getFullYear() - year < 13) {
+            setUserValDate("Bạn chưa đủ tuổi để đăng ký, phải trên 13 tuổi")
+            setAccount({
+                ...account,
+                dateOfBirth: ""
+            });
+        }
+        else {
+            setAccount({
+                ...account,
+                dateOfBirth: date
+            });
+        }
 
     };
 
@@ -67,8 +78,6 @@ const AddUserScreen = ({ navigation }: any) => {
         // account.dateOfBirth = changeDate;
         // console.log(account)
         try {
-
-
             const { data } = await registerApi(account)
             alert("Register complete!")
             await uploadImage()
@@ -78,8 +87,6 @@ const AddUserScreen = ({ navigation }: any) => {
             setUserVal(err.response.data.errors)
             console.log("Lỗi :" + err.response.data)
         }
-
-
     }
     const onCancel = () => {
         Alert.alert(
@@ -234,8 +241,6 @@ const AddUserScreen = ({ navigation }: any) => {
                                 </View>
                             </Modal>
                             <Text style={styles.label}>Date Of Birth</Text>
-
-
                             <TouchableOpacity style={[styles.dropdownButton, styles.input]} onPress={() => setShowDatePicker(true)}>
                                 <Text style={styles.selectedGenderText}>Selected Date: {account.dateOfBirth}</Text>
                             </TouchableOpacity>
@@ -251,6 +256,11 @@ const AddUserScreen = ({ navigation }: any) => {
                             ) : (
                                 <View></View>
                             )}
+                            {userValDate != null && !account.dateOfBirth ? (
+                                <View>
+                                    <Text style={styles.textError}>{userValDate}</Text>
+                                </View>
+                            ) : null}
                             <Text style={styles.label}>Address</Text>
                             <TextInput value={account.address} onChangeText={(value) => {
                                 setAccount({

@@ -123,19 +123,17 @@ const AddGameNCC = ({ navigation }: any) => {
             let result: any = await DocumentPicker.getDocumentAsync({
                 type: '*/*',
             });
-
+            const kichCo: any = ((result.assets[0].size / 1024) / 1024).toFixed(2)
             if (result != null) {
                 setDocumentUri(result.assets[0].uri);
                 setNameDocumentUri(result.assets[0].name);
-                console.log(parseFloat(((result.assets[0].size / 1024) / 1024).toFixed(2)))
+
                 setgame({
                     ...game,
-                    kichCoFile: parseFloat(((result.assets[0].size / 1024) / 1024).toFixed(2))
-                })
-                setgame({
-                    ...game,
+                    kichCoFile: kichCo,
                     tenTroChoi: result.assets[0].name
                 })
+               
             } else {
                 Alert.alert("Cảnh báo", 'Chưa chọn file.');
             }
@@ -290,6 +288,11 @@ const AddGameNCC = ({ navigation }: any) => {
                                 })
                             }
                         }} style={styles.input} placeholder='Giá' />
+
+                        <Text style={styles.label}>Kích cỡ</Text>
+                        <TextInput value={game?.kichCoFile.toString()+"Mb"}
+                            style={styles.input} placeholder='Kích cỡ' />
+
                         <Text style={styles.label}>Giới thiệu trò chơi</Text>
                         <TextInput numberOfLines={4} multiline value={game?.gioiThieuTroChoi} onChangeText={(value) => {
                             setgame({

@@ -34,7 +34,7 @@ const ManagerGameNCC = ({ navigation }: any) => {
 
         try {
             const { data } = await getInfoFileNCC(username)
-           
+
             setReListGame(data)
             setListGame(data)
             const responseAdmin = await getInfoFileAdmin()
@@ -315,7 +315,7 @@ const ManagerGameNCC = ({ navigation }: any) => {
             <View style={styles.end}>
                 {accountNCC?.note != "Admin" ? (
                     <View style={styles.addAndUpdate}>
-                        <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: accountNCC?.username }) }} style={{
+                        <TouchableOpacity onPress={() => { navigation.navigate("AddGameNCC", { nameNCC: accountNCC?.username, username }) }} style={{
                             backgroundColor: "#DFEEF6",
                             width: 100,
                             height: 30,

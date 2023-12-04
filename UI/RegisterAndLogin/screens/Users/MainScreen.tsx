@@ -2,13 +2,21 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, FlatList, AppState } from 'react-native';
 import Carousel from './Carousel';
 import { ImageGameUri, InfoGame } from '../../services/interfaces/GameService';
-import { BASE_URL_Image_Icon, getByName, getImageIconGame } from '../../services/Game';
+import { BASE_URL_Image_Icon, GetUserBuyGame, getByName, getImageIconGame } from '../../services/Game';
 import BottomSheet from "./BottomSheet";
 import { BASE_URL_Image, UpdateStateLogin, getByUser, getGameManager, getImageIcon } from '../../services/todo';
 import { getItemAsync } from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 
-
+interface RankGame {
+    position: number
+    game: InfoGame
+    numberUser: number
+}
+interface NewRelease {
+    game: InfoGame
+    timeUpGame: Date
+}
 const MainScreen = ({ navigation }: any) => {
     const bottomSheetRef = useRef<any>(null);
 
@@ -22,30 +30,28 @@ const MainScreen = ({ navigation }: any) => {
     const [refreshing, setRefreshing] = useState<boolean>(false)
     const [listGame, setListGame] = useState<InfoGame[]>([])
     const [reListGame, setReListGame] = useState<InfoGame[]>([])
+    const [listGameFree, setListGameFree] = useState<InfoGame[]>([])
     const [image, setImage] = useState<string>()
     const [imageUri, setImageUri] = useState<string>();
+    const [listRank, setListRank] = useState<RankGame[]>([])
+    const [listNewRelease, setListNewRelease] = useState<NewRelease[]>([])
     let ListGame: InfoGame[] = []
     const loadTasks = async () => {
         setRefreshing(true)
         //console.log(lsImageUri)
         try {
             const { data } = await getByName()
-            //console.log(data)
             setListGame(data)
             setReListGame(data)
+            sortRankGame(data)
             const response = await getImageIcon(username)
             const name = response.data[0].imageName
             // console.log(response.data)
+
             fetchImage(name)
             ListGame = data
-            for (let i = 0; i < ListGame.length; i++) {
-                const response = await getImageIconGame(ListGame[i].tenTroChoi)
-                const ImageName = response.data[0].imageName
-                // console.log(data[i].id)
-                await fetchImageGame(ListGame[i].tenTroChoi, ImageName, data[i].id)
-            }
-
-            setListImageUri(checklist)
+            getListIconGame(data)
+            sortNewRelease(data)
 
         } catch (err: any) {
             const errorMessage = err.response
@@ -53,16 +59,69 @@ const MainScreen = ({ navigation }: any) => {
         }
         setRefreshing(false)
     }
+    const sortNewRelease = async (lsGame: any) => {
+        // console.log(lsGame[0].timeUpGame.split("T")[0])
+        let lsGameRelease: NewRelease[] = []
+        for (let i = 0; i < lsGame.length; i++) {
+            let gameRelease: NewRelease
+            gameRelease = {
+                game: lsGame[i],
+                timeUpGame: new Date(lsGame[i].timeUpGame.split("T")[0])
+
+            }
+            lsGameRelease.push(gameRelease)
+        }
+        lsGameRelease.sort((a, b) => b.timeUpGame.getTime() - a.timeUpGame.getTime());
+        setListNewRelease(lsGameRelease)
+        // console.log(lsGameRelease[0].timeUpGame.toISOString().split("T")[0])
+    }
+    const sortRankGame = async (lsGame: any) => {
+        let lsRankClone: RankGame[] = []
+        for (let i = 0; i < lsGame.length; i++) {
+            let RankClone: RankGame
+            try {
+                const response = await GetUserBuyGame(lsGame[i].tenTroChoi)
+                // console.log(response.data)
+                RankClone = {
+                    game: lsGame[i],
+                    numberUser: response.data.length,
+                    position: 0
+                }
+                lsRankClone.push(RankClone)
+
+            } catch (error: any) {
+                console.log(error.response.data)
+            }
+        }
+        lsRankClone.sort((a, b) => b.numberUser - a.numberUser);
+        for (let i = 0; i < lsRankClone.length; i++) {
+            lsRankClone[i].position = i + 1;
+        }
+        setListRank(lsRankClone)
+    }
+    const getListIconGame = async (data: any) => {
+        let lsGameFree: InfoGame[] = []
+        for (let i = 0; i < ListGame.length; i++) {
+            if (data[i].gia == 0) {
+                lsGameFree.push(data[i])
+            }
+            const response = await getImageIconGame(ListGame[i].tenTroChoi)
+            const ImageName = response.data[0].imageName
+
+            await fetchImageGame(ListGame[i].tenTroChoi, ImageName, data[i].id)
+        }
+
+        setListGameFree(lsGameFree)
+        setListImageUri(checklist)
+    }
     const fetchImage = async (imageName: string) => {
 
         const url = BASE_URL_Image.concat("getImage/").concat(username).concat("/").concat(imageName);
         try {
             const response = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + imageName);
             setImageUri(response.uri);
-
         } catch (error: any) {
             console.error('Error fetching image:', error.response.data);
-
         }
 
     };
@@ -133,7 +192,6 @@ const MainScreen = ({ navigation }: any) => {
         updateState(true)
         loadimage()
         loadTasks()
-
         AppState.addEventListener('change', handleAppStateChange);
     }, [username, lsImageUri])
 
@@ -162,6 +220,7 @@ const MainScreen = ({ navigation }: any) => {
 
         setChecks(true); // Hiển thị FlatList khi có kết quả tìm kiếm
     };
+
 
 
     const CheckBuyAndInstall = async (name: string, item: InfoGame, imageGameUri: any) => {
@@ -227,6 +286,58 @@ const MainScreen = ({ navigation }: any) => {
 
                     </View>
 
+                </View>
+            </TouchableOpacity >
+
+        )
+    }
+    const renderRank = ({ item }: { item: RankGame }) => {
+        return (
+            <TouchableOpacity onPress={() => { CheckBuyAndInstall(item.game.tenTroChoi, item.game, listImageUri.find(f => f.nameFile == item.game.tenTroChoi)?.imageUri) }}>
+                <View style={{
+                    flexDirection: 'row',
+                    marginLeft: "5%",
+                    marginVertical: 10,
+                    alignItems: "center"
+                }}>
+                    <Text style={{ fontWeight: "700", marginRight: 10 }}>#{item.position}</Text>
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.nameFile == item.game.tenTroChoi)?.imageUri }
+
+                    } />
+                    <View style={{
+                        marginLeft: 15,
+                        width: "35%"
+                    }}>
+                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.game.tenTroChoi}</Text>
+
+                    </View>
+                    <Text style={{ fontWeight: "700", marginRight: 10 }}>Số lượng người mua: {item.numberUser}</Text>
+                </View>
+            </TouchableOpacity >
+
+        )
+    }
+    const renderNewRelease = ({ item }: { item: NewRelease }) => {
+        return (
+            <TouchableOpacity onPress={() => { CheckBuyAndInstall(item.game.tenTroChoi, item.game, listImageUri.find(f => f.nameFile == item.game.tenTroChoi)?.imageUri) }}>
+                <View style={{
+                    flexDirection: 'row',
+                    marginLeft: "5%",
+                    marginVertical: 10,
+                    alignItems: "center"
+                }}>
+                    
+                    <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.nameFile == item.game.tenTroChoi)?.imageUri }
+
+                    } />
+                    <View style={{
+                        marginLeft: 15,
+                        width: "35%"
+                    }}>
+                        <Text style={{ fontWeight: '600', fontSize: 12 }}>{item.game.tenTroChoi}</Text>
+
+                    </View>
+                    <Text style={{ fontWeight: "700", marginRight: 10 }}>Phát hành: {item.timeUpGame.toISOString().split("T")[0]}</Text>
                 </View>
             </TouchableOpacity >
 
@@ -304,9 +415,9 @@ const MainScreen = ({ navigation }: any) => {
                         borderRadius: 10,
                     }} onPress={() => { setChoseTitle(3); scrollToItem(2); }}>
                         {choseTitle != 3 ? (
-                            <Text style={styles.textScroll}>Theo xu hướng</Text>
+                            <Text style={styles.textScroll}>Mới phát hành</Text>
                         ) : (
-                            <Text style={[styles.textScroll, { color: "#45A0D2" }]}>Theo xu hướng</Text>
+                            <Text style={[styles.textScroll, { color: "#45A0D2" }]}>Mới phát hành</Text>
                         )}
                     </TouchableOpacity>
                     {choseTitle != 3 ? (
@@ -410,36 +521,93 @@ const MainScreen = ({ navigation }: any) => {
                         </View>
                     </View>
                 )
-                break;
             case 2:
                 return (
                     <View style={{
-                        backgroundColor: "red",
+                        // backgroundColor: "red",
                         width: "100%",
                         height: "95%"
                     }}>
+                        <View style={{
+                            height: "95%"
+                        }}>
 
+                            <FlatList
+                                data={listRank}
+                                renderItem={(list) => renderRank(list)}
+                                onRefresh={loadTasks}
+                                refreshing={refreshing}
+                                style={{
+                                    marginTop: "5%",
+                                    borderWidth: 1,
+                                    width: "95%",
+                                    alignSelf: 'center',
+                                    borderRadius: 5,
+                                    borderColor: "#bbb",
+                                    height: "10%"
+                                }}
+                            />
+                        </View>
                     </View>
                 )
-                break;
             case 3:
                 return (
                     <View style={{
-                        backgroundColor: "blue",
+                        // backgroundColor: "blue",
                         width: "100%",
                         height: "95%"
-                    }}></View>
+                    }}>
+                        <View style={{
+                            height: "95%"
+                        }}>
+
+                            <FlatList
+                                data={listNewRelease}
+                                renderItem={(list) => renderNewRelease(list)}
+                                onRefresh={loadTasks}
+                                refreshing={refreshing}
+                                style={{
+                                    marginTop: "5%",
+                                    borderWidth: 1,
+                                    width: "95%",
+                                    alignSelf: 'center',
+                                    borderRadius: 5,
+                                    borderColor: "#bbb",
+                                    height: "10%"
+                                }}
+                            />
+                        </View>
+                    </View>
                 )
-                break;
             case 4:
                 return (
                     <View style={{
-                        backgroundColor: "green",
+                        // backgroundColor: "green",
                         width: "100%",
                         height: "95%"
-                    }}></View>
+                    }}>
+                        <View style={{
+                            height: "95%"
+                        }}>
+
+                            <FlatList
+                                data={listGameFree}
+                                renderItem={(list) => renderTask(list)}
+                                onRefresh={loadTasks}
+                                refreshing={refreshing}
+                                style={{
+                                    marginTop: "5%",
+                                    borderWidth: 1,
+                                    width: "95%",
+                                    alignSelf: 'center',
+                                    borderRadius: 5,
+                                    borderColor: "#bbb",
+                                    height: "10%"
+                                }}
+                            />
+                        </View>
+                    </View>
                 )
-                break;
             case 5:
                 return (
                     <View style={{
@@ -465,7 +633,6 @@ const MainScreen = ({ navigation }: any) => {
 
                     </View>
                 )
-                break;
         }
     }
 
@@ -475,7 +642,7 @@ const MainScreen = ({ navigation }: any) => {
             <View style={styles.head}>
                 <View style={{
                     flexDirection: "row",
-                    width:"70%"
+                    width: "70%"
                 }}>
                     <TouchableOpacity onPress={() => { navigation.navigate("MainScreenUser", { username, lsImageUri }) }}>
                         <Image style={{ height: 40, width: 40, marginRight: 10 }} source={require("../../assets/Icon/Logo.png")} />
