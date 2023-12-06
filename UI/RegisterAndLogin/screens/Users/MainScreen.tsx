@@ -198,7 +198,7 @@ const MainScreen = ({ navigation }: any) => {
 
     const [checks, setChecks] = useState<boolean>(false)
 
-    const [searchKeyword, setSearchKeyword] = useState('');
+    const [searchKeyword, setSearchKeyword] = useState<string>('');
     let relist: InfoGame[] = reListGame
     const handleSearch = () => {
         const filteredTasks = reListGame.filter((item) =>
@@ -206,15 +206,15 @@ const MainScreen = ({ navigation }: any) => {
             item.tenTroChoi.toLowerCase().includes(searchKeyword.toLowerCase()) ||
             item.nhaCungCap.toLowerCase().includes(searchKeyword.toLowerCase())
         );
-        if (filteredTasks != null && filteredTasks.length != 0) {
-            setListGame(filteredTasks);
-        }
-        else {
+        // if (filteredTasks != null && filteredTasks.length != 0) {
 
-            setListGame(relist);
+        // }
+        // else {
 
-        }
+        //     setListGame(relist);
 
+        // }
+        setListGame(filteredTasks);
         // console.log(filteredTasks.length)
         // Đây là nơi bạn triển khai logic tìm kiếm, ví dụ:
 
@@ -326,7 +326,7 @@ const MainScreen = ({ navigation }: any) => {
                     marginVertical: 10,
                     alignItems: "center"
                 }}>
-                    
+
                     <Image style={{ width: 50, height: 50, borderRadius: 5 }} source={{ uri: listImageUri.find(f => f.nameFile == item.game.tenTroChoi)?.imageUri }
 
                     } />
@@ -615,19 +615,19 @@ const MainScreen = ({ navigation }: any) => {
                         height: "96%",
                         paddingTop: "10%"
                     }}>
-                        <TouchableOpacity style={styles.TypeBtn}>
+                        <TouchableOpacity style={styles.TypeBtn} onPress={() => { setSearchKeyword("Câu đố"); setChecks(true); handleSearch() }}>
                             <Text style={styles.TextTypeBtn}>Câu đố</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.TypeBtn}>
+                        <TouchableOpacity style={styles.TypeBtn} onPress={() => { setSearchKeyword("Chiến thuật"); setChecks(true); handleSearch() }}>
                             <Text style={styles.TextTypeBtn}>Chiến thuật</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.TypeBtn}>
+                        <TouchableOpacity style={styles.TypeBtn} onPress={() => { setSearchKeyword("Trí tuệ"); setChecks(true); handleSearch() }}>
                             <Text style={styles.TextTypeBtn}>Trí tuệ</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.TypeBtn}>
+                        <TouchableOpacity style={styles.TypeBtn} onPress={() => { setSearchKeyword("Hành động"); setChecks(true); handleSearch() }}>
                             <Text style={styles.TextTypeBtn}>Hành động</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.TypeBtn}>
+                        <TouchableOpacity style={styles.TypeBtn} onPress={() => { setSearchKeyword("Giáo dục"); setChecks(true); handleSearch() }}>
                             <Text style={styles.TextTypeBtn}>Giáo dục</Text>
                         </TouchableOpacity>
 

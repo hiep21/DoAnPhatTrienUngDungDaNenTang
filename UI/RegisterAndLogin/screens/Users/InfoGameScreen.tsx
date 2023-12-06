@@ -64,7 +64,7 @@ const InfoGameScreen = ({ navigation }: any) => {
                 // Quyền không được cấp
                 return;
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Lỗi khi tải xuống:', error);
             // Xử lý lỗi một cách phù hợp, ví dụ: hiển thị thông báo lỗi
             alert("Lỗi khi tải xuống: " + error.message);
@@ -87,9 +87,15 @@ const InfoGameScreen = ({ navigation }: any) => {
                 {
                     text: "Đồng ý",
                     onPress: async () => {
-                        // await deleteApi(deleteName);
-                        alert('Xóa game thành công');
-                        navigation.navigate("MainScreen");
+                        let gameManager1: GameManager = gameManager
+                        gameManager1.isInstall = false
+                        try {
+                            await UpdateGameManager(gameManager1);
+                            alert('Xóa game thành công');
+                            navigation.navigate("MainScreenUser");
+                        } catch (error: any) {
+                            console.log(error.response.data)
+                        }
                     },
                 },
             ]
