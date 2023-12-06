@@ -10,8 +10,8 @@ const ManagerGameUser = ({ navigation }: any) => {
     const username = navigation.getParam("username")
 
     const [listGame, setListGame] = useState<InfoGame[]>([])
-    const [listGameIsInstall, setListGameIsInstall] = useState<GameManager[]>([])
-    const [listGameHaveBuy, setListGameHaveBuy] = useState<GameManager[]>([])
+    const [listGameIsInstall, setListGameIsInstall] = useState<InfoGame[]>([])
+    const [listGameHaveBuy, setListGameHaveBuy] = useState<InfoGame[]>([])
     const [refreshing, setRefreshing] = useState<boolean>(false)
 
 
@@ -23,40 +23,35 @@ const ManagerGameUser = ({ navigation }: any) => {
             // console.log(data)
             const response = await getGameManager(username)
 
-            if (!check) {
-                const listGameInstall = []
-                const listGameInfo = []
-                for (let index = 0; index < response.data.length; index++) {
 
-                    if (response.data[index].isInstall) {
-                        listGameInstall.push(response.data[index])
-                        for (let index2 = 0; index2 < data.length; index2++) {
-                            if (response.data[index].nameGame == data[index2].tenTroChoi) {
-                                listGameInfo.push(data[index2])
-                            }
+            const listGameInstall = []
+            for (let index = 0; index < response.data.length; index++) {
+
+                if (response.data[index].isInstall) {
+                    for (let index2 = 0; index2 < data.length; index2++) {
+                        if (response.data[index].nameGame == data[index2].tenTroChoi) {
+                            listGameInstall.push(data[index2])
                         }
                     }
                 }
-                await setListGame(listGameInfo)
-                await setListGameIsInstall(listGameInstall)
-
             }
-            else {
-                const listGameBuy = []
-                const listGameInfo = []
-                for (let index = 0; index < response.data.length; index++) {
-                    if (response.data[index].isBuy) {
-                        listGameBuy.push(response.data[index])
-                        for (let index2 = 0; index2 < data.length; index2++) {
-                            if (response.data[index].nameGame == data[index2].tenTroChoi) {
-                                listGameInfo.push(data[index2])
-                            }
+            setListGameIsInstall(listGameInstall)
+
+
+            const listGameBuy = []
+
+            for (let index = 0; index < response.data.length; index++) {
+                if (response.data[index].isBuy) {
+                    for (let index2 = 0; index2 < data.length; index2++) {
+                        if (response.data[index].nameGame == data[index2].tenTroChoi) {
+                            listGameBuy.push(data[index2])
                         }
                     }
                 }
-                await setListGame(listGameInfo)
-                await setListGameHaveBuy(listGameBuy)
             }
+            setListGameHaveBuy(listGameBuy)
+
+
 
             ListGame = data
             for (let i = 0; i < ListGame.length; i++) {
@@ -154,6 +149,61 @@ const ManagerGameUser = ({ navigation }: any) => {
 
         }
     }
+    const viewChose = () => {
+        switch (check) {
+            case 0:
+                return (
+                    <View style={{
+                        width: "100%",
+                        height: "95%"
+                    }}>
+
+                        <FlatList
+                            data={listGameIsInstall}
+                            renderItem={(list) => renderListGameInstall(list)}
+                            onRefresh={loadTasks}
+                            refreshing={refreshing}
+                            style={{
+                                marginTop: "5%",
+                                borderWidth: 1,
+                                width: "95%",
+                                alignSelf: 'center',
+                                borderRadius: 5,
+                                borderColor: "#bbb",
+                                height: "10%"
+                            }}
+                        />
+                    </View>
+
+                )
+            case 1:
+                return (
+                    <View style={{
+                        width: "100%",
+                        height: "95%"
+                    }}>
+                        <FlatList
+                            data={listGameHaveBuy}
+                            renderItem={(list) => renderListGameInstall(list)}
+                            onRefresh={loadTasks}
+                            refreshing={refreshing}
+                            style={{
+                                marginTop: "5%",
+                                borderWidth: 1,
+                                width: "95%",
+                                alignSelf: 'center',
+                                borderRadius: 5,
+                                borderColor: "#bbb",
+                                height: "10%"
+                            }}
+                        />
+
+
+
+                    </View>
+                )
+        }
+    }
     const renderListGameInstall = ({ item }: { item: InfoGame }) => {
         return (
             <TouchableOpacity onPress={() => { }}>
@@ -209,7 +259,9 @@ const ManagerGameUser = ({ navigation }: any) => {
     }, [username])
     return (
         <View style={styles.container}>
-
+            <TouchableOpacity  onPress={()=>{navigation.navigate("MainScreenUser")}}>
+                <Image style={{ height: 50, width: 50 }} source={require("../../assets/Icon/Logo.png")} />
+            </TouchableOpacity>
             <View style={{
                 flexDirection: 'row',
 
@@ -218,73 +270,15 @@ const ManagerGameUser = ({ navigation }: any) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
             }}>
+
                 {ChoseBtn()}
             </View>
-            {!check ? (
-                <View style={{
-                    width: 300,
-                    height: 450,
-                    marginTop: 20,
-                    marginHorizontal: 5,
-                    alignItems: 'center'
-                }}>
-                    {listGameIsInstall.length != 0 ? (
-                        <FlatList
-                            data={listGame}
-                            renderItem={(list) => renderListGameInstall(list)}
-                            onRefresh={loadTasks}
-                            refreshing={refreshing}
-                            style={{
-                                marginTop: "5%",
-                                borderWidth: 1,
-                                width: "95%",
-                                alignSelf: 'center',
-                                borderRadius: 5,
-                                borderColor: "#bbb",
-                                height: "100%"
-                            }}
-                        />
-                    ) : (
-                        <View>
-                            <Text>
-                                Bạn chưa cài đặt game nào cả
-                            </Text>
-                        </View>
-                    )}
-                </View>
-            ) : (
-                <View style={{
-                    width: 300,
-                    height: 450,
-                    marginTop: 20,
-                    marginHorizontal: 5,
-                    alignItems: 'center'
-                }}>
-                    {listGameHaveBuy.length != 0 ? (
-                        <FlatList
-                            data={listGame}
-                            renderItem={(list) => renderListGameInstall(list)}
-                            onRefresh={loadTasks}
-                            refreshing={refreshing}
-                            style={{
-                                marginTop: "5%",
-                                borderWidth: 1,
-                                width: "95%",
-                                alignSelf: 'center',
-                                borderRadius: 5,
-                                borderColor: "#bbb",
-                                height: "100%"
-                            }}
-                        />
-                    ) : (
-                        <View>
-                            <Text>
-                                Bạn chưa mua game nào cả
-                            </Text>
-                        </View>
-                    )}
-                </View>
-            )}
+            <View style={{
+                height: "90%",
+                width: "100%"
+            }}>
+                {viewChose()}
+            </View>
         </View>
 
 

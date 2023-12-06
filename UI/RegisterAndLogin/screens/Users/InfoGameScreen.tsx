@@ -34,44 +34,46 @@ const InfoGameScreen = ({ navigation }: any) => {
     const [checkDownload, setCheckDownload] = useState<boolean>()
     const downloadApk = async (nameGame: any) => {
         const Url = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame);
-        setitemGameManager({
-            ...itemGameManager,
+
+        // Giả sử itemGameManager và setitemGameManager là phần của state trong component của bạn
+        setitemGameManager((prevGameManager) => ({
+            ...prevGameManager,
             isInstall: true
-        })
+        }));
 
-        if (itemGameManager.isInstall) {
-            try {
-                // await console.log(itemGameManager)
-                const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+        try {
+            const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
 
-                if (status === 'granted') {
-                    const downloadResumable = FileSystem.createDownloadResumable(
-                        Url,
-                        FileSystem.documentDirectory + nameGame
-                    );
-                    let uri: any
+            if (status === 'granted') {
+                const downloadResumable = FileSystem.createDownloadResumable(
+                    Url,
+                    FileSystem.documentDirectory + nameGame
+                );
 
-                    uri = await downloadResumable.downloadAsync();
+                const { uri }: any = await downloadResumable.downloadAsync();
 
-                    await MediaLibrary.createAssetAsync(uri);
+                await MediaLibrary.createAssetAsync(uri);
 
-                    console.log('Downloaded successfully:', uri);
+                console.log('Tải xuống thành công:', uri);
 
-                    await UpdateGameManager(itemGameManager)
-                    alert("Download thành công")
+                // Giả sử UpdateGameManager là một hàm để cập nhật dữ liệu game manager
+                await UpdateGameManager(itemGameManager);
 
-                } else {
-                    return
-                }
-            } catch (error: any) {
-                console.error('Error downloading :', error.response.data);
+                alert("Tải xuống thành công");
+            } else {
+                // Quyền không được cấp
+                return;
             }
+        } catch (error) {
+            console.error('Lỗi khi tải xuống:', error);
+            // Xử lý lỗi một cách phù hợp, ví dụ: hiển thị thông báo lỗi
+            alert("Lỗi khi tải xuống: " + error.message);
         }
-        else {
-            alert("Mời bạn ấn lại")
-        }
-        setCheckDownload(true)
+
+        // Dòng này được thực thi sau khối try-catch bất kể kết quả thế nào
+        setCheckDownload(true);
     };
+
 
     const deleteGame = async () => {
         Alert.alert(
