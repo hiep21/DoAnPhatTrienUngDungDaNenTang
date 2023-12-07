@@ -1,10 +1,11 @@
 import React, { useEffect,useState } from 'react';
 import { View, Text, Alert, Button, StyleSheet, TouchableOpacity, Image, TextInput, AppState } from 'react-native';
-import { LineChart, BarChart } from 'react-native-chart-kit';
+import { LineChart, BarChart,PieChart } from 'react-native-chart-kit';
 import { UpdateStateLogin } from '../../services/todo';
 import { GetUserBuyGameByDayAndMonth, GetGameByDayAndMonth } from '../../services/Game';
 import { getAccountByDayAndMonth } from '../../services/todo';
-import { string } from 'yup';
+
+
 const ChartComponent = ({ navigation }: any) => {
   const username = navigation.getParam("username")
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -77,17 +78,17 @@ const ChartComponent = ({ navigation }: any) => {
       {
         //data: [0, 4, 1, 5, 0, 3, 3, 2, 3, 1, 0, 4], // Dữ liệu doanh thu (ví dụ)
         data: allMonthsDataUserBuyGame || new Array(12).fill(0),
-        color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Màu của cột (màu xanh)
+        color: (opacity = 0) => `rgba(0, 0, 255, ${opacity})`, // Màu của cột (màu xanh)
         label: 'Doanh thu',
       },
       {
         data: allMonthsDataAccount || new Array(12).fill(0), // Dữ liệu số lượng khách hàng (ví dụ)
-        color: (opacity = 2) => `rgba(255, 0, 0, ${opacity})`, // Màu của cột (màu đỏ)
+        color: (opacity = 0) => `rgba(255, 0, 0, ${opacity})`, // Màu của cột (màu đỏ)
         label: 'Số lượng khách hàng',
       },
       {
         data: allMonthsDataGame || new Array(12).fill(0), // Dữ liệu số lượng khách hàng (ví dụ)
-        color: (opacity = 3) => `rgba(0, 255, 0, ${opacity})`, // Màu của cột (màu xanh lá cây)
+        color: (opacity = 0) => `rgba(0, 255, 0, ${opacity})`, // Màu của cột (màu xanh lá cây)
         label: 'Số lượng khách hàng',
       },
     ],
@@ -135,7 +136,7 @@ const ChartComponent = ({ navigation }: any) => {
         }}>Tổng doanh thu và số lượng khách hàng trong năm 2023</Text>
         <View style={styles.describeGame}>
           <TouchableOpacity style={styles.button1}></TouchableOpacity>
-          <Text style={styles.text}>Số lượng khách hàng </Text>
+          <Text style={styles.text}>Số lượng tài khoản</Text>
         </View>
         <View style={styles.describeGame}>
           <TouchableOpacity style={styles.button2}></TouchableOpacity>

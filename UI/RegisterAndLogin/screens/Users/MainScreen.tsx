@@ -484,7 +484,7 @@ const MainScreen = ({ navigation }: any) => {
                             width: "100%",
                             height: "51%"
                         }}>
-                            <Carousel listImageUri={listImageUri} username={username} navigation={navigation} />
+                            <Carousel listImageUri={lsImageUri} username={username} navigation={navigation} />
                         </View>
                         <View style={styles.body}>
 
@@ -665,7 +665,9 @@ const MainScreen = ({ navigation }: any) => {
                 </View>
                 {checks ? (
                     <TouchableOpacity style={{ marginRight: 10, justifyContent: "center" }} onPress={() => { setChecks(false) }}>
-                        <Text>Back</Text>
+                        <Image  style={{ width: 20, height: 20}} source={
+                            require("../../assets/Icon/back_icon.png")
+                        } />
                     </TouchableOpacity>
                 ) : (
                     <View></View>
@@ -703,7 +705,11 @@ const MainScreen = ({ navigation }: any) => {
                         {viewChose()}
                     </View>
                 ) : (
-                    <FlatList
+                    <View style ={{
+                        width:"100%",
+                        height:"90%"
+                    }}>
+                        <FlatList
                         data={listGame}
                         renderItem={(list) => renderTask(list)}
                         onRefresh={loadTasks}
@@ -718,6 +724,7 @@ const MainScreen = ({ navigation }: any) => {
                             height: 100
                         }}
                     />
+                    </View>
                 )}
                 <BottomSheet ref={bottomSheetRef} navigation={navigation} />
             </View>

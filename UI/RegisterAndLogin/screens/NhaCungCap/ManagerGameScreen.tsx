@@ -270,7 +270,7 @@ const ManagerGameNCC = ({ navigation }: any) => {
                 </View>
             </View>
             <View style={styles.body}>
-                <TouchableOpacity onPress={() => { console.log(timeCreateGame); }}>
+                <TouchableOpacity onPress={() => {  }}>
                     <Text style={{
                         textAlign: 'left',
                         paddingLeft: 30,

@@ -170,7 +170,16 @@ export const getById = (id: string) => {
     })
 
 }
+export const getInfoFileByName = (nameGame: string) => {
 
+    return axios({
+        method: "GET",
+        url: BASE_URL.concat("getInfoFileByName/").concat(nameGame)
+
+    })
+
+}
+getInfoFileByName
 export const getAllImage = () => {
 
     return axios({

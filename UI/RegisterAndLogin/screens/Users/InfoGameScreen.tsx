@@ -36,11 +36,7 @@ const InfoGameScreen = ({ navigation }: any) => {
         const Url = BASE_URL_APK_FILE.concat("getFile/").concat(nameGame);
 
         // Giả sử itemGameManager và setitemGameManager là phần của state trong component của bạn
-        setitemGameManager((prevGameManager) => ({
-            ...prevGameManager,
-            isInstall: true
-        }));
-
+        
         try {
             const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
 
@@ -58,7 +54,7 @@ const InfoGameScreen = ({ navigation }: any) => {
 
                 // Giả sử UpdateGameManager là một hàm để cập nhật dữ liệu game manager
                 await UpdateGameManager(itemGameManager);
-
+                navigation.navigate("MainScreenUser");
                 alert("Tải xuống thành công");
             } else {
                 // Quyền không được cấp
@@ -123,6 +119,11 @@ const InfoGameScreen = ({ navigation }: any) => {
         }
     };
     useEffect(() => {
+        setitemGameManager((prevGameManager) => ({
+            ...prevGameManager,
+            isInstall: true
+        }));
+
         AppState.addEventListener('change', handleAppStateChange);
         getGameById()
     }, [gameId, gameManager, installGame, imageGameUri])

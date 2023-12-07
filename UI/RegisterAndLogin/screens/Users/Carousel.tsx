@@ -3,6 +3,7 @@ import { View, Image, ScrollView, Dimensions, Animated, TouchableOpacity } from 
 
 import { getGameManager } from '../../services/todo';
 import { string } from 'yup';
+import { getInfoFileByName } from '../../services/Game';
 const { width, height } = Dimensions.get('window');
 
 // const images = [
@@ -44,6 +45,8 @@ export default function Carousel({ listImageUri, username, navigation }: { listI
       const { data } = await getGameManager(username);
       const GameCheck = [];
 
+      const response = await getInfoFileByName(nameFile)
+      id = response.data[0].id
       for (let index = 0; index < data.length; index++) {
         if (data[index].nameGame == nameFile) {
           GameCheck.push(data[index]);
@@ -89,7 +92,7 @@ export default function Carousel({ listImageUri, username, navigation }: { listI
         >
           {listImageUri.map((image, i) => {
             return (
-              <TouchableOpacity key={i} onPress={() => CheckBuyAndInstall(image.id, image.nameFile, image.imageUri)} style={{ width, height: containerHeight }}>
+              <TouchableOpacity key={i} onPress={() => CheckBuyAndInstall(image.id, image.namePath, image.imageUri)} style={{ width, height: containerHeight }}>
                 <Image
                   style={{ flex: 1, width: undefined, height: undefined, borderRadius: 15, marginHorizontal: 10 }}
                   source={{ uri: image.imageUri }}
