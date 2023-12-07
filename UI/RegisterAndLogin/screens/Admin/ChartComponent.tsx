@@ -151,16 +151,16 @@ const ChartComponent = ({ navigation }: any) => {
       <View style={styles.container}>
         <LineChart
           data={data}
-          width={350}
+          width={360}
           height={200}
           yAxisLabel=""
           yAxisSuffix=""
           fromZero
           chartConfig={{
-            backgroundGradientFrom: 'white',
+            backgroundGradientFrom: '#F0F8FF',
             backgroundGradientTo: 'white',
             decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            color: (opacity = 1) => `rgba(0, 128, 128, ${opacity})`,
           }}
           style={styles.chart}
         />
@@ -175,6 +175,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingTop: 20,
     width: "100%",
+    justifyContent: 'center',
+    alignItems: 'center'
 
   },
 
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
   bieudo: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 30
+    padding: 10
 
 
   },
