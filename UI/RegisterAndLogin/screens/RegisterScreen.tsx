@@ -187,7 +187,7 @@ const AddUserScreen = ({ navigation }: any) => {
                             }} style={styles.input} placeholder='User name' />
                             {userVal != null && account.username.length < 5 ? (
                                 <View>
-                                    <Text style={styles.textError}>{userVal.username}</Text>
+                                    <Text style={styles.textError}>Username không được nhỏ hơn 5 ký tự</Text>
                                 </View>
 
                             ) : null}
